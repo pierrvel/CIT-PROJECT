@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { SUBJECT_META, DEFAULT_SUBJECT_PRESETS } from './constants/subjects';
+import { DEFAULT_CHEERS } from './constants/lounge';
 import { playChime, playSchoolBellSequence } from './utils/audio';
 
-import Icon from './components/common/Icon';
+import Header from './components/common/Header';
 import Toast from './components/common/Toast';
 import VisualPulse from './components/common/VisualPulse';
 import UndoPill from './components/common/UndoPill';
 
 import SprintTab from './components/sprint/SprintTab';
 import ExamPacer from './components/pacer/ExamPacer';
+import LiveLounge from './components/lounge/LiveLounge';
 
 import BgModal from './components/modals/BgModal';
 import SyncModal from './components/modals/SyncModal';
@@ -116,6 +118,19 @@ export function App() {
   useEffect(() => {
     localStorage.setItem('dc_goals_v2', JSON.stringify(goals));
   }, [goals]);
+
+  // 4-1. 라이브 라운지 D-Day 응원 전광판 상태
+  const [cheerBoard, setCheerBoard] = useState(() => {
+    const saved = localStorage.getItem('dualcore_cheer_board');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return DEFAULT_CHEERS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dualcore_cheer_board', JSON.stringify(cheerBoard));
+  }, [cheerBoard]);
 
   // 5. Exam Pacer: 순차 파이프라인 & 다중 프리셋 영구 저장 시스템
   const [selectedSubjectKey, setSelectedSubjectKey] = useState('korean');
@@ -975,7 +990,7 @@ export function App() {
     const syncPayload = {
       pin: targetPin, updatedAt: now, senderId: clientId, version: '2.4.0',
       data: {
-        goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory,
+        goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard,
         settings: { dimOpacity, blurAmount, isDarkMode }
       }
     };
@@ -1004,7 +1019,7 @@ export function App() {
       if (!isSilent) showToast('동기화 서버 연결에 실패했습니다.', 'warn');
       return false;
     }
-  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
+  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
 
   const pullFromServer = useCallback(async (targetPin, isSilent = true) => {
     if (!targetPin || targetPin.length !== 6) return false;
@@ -1031,6 +1046,9 @@ export function App() {
         setSelectedPresetId(cloudData.data.selectedPresetId);
       }
       if (cloudData.data.examHistory) setExamHistory(cloudData.data.examHistory);
+      if (cloudData.data.cheerBoard && Array.isArray(cloudData.data.cheerBoard)) {
+        setCheerBoard(cloudData.data.cheerBoard);
+      }
       if (cloudData.data.settings) {
         if (typeof cloudData.data.settings.dimOpacity === 'number') setDimOpacity(cloudData.data.settings.dimOpacity);
         if (typeof cloudData.data.settings.blurAmount === 'number') setBlurAmount(cloudData.data.settings.blurAmount);
@@ -1064,7 +1082,7 @@ export function App() {
       if (autoPushTimerRef.current) clearTimeout(autoPushTimerRef.current);
       autoPushTimerRef.current = setTimeout(() => pushToServer(cleanPin, true), 800);
     }
-  }, [goals, examHistory, subjectPresets, selectedPresetId, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
+  }, [goals, examHistory, subjectPresets, selectedPresetId, cheerBoard, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
 
   // 자동 폴링 (N초 주기)
   useEffect(() => {
@@ -1145,115 +1163,22 @@ export function App() {
       <div className="fixed inset-0 -z-10 bg-black pointer-events-none transition-opacity duration-300" style={{ opacity: dimOpacity }} />
 
       {/* 헤더 */}
-      <header className="sticky top-0 z-40 w-full px-4 sm:px-8 py-3.5 glass-card bg-white/70 dark:bg-zinc-900/70 border-b border-zinc-200/50 dark:border-zinc-800/60 transition-colors">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* 브랜드 로고 */}
-          <div className="flex items-center gap-2.5 select-none">
-            <div className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 text-white shadow-md shadow-indigo-500/20">
-              <Icon name="zap" className="w-5 h-5 text-white animate-pulse" />
-              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-              </span>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-base sm:text-lg font-black tracking-wider text-zinc-900 dark:text-white uppercase font-mono">
-                  DUALCORE
-                </span>
-                <span className="text-xs px-1.5 py-0.5 rounded font-mono font-semibold bg-indigo-500/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                  COCKPIT
-                </span>
-              </div>
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium tracking-tight -mt-0.5">
-                수험생 고효율 듀얼 포커스 OS
-              </p>
-            </div>
-          </div>
-
-          {/* 알약 스타일 탭 전환 버튼 */}
-          <div className="inline-flex p-1 rounded-full bg-zinc-200/70 dark:bg-zinc-800/80 backdrop-blur-md border border-zinc-300/40 dark:border-zinc-700/50 shadow-inner">
-            <button
-              type="button"
-              onClick={() => { setActiveTab('sprint'); if (soundEnabled) playChime(640, 'sine', 0.05); }}
-              className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                activeTab === 'sprint'
-                  ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm border border-zinc-200/60 dark:border-zinc-700/60 scale-[1.02]'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
-              }`}
-            >
-              <Icon name="target" className="w-4 h-4" />
-              <span>Sprint 플랜</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => { setActiveTab('pacer'); if (soundEnabled) playChime(740, 'sine', 0.05); }}
-              className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                activeTab === 'pacer'
-                  ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm border border-zinc-200/60 dark:border-zinc-700/60 scale-[1.02]'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
-              }`}
-            >
-              <Icon name="clock" className="w-4 h-4" />
-              <span>Exam Pacer</span>
-            </button>
-          </div>
-
-          {/* 우측 상단 툴바 */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <button
-              type="button"
-              onClick={() => setIsSyncModalOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 shadow-md shadow-indigo-600/25 transition-all"
-            >
-              <div className="relative flex items-center justify-center">
-                <Icon name="cloud" className={`w-4 h-4 ${autoSyncStatus === 'syncing' ? 'animate-bounce text-emerald-300' : ''}`} />
-                {autoSyncEnabled && cleanPin.length === 6 && (
-                  <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-                  </span>
-                )}
-              </div>
-              <span className="hidden sm:inline font-mono">
-                {cleanPin.length === 6 ? `PIN: ${cleanPin}` : '기기 동기화'}
-              </span>
-              {autoSyncEnabled && cleanPin.length === 6 && (
-                <span className="hidden lg:inline text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-1.5 py-0.5 rounded-full font-mono font-bold">
-                  {autoSyncInterval}s 자동
-                </span>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsBgModalOpen(true)}
-              title="배경화면 커스텀"
-              className="p-2 sm:p-2.5 rounded-xl text-zinc-600 dark:text-zinc-300 bg-white/60 dark:bg-zinc-800/60 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/70 dark:border-zinc-700/60 shadow-sm transition-all"
-            >
-              <Icon name="image" className="w-4 h-4 text-indigo-500" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              title="다크모드 토글"
-              className="p-2 sm:p-2.5 rounded-xl text-zinc-600 dark:text-zinc-300 bg-white/60 dark:bg-zinc-800/60 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/70 dark:border-zinc-700/60 shadow-sm transition-all"
-            >
-              <Icon name={isDarkMode ? "sun" : "moon"} className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            </button>
-
-            <button
-              type="button"
-              onClick={toggleFullscreen}
-              title="전체화면"
-              className="p-2 sm:p-2.5 rounded-xl text-zinc-600 dark:text-zinc-300 bg-white/60 dark:bg-zinc-800/60 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/70 dark:border-zinc-700/60 shadow-sm transition-all"
-            >
-              <Icon name={isFullscreen ? "minimize" : "maximize"} className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        soundEnabled={soundEnabled}
+        playChime={playChime}
+        autoSyncStatus={autoSyncStatus}
+        autoSyncEnabled={autoSyncEnabled}
+        autoSyncInterval={autoSyncInterval}
+        cleanPin={cleanPin}
+        onOpenSync={() => setIsSyncModalOpen(true)}
+        onOpenBg={() => setIsBgModalOpen(true)}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
+        isFullscreen={isFullscreen}
+        toggleFullscreen={toggleFullscreen}
+      />
 
       {/* 메인 뷰 */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
@@ -1266,6 +1191,16 @@ export function App() {
             soundEnabled={soundEnabled}
             playChime={playChime}
             setNewGoalModal={setNewGoalModal}
+            showToast={showToast}
+          />
+        )}
+
+        {activeTab === 'lounge' && (
+          <LiveLounge
+            examHistory={examHistory}
+            goals={goals}
+            cheerBoard={cheerBoard}
+            setCheerBoard={setCheerBoard}
             showToast={showToast}
           />
         )}
