@@ -21,4 +21,6 @@ dist-ssr/
 scratch/
 *.tmp
 *.log
+report.html
+*.pdf
 
