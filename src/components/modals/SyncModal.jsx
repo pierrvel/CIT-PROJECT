@@ -14,11 +14,7 @@ export const SyncModal = ({
   lastSyncedTimeStr,
   isSyncing,
   pushToServer,
-  pullFromServer,
-  customFirebaseUrl,
-  setCustomFirebaseUrl,
-  showAdvancedSync,
-  setShowAdvancedSync
+  pullFromServer
 }) => {
   if (!isOpen) return null;
 
@@ -46,11 +42,11 @@ export const SyncModal = ({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="font-semibold text-zinc-700 dark:text-zinc-200">
-              {customFirebaseUrl ? 'Firebase 클라우드 모드' : '통합 동기화 서버 가동 중'}
+              Firebase 클라우드 자동 동기화
             </span>
           </div>
-          <span className="font-mono text-[11px] text-zinc-400 truncate max-w-[160px]">
-            {customFirebaseUrl ? 'Custom RTDB' : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000')}
+          <span className="inline-flex items-center gap-1 font-mono text-[11px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 dark:bg-emerald-500/20 px-2 py-0.5 rounded-md">
+            Cloud Connected
           </span>
         </div>
 
@@ -146,38 +142,6 @@ export const SyncModal = ({
           )}
         </div>
 
-        {/* 클라우드 DB 연결 (서버리스 / Firebase) 고급 설정 */}
-        <div className="pt-1">
-          <button
-            type="button"
-            onClick={() => setShowAdvancedSync(!showAdvancedSync)}
-            className="w-full flex items-center justify-between py-1.5 text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
-          >
-            <span className="flex items-center gap-1.5 font-medium">
-              <Icon name="settings" className="w-3.5 h-3.5 text-indigo-500" />
-              <span>클라우드 DB 고급 설정 (Firebase RTDB)</span>
-            </span>
-            <Icon name={showAdvancedSync ? "chevronUp" : "chevronDown"} className="w-3.5 h-3.5" />
-          </button>
-
-          {showAdvancedSync && (
-            <div className="mt-2 p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200/80 dark:border-zinc-700/80 space-y-2 text-xs">
-              <label className="font-semibold text-zinc-700 dark:text-zinc-300 block">
-                Firebase Realtime Database URL
-              </label>
-              <input
-                type="url"
-                placeholder="https://your-project-default-rtdb.firebaseio.com"
-                value={customFirebaseUrl}
-                onChange={(e) => setCustomFirebaseUrl(e.target.value.trim())}
-                className="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white font-mono text-[11px] focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-              />
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                URL을 등록하면 로컬 <code className="font-mono text-indigo-500">server.py</code> 없이도 Google Firebase 클라우드를 통해 PC ↔ 태블릿 ↔ 스마트폰 간에 100% 완전 무료 서버리스 실시간 동기화가 동작합니다.
-              </p>
-            </div>
-          )}
-        </div>
 
         <div className="grid grid-cols-2 gap-2 pt-1">
           <button

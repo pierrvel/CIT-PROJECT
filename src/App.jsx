@@ -1368,10 +1368,6 @@ export function App() {
         isSyncing={isSyncing}
         pushToServer={pushToServer}
         pullFromServer={pullFromServer}
-        customFirebaseUrl={customFirebaseUrl}
-        setCustomFirebaseUrl={setCustomFirebaseUrl}
-        showAdvancedSync={showAdvancedSync}
-        setShowAdvancedSync={setShowAdvancedSync}
       />
 
       <GoalModal
