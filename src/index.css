@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.7); }
+
+.digital-timer { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+.glass-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+
+@keyframes slideInUp { 
+  from { transform: translateY(100%); opacity: 0; } 
+  to { transform: translateY(0); opacity: 1; } 
+}
+.animate-slide-up { animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes pulseGlow { 
+  0%, 100% { opacity: 1; transform: scale(1); } 
+  50% { opacity: 0.85; transform: scale(1.015); } 
+}
+.animate-pulse-glow { animation: pulseGlow 1.8s ease-in-out infinite; }
+
+@keyframes edgeFlashStart {
+  0% { opacity: 0; box-shadow: inset 0 0 0px rgba(16,185,129,0); }
+  20% { opacity: 1; box-shadow: inset 0 0 80px rgba(16,185,129,0.7), inset 0 0 40px rgba(6,182,212,0.5); }
+  75% { opacity: 0.8; box-shadow: inset 0 0 70px rgba(16,185,129,0.5); }
+  100% { opacity: 0; box-shadow: inset 0 0 0px rgba(16,185,129,0); }
+}
+.animate-flash-start { animation: edgeFlashStart 2s ease-out forwards; }
+
+@keyframes edgeFlashWarning {
+  0% { opacity: 0; box-shadow: inset 0 0 0px rgba(245,158,11,0); }
+  25% { opacity: 1; box-shadow: inset 0 0 90px rgba(245,158,11,0.7); }
+  50% { opacity: 0.25; box-shadow: inset 0 0 20px rgba(245,158,11,0.2); }
+  75% { opacity: 1; box-shadow: inset 0 0 90px rgba(245,158,11,0.7); }
+  100% { opacity: 0; box-shadow: inset 0 0 0px rgba(245,158,11,0.2); }
+}
+.animate-flash-warning { animation: edgeFlashWarning 2.6s ease-out forwards; }
+
+@keyframes edgeFlashEnd {
+  0% { opacity: 0; box-shadow: inset 0 0 0px rgba(244,63,94,0); }
+  15% { opacity: 1; box-shadow: inset 0 0 100px rgba(244,63,94,0.75); }
+  30% { opacity: 0.1; box-shadow: inset 0 0 10px rgba(244,63,94,0.1); }
+  45% { opacity: 1; box-shadow: inset 0 0 100px rgba(244,63,94,0.75); }
+  60% { opacity: 0.1; box-shadow: inset 0 0 10px rgba(244,63,94,0.1); }
+  75% { opacity: 1; box-shadow: inset 0 0 120px rgba(244,63,94,0.85); }
+  100% { opacity: 0; box-shadow: inset 0 0 0px rgba(244,63,94,0); }
+}
+.animate-flash-end { animation: edgeFlashEnd 3.2s ease-in-out forwards; }

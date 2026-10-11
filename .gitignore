@@ -11,7 +11,14 @@ env/
 Thumbs.db
 desktop.ini
 
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+*.local
+
 # Temporary / Scratch
 scratch/
 *.tmp
 *.log
+
