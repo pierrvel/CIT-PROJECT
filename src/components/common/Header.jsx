@@ -1,17 +1,19 @@
 import React from 'react';
-import { Globe } from 'lucide-react';
+import { Globe, Calendar } from 'lucide-react';
 import Icon from './Icon';
 
 const TABS = [
   { key: 'sprint', label: 'Sprint 플랜', tone: 640 },
   { key: 'pacer', label: 'Exam Pacer', tone: 740 },
-  { key: 'lounge', label: '라이브 라운지', tone: 840 }
+  { key: 'lounge', label: '라이브 라운지', tone: 840 },
+  { key: 'calendar', label: '입시 캘린더', tone: 920 }
 ];
 
 const TabIcon = ({ tabKey }) => {
   if (tabKey === 'sprint') return <Icon name="target" className="w-4 h-4" />;
   if (tabKey === 'pacer') return <Icon name="clock" className="w-4 h-4" />;
-  return <Globe className="w-4 h-4" />;
+  if (tabKey === 'lounge') return <Globe className="w-4 h-4" />;
+  return <Calendar className="w-4 h-4" />;
 };
 
 export const Header = ({

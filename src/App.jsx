@@ -11,6 +11,7 @@ import UndoPill from './components/common/UndoPill';
 import SprintTab from './components/sprint/SprintTab';
 import ExamPacer from './components/pacer/ExamPacer';
 import LiveLounge from './components/lounge/LiveLounge';
+import CalendarTab from './components/calendar/CalendarTab';
 
 import BgModal from './components/modals/BgModal';
 import SyncModal from './components/modals/SyncModal';
@@ -136,6 +137,31 @@ export function App() {
   useEffect(() => {
     localStorage.setItem('dualcore_cheer_board', JSON.stringify(cheerBoard));
   }, [cheerBoard]);
+
+  // 4-2. 2026~2027 입시 캘린더 맞춤 일정 & 관심 일정 상태
+  const [customMilestones, setCustomMilestones] = useState(() => {
+    const saved = localStorage.getItem('dualcore_custom_milestones');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dualcore_custom_milestones', JSON.stringify(customMilestones));
+  }, [customMilestones]);
+
+  const [starredMilestoneIds, setStarredMilestoneIds] = useState(() => {
+    const saved = localStorage.getItem('dualcore_starred_milestones');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dualcore_starred_milestones', JSON.stringify(starredMilestoneIds));
+  }, [starredMilestoneIds]);
 
   // 5. Exam Pacer: 순차 파이프라인 & 다중 프리셋 영구 저장 시스템
   const [selectedSubjectKey, setSelectedSubjectKey] = useState('korean');
@@ -996,6 +1022,7 @@ export function App() {
       pin: targetPin, updatedAt: now, senderId: clientId, version: '2.4.0',
       data: {
         goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard,
+        customMilestones, starredMilestoneIds,
         settings: { dimOpacity, blurAmount, isDarkMode }
       }
     };
@@ -1024,7 +1051,7 @@ export function App() {
       if (!isSilent) showToast('동기화 서버 연결에 실패했습니다.', 'warn');
       return false;
     }
-  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
+  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard, customMilestones, starredMilestoneIds, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
 
   const pullFromServer = useCallback(async (targetPin, isSilent = true) => {
     if (!targetPin || targetPin.length !== 6) return false;
@@ -1054,6 +1081,12 @@ export function App() {
       if (cloudData.data.cheerBoard && Array.isArray(cloudData.data.cheerBoard)) {
         const cleaned = cloudData.data.cheerBoard.filter((c) => c && !String(c.id).startsWith('cheer_default_'));
         setCheerBoard(cleaned);
+      }
+      if (cloudData.data.customMilestones && Array.isArray(cloudData.data.customMilestones)) {
+        setCustomMilestones(cloudData.data.customMilestones);
+      }
+      if (cloudData.data.starredMilestoneIds && Array.isArray(cloudData.data.starredMilestoneIds)) {
+        setStarredMilestoneIds(cloudData.data.starredMilestoneIds);
       }
       if (cloudData.data.settings) {
         if (typeof cloudData.data.settings.dimOpacity === 'number') setDimOpacity(cloudData.data.settings.dimOpacity);
@@ -1088,7 +1121,7 @@ export function App() {
       if (autoPushTimerRef.current) clearTimeout(autoPushTimerRef.current);
       autoPushTimerRef.current = setTimeout(() => pushToServer(cleanPin, true), 800);
     }
-  }, [goals, examHistory, subjectPresets, selectedPresetId, cheerBoard, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
+  }, [goals, examHistory, subjectPresets, selectedPresetId, cheerBoard, customMilestones, starredMilestoneIds, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
 
   // 자동 폴링 (N초 주기)
   useEffect(() => {
@@ -1207,6 +1240,16 @@ export function App() {
             goals={goals}
             cheerBoard={cheerBoard}
             setCheerBoard={setCheerBoard}
+            showToast={showToast}
+          />
+        )}
+
+        {activeTab === 'calendar' && (
+          <CalendarTab
+            customMilestones={customMilestones}
+            setCustomMilestones={setCustomMilestones}
+            starredIds={starredMilestoneIds}
+            setStarredIds={setStarredMilestoneIds}
             showToast={showToast}
           />
         )}
