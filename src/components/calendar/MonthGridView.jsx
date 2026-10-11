@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Star, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Star, Pencil, Trash2 } from 'lucide-react';
 import {
   formatDateWithDay,
   formatDateRange,
@@ -15,6 +15,7 @@ export const MonthGridView = ({
   milestones = [],
   starredIds = [],
   onToggleStar,
+  onDeleteMilestone,
   onEditCustomMilestone
 }) => {
   // 기준 년/월 상태 (기본값: 오늘 날짜 기준)
@@ -301,6 +302,21 @@ export const MonthGridView = ({
                         className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
                       >
                         <Pencil className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    {(badge.isPast || m.isCustom) && (
+                      <button
+                        type="button"
+                        onClick={() => onDeleteMilestone && onDeleteMilestone(m.id, m.title)}
+                        title={badge.isPast ? "지난 일정 삭제" : "맞춤 일정 삭제"}
+                        className={`p-1.5 rounded-lg transition-colors ${
+                          badge.isPast
+                            ? 'text-rose-500 hover:text-rose-600 hover:bg-rose-500/15'
+                            : 'text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10'
+                        }`}
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     )}
 

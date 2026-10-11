@@ -11,9 +11,15 @@ export const TimelineView = ({
   milestones = [],
   starredIds = [],
   onToggleStar,
+  onDeleteMilestone,
   onDeleteCustomMilestone,
   onEditCustomMilestone
 }) => {
+  const handleDelete = (id, title) => {
+    const fn = onDeleteMilestone || onDeleteCustomMilestone;
+    if (fn) fn(id, title);
+  };
+
   if (milestones.length === 0) {
     return (
       <div className="py-16 text-center rounded-3xl backdrop-blur-md bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-zinc-800 space-y-2">
@@ -40,7 +46,7 @@ export const TimelineView = ({
             key={m.id}
             className={`relative rounded-2xl backdrop-blur-md bg-white/75 dark:bg-zinc-900/75 border p-4 sm:p-5 transition-all duration-300 hover:shadow-lg ${
               badge.cardBorder
-            } ${badge.isPast ? 'opacity-65 hover:opacity-100' : ''}`}
+            } ${badge.isPast ? 'opacity-75 hover:opacity-100' : ''}`}
           >
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
               {/* 좌측 콘텐츠 */}
@@ -66,6 +72,19 @@ export const TimelineView = ({
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                       KEY 핵심
                     </span>
+                  )}
+
+                  {/* 지난 일정인 경우 눈에 띄는 삭제 버튼 */}
+                  {badge.isPast && (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(m.id, m.title)}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 transition-colors"
+                      title="캘린더에서 이 지난 일정 삭제"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>지난 일정 삭제</span>
+                    </button>
                   )}
                 </div>
 
@@ -102,7 +121,7 @@ export const TimelineView = ({
                 )}
               </div>
 
-              {/* 우측 툴 액션 (관심 일정 고정 / 맞춤 일정 삭제) */}
+              {/* 우측 툴 액션 (관심 일정 고정 / 맞춤 일정 수정 / 삭제 버튼) */}
               <div className="flex sm:flex-col items-center justify-end gap-1.5 shrink-0 self-end sm:self-start">
                 <button
                   type="button"
@@ -118,24 +137,29 @@ export const TimelineView = ({
                 </button>
 
                 {m.isCustom && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => onEditCustomMilestone && onEditCustomMilestone(m)}
-                      title="일정 수정"
-                      className="p-2 rounded-xl text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onDeleteCustomMilestone(m.id)}
-                      title="일정 삭제"
-                      className="p-2 rounded-xl text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </>
+                  <button
+                    type="button"
+                    onClick={() => onEditCustomMilestone && onEditCustomMilestone(m)}
+                    title="일정 수정"
+                    className="p-2 rounded-xl text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                )}
+
+                {(badge.isPast || m.isCustom) && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(m.id, m.title)}
+                    title={badge.isPast ? '지난 일정 삭제' : '맞춤 일정 삭제'}
+                    className={`p-2 rounded-xl transition-all ${
+                      badge.isPast
+                        ? 'text-rose-500 hover:text-rose-600 hover:bg-rose-500/15 bg-rose-500/5'
+                        : 'text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10'
+                    }`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 )}
               </div>
             </div>

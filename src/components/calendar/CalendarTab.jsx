@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, List, Calendar as CalendarIcon, Filter, Layers, Target, FileText, Sparkles, Star } from 'lucide-react';
+import { Plus, List, Calendar as CalendarIcon, Trash2, RotateCcw } from 'lucide-react';
 import { OFFICIAL_MILESTONES, CALENDAR_CATEGORIES } from '../../constants/calendar';
+import { isMilestonePast } from './calendarHelpers';
 import NextMilestoneHero from './NextMilestoneHero';
 import TimelineView from './TimelineView';
 import MonthGridView from './MonthGridView';
@@ -11,6 +12,8 @@ export const CalendarTab = ({
   setCustomMilestones,
   starredIds = [],
   setStarredIds,
+  deletedMilestoneIds = [],
+  setDeletedMilestoneIds,
   showToast
 }) => {
   const [selectedCategory, setSelectedCategory] = useState('all'); // 'all' | 'mock' | 'susi' | 'jungsi' | 'custom'
@@ -19,11 +22,12 @@ export const CalendarTab = ({
 
   const [editingMilestone, setEditingMilestone] = useState(null);
 
-  // 공식 일정 + 사용자 맞춤 일정 통합 및 날짜순 정렬
+  // 공식 일정(삭제된 것 제외) + 사용자 맞춤 일정 통합 및 날짜순 정렬
   const allMilestones = useMemo(() => {
-    const combined = [...OFFICIAL_MILESTONES, ...customMilestones];
+    const visibleOfficials = OFFICIAL_MILESTONES.filter((m) => !deletedMilestoneIds.includes(m.id));
+    const combined = [...visibleOfficials, ...customMilestones];
     return combined.sort((a, b) => (a.date > b.date ? 1 : -1));
-  }, [customMilestones]);
+  }, [customMilestones, deletedMilestoneIds]);
 
   // 카테고리 필터링된 마일스톤
   const filteredMilestones = useMemo(() => {
@@ -33,6 +37,11 @@ export const CalendarTab = ({
     }
     return allMilestones.filter((m) => m.group === selectedCategory);
   }, [allMilestones, selectedCategory, starredIds]);
+
+  // 이미 종료(과거)된 일정 목록
+  const pastMilestones = useMemo(() => {
+    return allMilestones.filter((m) => isMilestonePast(m));
+  }, [allMilestones]);
 
   // 관심 일정 토글 핸들러
   const handleToggleStar = (id) => {
@@ -82,13 +91,58 @@ export const CalendarTab = ({
     }
   };
 
-  // 맞춤 일정 삭제 핸들러
-  const handleDeleteCustomMilestone = (id) => {
-    if (confirm('이 맞춤 일정을 삭제하시겠습니까?')) {
-      setCustomMilestones((prev) => prev.filter((m) => m.id !== id));
+  // 단일 일정 삭제 핸들러 (과거 일정 또는 맞춤 일정)
+  const handleDeleteMilestone = (id, title) => {
+    if (window.confirm(`'${title || '이 일정'}'을(를) 캘린더에서 삭제하시겠습니까?`)) {
+      const isCustom = customMilestones.some((m) => m.id === id);
+      if (isCustom) {
+        setCustomMilestones((prev) => prev.filter((m) => m.id !== id));
+      } else {
+        if (setDeletedMilestoneIds) {
+          setDeletedMilestoneIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+        }
+      }
       setStarredIds((prev) => prev.filter((item) => item !== id));
       if (showToast) {
-        showToast('일정이 삭제되었습니다.', 'info');
+        showToast(`'${title || '일정'}'이(가) 삭제되었습니다.`, 'info');
+      }
+    }
+  };
+
+  // 지난 일정 일괄 삭제 핸들러
+  const handleClearPastMilestones = () => {
+    if (pastMilestones.length === 0) {
+      if (showToast) showToast('삭제할 지난 일정이 없습니다.', 'info');
+      return;
+    }
+
+    if (window.confirm(`이미 기간이 종료된 ${pastMilestones.length}개의 입시 일정을 모두 삭제하시겠습니까?`)) {
+      const pastCustomIds = pastMilestones.filter((m) => m.isCustom).map((m) => m.id);
+      const pastOfficialIds = pastMilestones.filter((m) => !m.isCustom).map((m) => m.id);
+      const allPastIds = pastMilestones.map((m) => m.id);
+
+      if (pastCustomIds.length > 0) {
+        setCustomMilestones((prev) => prev.filter((m) => !pastCustomIds.includes(m.id)));
+      }
+      if (pastOfficialIds.length > 0 && setDeletedMilestoneIds) {
+        setDeletedMilestoneIds((prev) => Array.from(new Set([...prev, ...pastOfficialIds])));
+      }
+      setStarredIds((prev) => prev.filter((item) => !allPastIds.includes(item)));
+
+      if (showToast) {
+        showToast(`지난 입시 일정 ${pastMilestones.length}개가 모두 삭제되었습니다.`, 'success');
+      }
+    }
+  };
+
+  // 삭제된 기본 일정 복원 핸들러
+  const handleRestoreDefaultMilestones = () => {
+    if (window.confirm('삭제되었던 기본 입시 일정을 모두 복원하시겠습니까?')) {
+      if (setDeletedMilestoneIds) {
+        setDeletedMilestoneIds([]);
+      }
+      if (showToast) {
+        showToast('기본 입시 일정이 모두 복구되었습니다.', 'success');
       }
     }
   };
@@ -98,7 +152,7 @@ export const CalendarTab = ({
       {/* 1. 상단 D-Day 하이라이트 배너 */}
       <NextMilestoneHero milestones={allMilestones} />
 
-      {/* 2. 툴바 (카테고리 필터 칩 + 뷰 모드 전환 + 맞춤 추가 버튼) */}
+      {/* 2. 툴바 (카테고리 필터 칩 + 일괄 삭제/복원 + 뷰 모드 전환 + 맞춤 추가 버튼) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* 카테고리 필터 칩 */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
@@ -121,8 +175,35 @@ export const CalendarTab = ({
           })}
         </div>
 
-        {/* 뷰 모드 스위처 & 맞춤 일정 추가 버튼 */}
-        <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
+        {/* 툴 액션 버튼 그룹 */}
+        <div className="flex flex-wrap items-center gap-2 self-end md:self-auto shrink-0">
+          {/* 지난 일정 일괄 삭제 버튼 */}
+          {pastMilestones.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearPastMilestones}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-800/80 transition-all shrink-0"
+              title="이미 기간이 지난 입시 일정을 한 번에 정리합니다"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>지난 일정 정리 ({pastMilestones.length})</span>
+            </button>
+          )}
+
+          {/* 삭제된 기본 일정 복원 버튼 */}
+          {deletedMilestoneIds.length > 0 && (
+            <button
+              type="button"
+              onClick={handleRestoreDefaultMilestones}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 transition-all shrink-0"
+              title="삭제된 기본 입시 일정을 다시 복원합니다"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>기본 일정 복원 ({deletedMilestoneIds.length})</span>
+            </button>
+          )}
+
+          {/* 뷰 모드 스위처 */}
           <div className="inline-flex p-1 rounded-full bg-zinc-200/70 dark:bg-zinc-800/80 backdrop-blur-md border border-zinc-300/40 dark:border-zinc-700/50">
             <button
               type="button"
@@ -167,7 +248,7 @@ export const CalendarTab = ({
           milestones={filteredMilestones}
           starredIds={starredIds}
           onToggleStar={handleToggleStar}
-          onDeleteCustomMilestone={handleDeleteCustomMilestone}
+          onDeleteMilestone={handleDeleteMilestone}
           onEditCustomMilestone={handleOpenEditModal}
         />
       ) : (
@@ -175,6 +256,7 @@ export const CalendarTab = ({
           milestones={filteredMilestones}
           starredIds={starredIds}
           onToggleStar={handleToggleStar}
+          onDeleteMilestone={handleDeleteMilestone}
           onEditCustomMilestone={handleOpenEditModal}
         />
       )}

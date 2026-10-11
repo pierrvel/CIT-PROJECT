@@ -163,6 +163,18 @@ export function App() {
     localStorage.setItem('dualcore_starred_milestones', JSON.stringify(starredMilestoneIds));
   }, [starredMilestoneIds]);
 
+  const [deletedMilestoneIds, setDeletedMilestoneIds] = useState(() => {
+    const saved = localStorage.getItem('dualcore_deleted_milestones');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dualcore_deleted_milestones', JSON.stringify(deletedMilestoneIds));
+  }, [deletedMilestoneIds]);
+
   // 5. Exam Pacer: 순차 파이프라인 & 다중 프리셋 영구 저장 시스템
   const [selectedSubjectKey, setSelectedSubjectKey] = useState('korean');
 
@@ -1022,7 +1034,7 @@ export function App() {
       pin: targetPin, updatedAt: now, senderId: clientId, version: '2.4.0',
       data: {
         goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard,
-        customMilestones, starredMilestoneIds,
+        customMilestones, starredMilestoneIds, deletedMilestoneIds,
         settings: { dimOpacity, blurAmount, isDarkMode }
       }
     };
@@ -1051,7 +1063,7 @@ export function App() {
       if (!isSilent) showToast('동기화 서버 연결에 실패했습니다.', 'warn');
       return false;
     }
-  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard, customMilestones, starredMilestoneIds, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
+  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
 
   const pullFromServer = useCallback(async (targetPin, isSilent = true) => {
     if (!targetPin || targetPin.length !== 6) return false;
@@ -1088,6 +1100,9 @@ export function App() {
       if (cloudData.data.starredMilestoneIds && Array.isArray(cloudData.data.starredMilestoneIds)) {
         setStarredMilestoneIds(cloudData.data.starredMilestoneIds);
       }
+      if (cloudData.data.deletedMilestoneIds && Array.isArray(cloudData.data.deletedMilestoneIds)) {
+        setDeletedMilestoneIds(cloudData.data.deletedMilestoneIds);
+      }
       if (cloudData.data.settings) {
         if (typeof cloudData.data.settings.dimOpacity === 'number') setDimOpacity(cloudData.data.settings.dimOpacity);
         if (typeof cloudData.data.settings.blurAmount === 'number') setBlurAmount(cloudData.data.settings.blurAmount);
@@ -1121,7 +1136,7 @@ export function App() {
       if (autoPushTimerRef.current) clearTimeout(autoPushTimerRef.current);
       autoPushTimerRef.current = setTimeout(() => pushToServer(cleanPin, true), 800);
     }
-  }, [goals, examHistory, subjectPresets, selectedPresetId, cheerBoard, customMilestones, starredMilestoneIds, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
+  }, [goals, examHistory, subjectPresets, selectedPresetId, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
 
   // 자동 폴링 (N초 주기)
   useEffect(() => {
@@ -1250,6 +1265,8 @@ export function App() {
             setCustomMilestones={setCustomMilestones}
             starredIds={starredMilestoneIds}
             setStarredIds={setStarredMilestoneIds}
+            deletedMilestoneIds={deletedMilestoneIds}
+            setDeletedMilestoneIds={setDeletedMilestoneIds}
             showToast={showToast}
           />
         )}

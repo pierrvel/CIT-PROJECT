@@ -173,3 +173,11 @@ export const getCsatYearProgress = (csatDateStr = '2026-11-19') => {
   const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
   return Math.round(pct);
 };
+
+// 일정이 완전히 종료(과거)되었는지 검사 (종료일이 있으면 종료일 기준, 없으면 시작일 기준)
+export const isMilestonePast = (milestone) => {
+  if (!milestone) return false;
+  const checkDate = milestone.endDate || milestone.date;
+  return getDaysUntil(checkDate) < 0;
+};
+
