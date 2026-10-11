@@ -58,8 +58,18 @@ export function App() {
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [pinInput, setPinInput] = useState(() => localStorage.getItem('dc_last_used_pin') || '');
   const [isSyncing, setIsSyncing] = useState(false);
-  const [customFirebaseUrl, setCustomFirebaseUrl] = useState(() => localStorage.getItem('dc_custom_firebase_url') || '');
+  const [customFirebaseUrl, setCustomFirebaseUrl] = useState(() => {
+    return localStorage.getItem('dc_custom_firebase_url') || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FIREBASE_DB_URL) || '';
+  });
   const [showAdvancedSync, setShowAdvancedSync] = useState(false);
+
+  useEffect(() => {
+    if (customFirebaseUrl) {
+      localStorage.setItem('dc_custom_firebase_url', customFirebaseUrl);
+    } else {
+      localStorage.removeItem('dc_custom_firebase_url');
+    }
+  }, [customFirebaseUrl]);
 
   // 실시간 자동 동기화 (Auto-Sync) 상태
   const [autoSyncEnabled, setAutoSyncEnabled] = useState(() => {
@@ -948,8 +958,10 @@ export function App() {
 
   const getSyncUrl = useCallback((pin) => {
     const custom = (customFirebaseUrl || '').trim();
-    if (custom && !custom.includes('your-project-default') && !custom.includes('dualcore-cockpit-default')) {
-      return `${custom.replace(/\/+$/, '')}/rooms/${pin}.json`;
+    const envUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FIREBASE_DB_URL ? import.meta.env.VITE_FIREBASE_DB_URL : '').trim();
+    const targetUrl = custom || envUrl;
+    if (targetUrl && !targetUrl.includes('your-project-default') && !targetUrl.includes('dualcore-cockpit-default')) {
+      return `${targetUrl.replace(/\/+$/, '')}/rooms/${pin}.json`;
     }
     if (typeof window !== 'undefined' && window.location.protocol.startsWith('http')) {
       return `${window.location.origin}/rooms/${pin}.json`;
