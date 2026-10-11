@@ -1,0 +1,614 @@
+{
+  "789012": {
+    "pin": "789012",
+    "updatedAt": "2026-10-05",
+    "data": {
+      "test": true
+    }
+  },
+  "999888": {
+    "pin": "999888",
+    "updatedAt": "2026-10-05T11:05:00Z",
+    "version": "2.1.0",
+    "data": {
+      "goals": [
+        {
+          "id": 1,
+          "title": "수능특강 미적분",
+          "completedAmount": 250,
+          "totalAmount": 300,
+          "unit": "문제"
+        }
+      ],
+      "settings": {
+        "isDarkMode": true,
+        "dimOpacity": 0.3
+      }
+    }
+  },
+  "123456": {
+    "pin": "123456",
+    "updatedAt": 1791294034208,
+    "senderId": "client_xz25ggo",
+    "version": "2.4.0",
+    "data": {
+      "goals": [
+        {
+          "id": 1,
+          "title": "수능특강 미적분",
+          "unit": "문제",
+          "totalAmount": 300,
+          "completedAmount": 293,
+          "deadline": "2026-11-19",
+          "dailyCap": 15,
+          "prunedAmount": 0,
+          "strategyMode": "normal",
+          "lastRecordDate": "방금 전"
+        },
+        {
+          "id": 2,
+          "title": "수능완성 영어",
+          "unit": "강",
+          "totalAmount": 24,
+          "completedAmount": 24,
+          "deadline": "2026-10-15",
+          "dailyCap": 1,
+          "prunedAmount": 0,
+          "strategyMode": "weekend_rollover",
+          "lastRecordDate": "방금 전"
+        },
+        {
+          "id": 1791166268510,
+          "title": "2345",
+          "unit": "문제",
+          "totalAmount": 100,
+          "completedAmount": 0,
+          "deadline": "2026-11-04",
+          "dailyCap": 15,
+          "prunedAmount": 0,
+          "strategyMode": "normal",
+          "lastRecordDate": "방금 등록됨"
+        },
+        {
+          "id": 1791167687505,
+          "title": "123",
+          "unit": "문제",
+          "totalAmount": 100,
+          "completedAmount": 0,
+          "deadline": "2026-11-04",
+          "dailyCap": 15,
+          "prunedAmount": 0,
+          "strategyMode": "normal",
+          "lastRecordDate": "방금 등록됨"
+        }
+      ],
+      "selectedSubjectKey": "inquiry",
+      "selectedPresetId": "inq_default",
+      "subjectPresets": {
+        "korean": [
+          {
+            "id": "kor_default",
+            "name": "표준 순서 (독서 우선)",
+            "totalMinutes": 80,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_kor_read",
+                "name": "1. 독서 (비문학)",
+                "targetMin": 32,
+                "targetMinutes": 32,
+                "desc": "지문당 평균 8분 (킬러 지문 전략적 시간 배분)"
+              },
+              {
+                "id": "p_kor_lit",
+                "name": "2. 문학",
+                "targetMin": 24,
+                "targetMinutes": 24,
+                "desc": "연계 체감 지문 신속 해결 및 시간 세이브"
+              },
+              {
+                "id": "p_kor_opt",
+                "name": "3. 선택과목 (화작/언매)",
+                "targetMin": 14,
+                "targetMinutes": 14,
+                "desc": "정확도 우선, 15분 내 컷 목표"
+              },
+              {
+                "id": "p_kor_mark",
+                "name": "4. 마킹 및 최종 검토",
+                "targetMin": 10,
+                "targetMinutes": 10,
+                "desc": "OMR 마킹 체크 및 애매한 문항 재확인"
+              }
+            ]
+          },
+          {
+            "id": "kor_lit_first",
+            "name": "실전 전략 A (문학 선풀이형)",
+            "totalMinutes": 80,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_kor_lit",
+                "name": "1. 문학",
+                "targetMin": 22,
+                "targetMinutes": 22,
+                "desc": "연계 체감 지문 신속 해결로 심리적 안정 확보"
+              },
+              {
+                "id": "p_kor_opt",
+                "name": "2. 선택과목 (화작/언매)",
+                "targetMin": 13,
+                "targetMinutes": 13,
+                "desc": "자신감 있는 선택과목 신속 마무리"
+              },
+              {
+                "id": "p_kor_read",
+                "name": "3. 독서 (비문학)",
+                "targetMin": 35,
+                "targetMinutes": 35,
+                "desc": "확보한 잔여 시간으로 고난도 비문학 독해"
+              },
+              {
+                "id": "p_kor_mark",
+                "name": "4. 마킹 및 최종 검토",
+                "targetMin": 10,
+                "targetMinutes": 10,
+                "desc": "OMR 마킹 체크 및 애매한 문항 재확인"
+              }
+            ]
+          },
+          {
+            "id": "kor_opt_first",
+            "name": "실전 전략 B (선택과목 12분 컷)",
+            "totalMinutes": 80,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_kor_opt",
+                "name": "1. 선택과목 (화작/언매)",
+                "targetMin": 12,
+                "targetMinutes": 12,
+                "desc": "초반 집중력으로 선택과목 12분 컷"
+              },
+              {
+                "id": "p_kor_lit",
+                "name": "2. 문학",
+                "targetMin": 23,
+                "targetMinutes": 23,
+                "desc": "안정적인 EBS 연계 문학 풀이"
+              },
+              {
+                "id": "p_kor_read",
+                "name": "3. 독서 (비문학)",
+                "targetMin": 35,
+                "targetMinutes": 35,
+                "desc": "고난도 비문학 지문에 충분한 시간 집중"
+              },
+              {
+                "id": "p_kor_mark",
+                "name": "4. 마킹 및 최종 검토",
+                "targetMin": 10,
+                "targetMinutes": 10,
+                "desc": "OMR 마킹 체크 및 애매한 문항 재확인"
+              }
+            ]
+          }
+        ],
+        "math": [
+          {
+            "id": "math_default",
+            "name": "표준 순서 (공통 비킬러 우선)",
+            "totalMinutes": 100,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_math_comm",
+                "name": "1. 공통 비킬러 (2·3점 & 쉬운 4점)",
+                "targetMin": 35,
+                "targetMinutes": 35,
+                "desc": "1~14번, 16~20번 안정적 확보"
+              },
+              {
+                "id": "p_math_killer",
+                "name": "2. 준킬러·킬러 (15·22번 등)",
+                "targetMin": 35,
+                "targetMinutes": 35,
+                "desc": "조건 엄밀 해석 및 최고난도 풀이"
+              },
+              {
+                "id": "p_math_opt",
+                "name": "3. 선택과목 (미적/기하/확통)",
+                "targetMin": 20,
+                "targetMinutes": 20,
+                "desc": "23~28번 신속 풀이 & 29~30번 공략"
+              },
+              {
+                "id": "p_math_check",
+                "name": "4. 검토 및 주관식 검산",
+                "targetMin": 10,
+                "targetMinutes": 10,
+                "desc": "주관식 단답형 계산 검산 및 OMR"
+              }
+            ]
+          },
+          {
+            "id": "math_opt_first",
+            "name": "실전 전략 A (선택과목 선풀이형)",
+            "totalMinutes": 100,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_math_opt",
+                "name": "1. 선택과목 (미적/기하/확통)",
+                "targetMin": 18,
+                "targetMinutes": 18,
+                "desc": "선택과목 23~28번 번개 풀이"
+              },
+              {
+                "id": "p_math_comm",
+                "name": "2. 공통 비킬러 (2·3점 & 쉬운 4점)",
+                "targetMin": 35,
+                "targetMinutes": 35,
+                "desc": "공통문항 점수 안정적 득점"
+              },
+              {
+                "id": "p_math_killer",
+                "name": "3. 준킬러·킬러 (15·22·30번)",
+                "targetMin": 37,
+                "targetMinutes": 37,
+                "desc": "최고 변별력 문항 깊은 수식 전개"
+              },
+              {
+                "id": "p_math_check",
+                "name": "4. 검토 및 주관식 검산",
+                "targetMin": 10,
+                "targetMinutes": 10,
+                "desc": "주관식 단답형 계산 검산 및 OMR"
+              }
+            ]
+          },
+          {
+            "id": "math_speed_run",
+            "name": "실전 전략 B (비킬러 스피드런 & 12분 검토)",
+            "totalMinutes": 100,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_math_comm",
+                "name": "1. 공통 비킬러 (스피드런)",
+                "targetMin": 30,
+                "targetMinutes": 30,
+                "desc": "신속하고 정확한 초반 기본기 공략"
+              },
+              {
+                "id": "p_math_opt",
+                "name": "2. 선택과목 (미적/기하/확통)",
+                "targetMin": 18,
+                "targetMinutes": 18,
+                "desc": "선택과목 23~28번 안정적 컷"
+              },
+              {
+                "id": "p_math_killer",
+                "name": "3. 준킬러·킬러 집중 공략",
+                "targetMin": 40,
+                "targetMinutes": 40,
+                "desc": "킬러 4문항에 과감한 시간 투자"
+              },
+              {
+                "id": "p_math_check",
+                "name": "4. 철저한 단답형 재검토",
+                "targetMin": 12,
+                "targetMinutes": 12,
+                "desc": "실수 방지를 위한 주관식 재검산"
+              }
+            ]
+          }
+        ],
+        "english": [
+          {
+            "id": "eng_default",
+            "name": "표준 순서 (듣기 ➔ 독해 전반 ➔ 킬러)",
+            "totalMinutes": 70,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_eng_listen",
+                "name": "1. 듣기 평가 (1~17번)",
+                "targetMin": 23,
+                "targetMinutes": 23,
+                "desc": "독해 병행 풀이 (18~20, 25~28번)"
+              },
+              {
+                "id": "p_eng_read",
+                "name": "2. 독해 전반 (대의파악·장문)",
+                "targetMin": 22,
+                "targetMinutes": 22,
+                "desc": "주제, 제목, 요약문 신속 파악"
+              },
+              {
+                "id": "p_eng_killer",
+                "name": "3. 빈칸·순서·삽입 킬러",
+                "targetMin": 17,
+                "targetMinutes": 17,
+                "desc": "킬러 유형 논리 전개 추론"
+              },
+              {
+                "id": "p_eng_mark",
+                "name": "4. 마킹 및 어법/어휘 검토",
+                "targetMin": 8,
+                "targetMinutes": 8,
+                "desc": "마킹 완료 및 불확실 문항 검토"
+              }
+            ]
+          },
+          {
+            "id": "eng_reading_heavy",
+            "name": "실전 전략 A (듣기 시간 독해 병행형)",
+            "totalMinutes": 70,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_eng_listen",
+                "name": "1. 듣기 + 하위 독해 병행",
+                "targetMin": 20,
+                "targetMinutes": 20,
+                "desc": "듣기 도중 일치/불일치 6문항 컷"
+              },
+              {
+                "id": "p_eng_read",
+                "name": "2. 독해 전반 (대의파악·도표)",
+                "targetMin": 23,
+                "targetMinutes": 23,
+                "desc": "독해 문제 안정적 해결"
+              },
+              {
+                "id": "p_eng_killer",
+                "name": "3. 빈칸/순서/삽입 킬러 집중",
+                "targetMin": 19,
+                "targetMinutes": 19,
+                "desc": "충분한 시간을 두고 정답 근거 도출"
+              },
+              {
+                "id": "p_eng_mark",
+                "name": "4. 마킹 및 최종 검토",
+                "targetMin": 8,
+                "targetMinutes": 8,
+                "desc": "OMR 마킹 확인"
+              }
+            ]
+          }
+        ],
+        "inquiry": [
+          {
+            "id": "inq_default",
+            "name": "표준 순서 (개념 ➔ 고난도 ➔ 마킹)",
+            "totalMinutes": 30,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_inq_basic",
+                "name": "1. 개념형 문항 (1~15번)",
+                "targetMin": 12,
+                "targetMinutes": 12,
+                "desc": "실수 없는 번개 스피드 풀이"
+              },
+              {
+                "id": "p_inq_killer",
+                "name": "2. 고난도·자료해석 (16~20번)",
+                "targetMin": 14,
+                "targetMinutes": 14,
+                "desc": "도표/그래프 타임어택 논리 추론"
+              },
+              {
+                "id": "p_inq_mark",
+                "name": "3. 마킹 및 최종 가채점표",
+                "targetMin": 4,
+                "targetMinutes": 4,
+                "desc": "종료 직전 가채점표 및 마킹"
+              }
+            ]
+          },
+          {
+            "id": "inq_speed",
+            "name": "실전 전략 (개념 10분 컷)",
+            "totalMinutes": 30,
+            "isSystem": true,
+            "parts": [
+              {
+                "id": "p_inq_basic",
+                "name": "1. 개념형 문항 (1~15번)",
+                "targetMin": 10,
+                "targetMinutes": 10,
+                "desc": "10분 컷 스피드 풀이"
+              },
+              {
+                "id": "p_inq_killer",
+                "name": "2. 고난도 킬러 5문항 몰입",
+                "targetMin": 16,
+                "targetMinutes": 16,
+                "desc": "복잡한 유전/역학 등 계산과 추론"
+              },
+              {
+                "id": "p_inq_mark",
+                "name": "3. 마킹 및 가채점표",
+                "targetMin": 4,
+                "targetMinutes": 4,
+                "desc": "종료 직전 OMR 마킹"
+              }
+            ]
+          }
+        ]
+      },
+      "examHistory": [
+        {
+          "id": "hist_1710000001",
+          "date": "2026-10-05 14:30",
+          "subject": "korean",
+          "subjectName": "국어 영역",
+          "presetName": "실전 전략 A (문학 선풀이형)",
+          "totalTargetSec": 4800,
+          "totalActualSec": 4690,
+          "totalDeltaSec": -110,
+          "totalElapsed": 4690,
+          "parts": [
+            {
+              "name": "문학",
+              "targetSec": 1320,
+              "targetMinutes": 22,
+              "actualSec": 1200,
+              "actualSeconds": 1200,
+              "deltaSec": -120,
+              "delta": -120,
+              "completed": true
+            },
+            {
+              "name": "선택과목",
+              "targetSec": 780,
+              "targetMinutes": 13,
+              "actualSec": 810,
+              "actualSeconds": 810,
+              "deltaSec": 30,
+              "delta": 30,
+              "completed": true
+            },
+            {
+              "name": "독서",
+              "targetSec": 2100,
+              "targetMinutes": 35,
+              "actualSec": 2160,
+              "actualSeconds": 2160,
+              "deltaSec": 60,
+              "delta": 60,
+              "completed": true
+            },
+            {
+              "name": "마킹 및 검토",
+              "targetSec": 600,
+              "targetMinutes": 10,
+              "actualSec": 520,
+              "actualSeconds": 520,
+              "deltaSec": -80,
+              "delta": -80,
+              "completed": true
+            }
+          ],
+          "memo": "문학에서 시간 단축 성공했으나 독서 법경제 지문에서 1분 지체됨."
+        },
+        {
+          "id": "hist_1710000002",
+          "date": "2026-10-04 10:15",
+          "subject": "math",
+          "subjectName": "수학 영역",
+          "presetName": "실전 전략 B (비킬러 스피드런)",
+          "totalTargetSec": 6000,
+          "totalActualSec": 6100,
+          "totalDeltaSec": 100,
+          "totalElapsed": 6100,
+          "parts": [
+            {
+              "name": "공통 비킬러 (스피드런)",
+              "targetSec": 1800,
+              "targetMinutes": 30,
+              "actualSec": 1710,
+              "actualSeconds": 1710,
+              "deltaSec": -90,
+              "delta": -90,
+              "completed": true
+            },
+            {
+              "name": "선택과목 (미적/기하/확통)",
+              "targetSec": 1080,
+              "targetMinutes": 18,
+              "actualSec": 1140,
+              "actualSeconds": 1140,
+              "deltaSec": 60,
+              "delta": 60,
+              "completed": true
+            },
+            {
+              "name": "준킬러·킬러 집중 공략",
+              "targetSec": 2400,
+              "targetMinutes": 40,
+              "actualSec": 2620,
+              "actualSeconds": 2620,
+              "deltaSec": 220,
+              "delta": 220,
+              "completed": true
+            },
+            {
+              "name": "철저한 단답형 재검토",
+              "targetSec": 720,
+              "targetMinutes": 12,
+              "actualSec": 630,
+              "actualSeconds": 630,
+              "deltaSec": -90,
+              "delta": -90,
+              "completed": true
+            }
+          ],
+          "memo": "22번 수열 귀납 추론에서 계산 꼬여 3분 초과됨. 과감히 넘기는 결단 필요."
+        },
+        {
+          "id": "hist_1710000003",
+          "date": "2026-10-02 16:40",
+          "subject": "english",
+          "subjectName": "영어 영역",
+          "presetName": "실전 전략 A (듣기 시간 독해 병행형)",
+          "totalTargetSec": 4200,
+          "totalActualSec": 4040,
+          "totalDeltaSec": -160,
+          "totalElapsed": 4040,
+          "parts": [
+            {
+              "name": "듣기 + 하위 독해 병행",
+              "targetSec": 1200,
+              "targetMinutes": 20,
+              "actualSec": 1140,
+              "actualSeconds": 1140,
+              "deltaSec": -60,
+              "delta": -60,
+              "completed": true
+            },
+            {
+              "name": "독해 전반 (대의파악·도표)",
+              "targetSec": 1380,
+              "targetMinutes": 23,
+              "actualSec": 1320,
+              "actualSeconds": 1320,
+              "deltaSec": -60,
+              "delta": -60,
+              "completed": true
+            },
+            {
+              "name": "빈칸/순서/삽입 킬러 집중",
+              "targetSec": 1140,
+              "targetMinutes": 19,
+              "actualSec": 1110,
+              "actualSeconds": 1110,
+              "deltaSec": -30,
+              "delta": -30,
+              "completed": true
+            },
+            {
+              "name": "마킹 및 최종 검토",
+              "targetSec": 480,
+              "targetMinutes": 8,
+              "actualSec": 470,
+              "actualSeconds": 470,
+              "deltaSec": -10,
+              "delta": -10,
+              "completed": true
+            }
+          ],
+          "memo": "듣기 평가 중 안내문/도표 5문항 선풀이 전략 성공. 빈칸 34번에 안정적 4분 확보."
+        }
+      ],
+      "settings": {
+        "dimOpacity": 0.15,
+        "blurAmount": 12,
+        "isDarkMode": false
+      }
+    }
+  }
+}
