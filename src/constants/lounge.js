@@ -5,39 +5,14 @@
 // 2027학년도 수능 시행일 (D-Day 계산 기준)
 export const CSAT_DATE = '2026-11-19';
 
-// 현재 함께 자습 중인 수험생 수 (라운지 표시용 시뮬레이션 값)
-export const LOUNGE_ONLINE_COUNT = 28;
+// 현재 함께 자습 중인 수험생 수 (실제 사용자 본인 기본 카운트)
+export const LOUNGE_ONLINE_COUNT = 1;
 
 // 활동 티커 전환 간격 (ms)
 export const TICKER_INTERVAL_MS = 3500;
 
-// 실시간 활동 스트림 기본 샘플 로그
-export const SAMPLE_ACTIVITY_LOGS = [
-  {
-    id: 'sample_1',
-    isMine: false,
-    text: "🔥 [익명]님이 '수능특강 미적분' 10문제를 완주했습니다!",
-    time: '방금 전'
-  },
-  {
-    id: 'sample_2',
-    isMine: false,
-    text: "🎯 [의대목표]님이 '국어 80분 모의고사'를 정시 완주했습니다 (-02:40)",
-    time: '2분 전'
-  },
-  {
-    id: 'sample_3',
-    isMine: false,
-    text: "⚡ [새벽러]님이 '수특 수2' 5문제를 완주했습니다!",
-    time: '5분 전'
-  },
-  {
-    id: 'sample_4',
-    isMine: false,
-    text: "🌙 [독서실고3]님이 '문학 선풀이 전략'으로 +03:15를 세이브했습니다",
-    time: '8분 전'
-  }
-];
+// 실시간 활동 스트림 기본 로그 (실제 활동 내역만 표시)
+export const SAMPLE_ACTIVITY_LOGS = [];
 
 // ----------------------------------------------------------
 // 전국 타임 벤치마크 데이터 (단위: 초)
@@ -115,12 +90,5 @@ export const NICKNAME_SUGGESTIONS = [
 // 다짐 최대 글자 수
 export const CHEER_MAX_LENGTH = 30;
 
-// 응원 전광판 기본 카드
-export const DEFAULT_CHEERS = [
-  { id: 'cheer_default_1', nickname: '샤대정문뿌셔', message: '국어 1등급 무조건 찍고 간다!', cheers: 42, isMine: false },
-  { id: 'cheer_default_2', nickname: '새벽의미적러', message: '미적분 30번 오늘도 정복 완료', cheers: 31, isMine: false },
-  { id: 'cheer_default_3', nickname: '독서실지박령', message: '하루 순공 10시간 지키는 중', cheers: 27, isMine: false },
-  { id: 'cheer_default_4', nickname: 'N수탈출러', message: '올해가 마지막, 후회 없이 간다', cheers: 58, isMine: false },
-  { id: 'cheer_default_5', nickname: '국어킬러헌터', message: '독서 지문 8분 컷 루틴 완성!', cheers: 19, isMine: false },
-  { id: 'cheer_default_6', nickname: '의대가는길', message: '수학 실수 0개, 끝까지 검토하기', cheers: 23, isMine: false }
-];
+// 응원 전광판 기본 카드 (실제 사용자 다짐만 표시)
+export const DEFAULT_CHEERS = [];

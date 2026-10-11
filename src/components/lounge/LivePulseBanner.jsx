@@ -68,7 +68,7 @@ export const LivePulseBanner = ({ examHistory = [], goals = [] }) => {
             <span className="text-[11px] font-bold tracking-wide text-indigo-600 dark:text-indigo-400 uppercase">Live Activity</span>
           </div>
           <div className="relative h-12 sm:h-10 overflow-hidden">
-            {current && (
+            {current ? (
               <div
                 key={current.id}
                 className={`absolute inset-0 flex items-center gap-2 transition-all duration-300 ease-out ${
@@ -83,23 +83,29 @@ export const LivePulseBanner = ({ examHistory = [], goals = [] }) => {
                   <span className="ml-1.5 text-[11px] font-normal text-zinc-400 dark:text-zinc-500">({current.time})</span>
                 </p>
               </div>
+            ) : (
+              <div className="absolute inset-0 flex items-center text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                <span>아직 최근 활동 내역이 없습니다. Sprint 목표를 진행하거나 모의고사를 완주하면 기록됩니다.</span>
+              </div>
             )}
           </div>
         </div>
 
         {/* 위치 인디케이터 */}
-        <div className="flex md:flex-col items-center justify-center gap-1.5 shrink-0">
-          {logs.map((log, i) => (
-            <span
-              key={log.id}
-              className={`rounded-full transition-all duration-300 ${
-                i === index % logs.length
-                  ? 'w-4 h-1.5 md:w-1.5 md:h-4 bg-indigo-500'
-                  : 'w-1.5 h-1.5 bg-zinc-300 dark:bg-zinc-700'
-              }`}
-            />
-          ))}
-        </div>
+        {logs.length > 1 && (
+          <div className="flex md:flex-col items-center justify-center gap-1.5 shrink-0">
+            {logs.map((log, i) => (
+              <span
+                key={log.id}
+                className={`rounded-full transition-all duration-300 ${
+                  i === index % logs.length
+                    ? 'w-4 h-1.5 md:w-1.5 md:h-4 bg-indigo-500'
+                    : 'w-1.5 h-1.5 bg-zinc-300 dark:bg-zinc-700'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

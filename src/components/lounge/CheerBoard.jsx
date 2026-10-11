@@ -55,8 +55,10 @@ export const CheerBoard = ({ cheers = [], setCheers, showToast }) => {
       </div>
 
       {cheers.length === 0 ? (
-        <div className="py-10 text-center text-xs text-zinc-400 dark:text-zinc-500">
-          아직 등록된 다짐이 없습니다. 첫 다짐을 남겨보세요!
+        <div className="py-12 flex flex-col items-center justify-center text-center space-y-2 text-zinc-400 dark:text-zinc-500">
+          <span className="text-2xl">✍️</span>
+          <p className="text-sm font-semibold text-zinc-600 dark:text-zinc-300">아직 등록된 다짐이 없습니다.</p>
+          <p className="text-xs">상단의 [오늘 내 다짐 등록] 버튼을 눌러 첫 번째 각오를 남겨보세요!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3 max-h-[560px] overflow-y-auto pr-1">

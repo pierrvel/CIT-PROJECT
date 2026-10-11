@@ -119,11 +119,16 @@ export function App() {
     localStorage.setItem('dc_goals_v2', JSON.stringify(goals));
   }, [goals]);
 
-  // 4-1. 라이브 라운지 D-Day 응원 전광판 상태
+  // 4-1. 라이브 라운지 D-Day 응원 전광판 상태 (이전 예시 데이터 자동 필터링)
   const [cheerBoard, setCheerBoard] = useState(() => {
     const saved = localStorage.getItem('dualcore_cheer_board');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((c) => c && !String(c.id).startsWith('cheer_default_'));
+        }
+      } catch (e) {}
     }
     return DEFAULT_CHEERS;
   });
@@ -1047,7 +1052,8 @@ export function App() {
       }
       if (cloudData.data.examHistory) setExamHistory(cloudData.data.examHistory);
       if (cloudData.data.cheerBoard && Array.isArray(cloudData.data.cheerBoard)) {
-        setCheerBoard(cloudData.data.cheerBoard);
+        const cleaned = cloudData.data.cheerBoard.filter((c) => c && !String(c.id).startsWith('cheer_default_'));
+        setCheerBoard(cleaned);
       }
       if (cloudData.data.settings) {
         if (typeof cloudData.data.settings.dimOpacity === 'number') setDimOpacity(cloudData.data.settings.dimOpacity);
