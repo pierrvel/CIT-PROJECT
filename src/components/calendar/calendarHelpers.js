@@ -50,6 +50,32 @@ export const formatDateRange = (startStr, endStr) => {
   return `${formatDateWithDay(startStr)} ~ ${formatDateWithDay(endStr)}`;
 };
 
+// 시작일자 ~ 종료일자 사이의 모든 YYYY-MM-DD 날짜 배열 산출 (최대 90일 보호)
+export const getDatesInRange = (startDateStr, endDateStr) => {
+  const dates = [];
+  if (!startDateStr) return dates;
+  if (!endDateStr || endDateStr <= startDateStr) {
+    dates.push(startDateStr);
+    return dates;
+  }
+
+  const [sY, sM, sD] = startDateStr.split('-').map(Number);
+  const [eY, eM, eD] = endDateStr.split('-').map(Number);
+  const cur = new Date(sY, sM - 1, sD);
+  const end = new Date(eY, eM - 1, eD);
+
+  let count = 0;
+  while (cur <= end && count < 90) {
+    const y = cur.getFullYear();
+    const m = String(cur.getMonth() + 1).padStart(2, '0');
+    const d = String(cur.getDate()).padStart(2, '0');
+    dates.push(`${y}-${m}-${d}`);
+    cur.setDate(cur.getDate() + 1);
+    count++;
+  }
+  return dates;
+};
+
 // D-Day 뱃지 텍스트 및 스타일 토큰
 export const getDDayBadgeProps = (diffDays) => {
   if (diffDays === 0) {

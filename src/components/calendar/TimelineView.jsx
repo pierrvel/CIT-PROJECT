@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Trash2, Star, Tag, CheckCircle2, Clock } from 'lucide-react';
+import { Calendar, Trash2, Star, Tag, CheckCircle2, Clock, Pencil } from 'lucide-react';
 import {
   formatDateRange,
   getCategoryBadgeStyle,
@@ -11,7 +11,8 @@ export const TimelineView = ({
   milestones = [],
   starredIds = [],
   onToggleStar,
-  onDeleteCustomMilestone
+  onDeleteCustomMilestone,
+  onEditCustomMilestone
 }) => {
   if (milestones.length === 0) {
     return (
@@ -117,14 +118,24 @@ export const TimelineView = ({
                 </button>
 
                 {m.isCustom && (
-                  <button
-                    type="button"
-                    onClick={() => onDeleteCustomMilestone(m.id)}
-                    title="일정 삭제"
-                    className="p-2 rounded-xl text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => onEditCustomMilestone && onEditCustomMilestone(m)}
+                      title="일정 수정"
+                      className="p-2 rounded-xl text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDeleteCustomMilestone(m.id)}
+                      title="일정 삭제"
+                      className="p-2 rounded-xl text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </>
                 )}
               </div>
             </div>

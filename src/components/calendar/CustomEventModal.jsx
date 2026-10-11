@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, X, Calendar as CalendarIcon, Tag } from 'lucide-react';
 
-export const CustomEventModal = ({ isOpen, onClose, onSubmit }) => {
+export const CustomEventModal = ({ isOpen, onClose, onSubmit, initialData = null }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState('');
@@ -21,15 +21,25 @@ export const CustomEventModal = ({ isOpen, onClose, onSubmit }) => {
 
   useEffect(() => {
     if (isOpen) {
-      setTitle('');
-      setDate(new Date().toISOString().split('T')[0]);
-      setEndDate('');
-      setGroup('mock');
-      setCategoryLabel('사설 모의고사');
-      setDesc('');
-      setTagsStr('');
+      if (initialData) {
+        setTitle(initialData.title || '');
+        setDate(initialData.date || new Date().toISOString().split('T')[0]);
+        setEndDate(initialData.endDate || '');
+        setGroup(initialData.group || 'mock');
+        setCategoryLabel(initialData.categoryLabel || '사설 모의고사');
+        setDesc(initialData.desc || '');
+        setTagsStr(Array.isArray(initialData.tags) ? initialData.tags.join(', ') : '');
+      } else {
+        setTitle('');
+        setDate(new Date().toISOString().split('T')[0]);
+        setEndDate('');
+        setGroup('mock');
+        setCategoryLabel('사설 모의고사');
+        setDesc('');
+        setTagsStr('');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   // ESC 키 닫기
   useEffect(() => {
@@ -47,26 +57,31 @@ export const CustomEventModal = ({ isOpen, onClose, onSubmit }) => {
     e.preventDefault();
     if (!title.trim() || !date) return;
 
+    if (endDate && endDate < date) {
+      alert('종료일자는 시작일자보다 빠를 수 없습니다.');
+      return;
+    }
+
     const tags = tagsStr
       .split(',')
       .map((t) => t.trim().replace(/^#/, ''))
       .filter(Boolean);
 
-    const newMilestone = {
-      id: `custom_m_${Date.now()}`,
+    const milestoneData = {
+      id: initialData ? initialData.id : `custom_m_${Date.now()}`,
       title: title.trim(),
       date,
       endDate: endDate || null,
       group,
       category: 'custom',
       categoryLabel: categoryLabel.trim() || '맞춤 일정',
-      importance: 'normal',
+      importance: initialData?.importance || 'normal',
       desc: desc.trim(),
       tags,
       isCustom: true
     };
 
-    onSubmit(newMilestone);
+    onSubmit(milestoneData);
   };
 
   return (
@@ -75,7 +90,9 @@ export const CustomEventModal = ({ isOpen, onClose, onSubmit }) => {
         <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-2">
             <CalendarIcon className="w-5 h-5 text-indigo-500" />
-            <h3 className="font-bold text-lg text-zinc-900 dark:text-white">➕ 내 맞춤 입시 일정 등록</h3>
+            <h3 className="font-bold text-lg text-zinc-900 dark:text-white">
+              {initialData ? '✏️ 내 맞춤 입시 일정 수정' : '➕ 내 맞춤 입시 일정 등록'}
+            </h3>
           </div>
           <button
             type="button"
@@ -181,7 +198,7 @@ export const CustomEventModal = ({ isOpen, onClose, onSubmit }) => {
               type="submit"
               className="px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20"
             >
-              등록 완료
+              {initialData ? '수정 완료' : '등록 완료'}
             </button>
           </div>
         </form>

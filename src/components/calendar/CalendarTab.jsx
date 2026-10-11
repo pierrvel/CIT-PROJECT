@@ -17,6 +17,8 @@ export const CalendarTab = ({
   const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'month'
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [editingMilestone, setEditingMilestone] = useState(null);
+
   // 공식 일정 + 사용자 맞춤 일정 통합 및 날짜순 정렬
   const allMilestones = useMemo(() => {
     const combined = [...OFFICIAL_MILESTONES, ...customMilestones];
@@ -44,12 +46,39 @@ export const CalendarTab = ({
     });
   };
 
-  // 맞춤 일정 추가 핸들러
-  const handleAddCustomMilestone = (newMilestone) => {
-    setCustomMilestones((prev) => [newMilestone, ...prev]);
+  // 맞춤 일정 등록 모달 열기
+  const handleOpenCreateModal = () => {
+    setEditingMilestone(null);
+    setIsModalOpen(true);
+  };
+
+  // 맞춤 일정 수정 모달 열기
+  const handleOpenEditModal = (milestone) => {
+    setEditingMilestone(milestone);
+    setIsModalOpen(true);
+  };
+
+  // 맞춤 일정 등록/수정 저장 핸들러
+  const handleSaveCustomMilestone = (savedMilestone) => {
+    setCustomMilestones((prev) => {
+      const exists = prev.some((m) => m.id === savedMilestone.id);
+      if (exists) {
+        return prev.map((m) => (m.id === savedMilestone.id ? savedMilestone : m));
+      }
+      return [savedMilestone, ...prev];
+    });
+
+    const wasEditing = !!editingMilestone;
     setIsModalOpen(false);
+    setEditingMilestone(null);
+
     if (showToast) {
-      showToast(`'${newMilestone.title}' 일정이 등록되었습니다.`, 'success');
+      showToast(
+        wasEditing
+          ? `'${savedMilestone.title}' 일정이 수정되었습니다.`
+          : `'${savedMilestone.title}' 일정이 등록되었습니다.`,
+        'success'
+      );
     }
   };
 
@@ -123,7 +152,7 @@ export const CalendarTab = ({
 
           <button
             type="button"
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenCreateModal}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 shadow-md shadow-indigo-600/25 transition-all"
           >
             <Plus className="w-4 h-4" />
@@ -139,20 +168,26 @@ export const CalendarTab = ({
           starredIds={starredIds}
           onToggleStar={handleToggleStar}
           onDeleteCustomMilestone={handleDeleteCustomMilestone}
+          onEditCustomMilestone={handleOpenEditModal}
         />
       ) : (
         <MonthGridView
           milestones={filteredMilestones}
           starredIds={starredIds}
           onToggleStar={handleToggleStar}
+          onEditCustomMilestone={handleOpenEditModal}
         />
       )}
 
-      {/* 4. 맞춤 일정 등록 모달 */}
+      {/* 4. 맞춤 일정 등록 / 수정 모달 */}
       <CustomEventModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddCustomMilestone}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingMilestone(null);
+        }}
+        onSubmit={handleSaveCustomMilestone}
+        initialData={editingMilestone}
       />
     </div>
   );

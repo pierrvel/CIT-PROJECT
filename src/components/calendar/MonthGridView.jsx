@@ -1,15 +1,22 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Star, Pencil } from 'lucide-react';
 import {
   formatDateWithDay,
+  formatDateRange,
   getCategoryBadgeStyle,
   getDDayBadgeProps,
-  getDaysUntil
+  getDaysUntil,
+  getDatesInRange
 } from './calendarHelpers';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-export const MonthGridView = ({ milestones = [], starredIds = [], onToggleStar }) => {
+export const MonthGridView = ({
+  milestones = [],
+  starredIds = [],
+  onToggleStar,
+  onEditCustomMilestone
+}) => {
   // 기준 년/월 상태 (기본값: 오늘 날짜 기준)
   const [currentYear, setCurrentYear] = useState(() => new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(() => new Date().getMonth()); // 0-indexed
@@ -66,11 +73,16 @@ export const MonthGridView = ({ milestones = [], starredIds = [], onToggleStar }
       });
     }
 
-    // 날짜별 마일스톤 매핑
+    // 날짜별 마일스톤 매핑 (기간 일정 포함: 시작일 ~ 종료일 모든 날짜에 매핑)
     const map = {};
     milestones.forEach((m) => {
-      if (!map[m.date]) map[m.date] = [];
-      map[m.date].push(m);
+      const dates = getDatesInRange(m.date, m.endDate);
+      dates.forEach((dStr) => {
+        if (!map[dStr]) map[dStr] = [];
+        if (!map[dStr].some((item) => item.id === m.id)) {
+          map[dStr].push(m);
+        }
+      });
     });
 
     return { calendarCells: cells, monthMilestonesMap: map };
@@ -259,7 +271,7 @@ export const MonthGridView = ({ milestones = [], starredIds = [], onToggleStar }
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-white/60 dark:bg-zinc-800/50 border border-zinc-200/70 dark:border-zinc-700/60"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${badge.bgClass}`}>
                         {badge.label}
                       </span>
@@ -267,6 +279,11 @@ export const MonthGridView = ({ milestones = [], starredIds = [], onToggleStar }
                         {m.categoryLabel}
                       </span>
                       <h5 className="text-sm font-bold text-zinc-900 dark:text-white">{m.title}</h5>
+                      {m.endDate && (
+                        <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
+                          ({formatDateRange(m.date, m.endDate)})
+                        </span>
+                      )}
                     </div>
                     {m.desc && (
                       <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-snug break-keep">
@@ -275,16 +292,29 @@ export const MonthGridView = ({ milestones = [], starredIds = [], onToggleStar }
                     )}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => onToggleStar(m.id)}
-                    title={isStarred ? '관심 해제' : '관심 일정 등록'}
-                    className={`self-end sm:self-center p-1.5 rounded-lg transition-colors ${
-                      isStarred ? 'text-amber-500 bg-amber-500/15' : 'text-zinc-400 hover:text-amber-500'
-                    }`}
-                  >
-                    <Star className={`w-4 h-4 ${isStarred ? 'fill-amber-400' : ''}`} />
-                  </button>
+                  <div className="flex items-center gap-1 self-end sm:self-center shrink-0">
+                    {m.isCustom && onEditCustomMilestone && (
+                      <button
+                        type="button"
+                        onClick={() => onEditCustomMilestone(m)}
+                        title="일정 수정"
+                        className="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => onToggleStar(m.id)}
+                      title={isStarred ? '관심 해제' : '관심 일정 등록'}
+                      className={`p-1.5 rounded-lg transition-colors ${
+                        isStarred ? 'text-amber-500 bg-amber-500/15' : 'text-zinc-400 hover:text-amber-500'
+                      }`}
+                    >
+                      <Star className={`w-4 h-4 ${isStarred ? 'fill-amber-400' : ''}`} />
+                    </button>
+                  </div>
                 </div>
               );
             })}
