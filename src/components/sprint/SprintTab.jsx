@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Icon from '../common/Icon';
+import GoalEditModal from '../modals/GoalEditModal';
 import { calculateGoalPacing } from '../../utils/pacing';
 
 export const SprintTab = ({
@@ -14,6 +15,19 @@ export const SprintTab = ({
 }) => {
   const [strategyModalGoal, setStrategyModalGoal] = useState(null);
   const [pruneInputVal, setPruneInputVal] = useState(0);
+  const [editingGoal, setEditingGoal] = useState(null);
+
+  const handleSaveEditedGoal = (updatedGoal) => {
+    setGoals((prev) =>
+      prev.map((g) =>
+        g.id === updatedGoal.id
+          ? { ...g, ...updatedGoal, lastRecordDate: '목표 수정됨' }
+          : g
+      )
+    );
+    setEditingGoal(null);
+    showToast(`'${updatedGoal.title}' 목표가 성공적으로 수정되었습니다.`, 'success');
+  };
 
   const handleApplyStrategy = (goalId, mode, pruned = 0) => {
     setGoals((prev) =>
@@ -91,13 +105,22 @@ export const SprintTab = ({
                     </span>
                     <button
                       type="button"
+                      onClick={() => setEditingGoal(goal)}
+                      title="학습 목표 수정"
+                      className="p-1 rounded-lg text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
+                    >
+                      <Icon name="edit3" className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => {
                         if (confirm('이 학습 목표를 삭제하시겠습니까?')) {
                           setGoals((prev) => prev.filter((g) => g.id !== goal.id));
                           showToast('목표가 삭제되었습니다.', 'info');
                         }
                       }}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-rose-500 transition-colors"
+                      className="p-1 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+                      title="학습 목표 삭제"
                     >
                       <Icon name="trash2" className="w-4 h-4" />
                     </button>
@@ -340,6 +363,14 @@ export const SprintTab = ({
           </div>
         </div>
       )}
+
+      {/* 목표 편집 모달 */}
+      <GoalEditModal
+        isOpen={!!editingGoal}
+        goal={editingGoal}
+        onClose={() => setEditingGoal(null)}
+        onSave={handleSaveEditedGoal}
+      />
     </div>
   );
 };

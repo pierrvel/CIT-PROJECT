@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from '../common/Icon';
 import CSATAnalogClock from '../clock/CSATAnalogClock';
 import StatsDashboard from '../analytics/StatsDashboard';
+import SubjectReportList from './SubjectReportList';
 import { formatTime } from '../../utils/pacing';
 
 export const ExamPacer = ({
@@ -75,13 +76,13 @@ export const ExamPacer = ({
 }) => {
   return (
     <div className="space-y-6">
-      {/* [Pacer 서브 헤더 탭바]: 실전 타임어택 vs 타임 통계 대시보드 */}
+      {/* [Pacer 서브 헤더 탭바]: 실전 타임어택 vs 과목별 리포트 vs 타임 통계 대시보드 */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-zinc-200/60 dark:border-zinc-800/60">
         <div className="inline-flex p-1 bg-zinc-200/70 dark:bg-zinc-800/70 backdrop-blur-md rounded-2xl border border-zinc-300/40 dark:border-zinc-700/40 shadow-inner">
           <button
             type="button"
             onClick={() => setPacerSubView('timer')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
               pacerSubView === 'timer'
                 ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
@@ -92,33 +93,55 @@ export const ExamPacer = ({
           </button>
           <button
             type="button"
+            onClick={() => setPacerSubView('reports')}
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+              pacerSubView === 'reports'
+                ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+            }`}
+          >
+            <Icon name="fileText" className="w-4 h-4 text-blue-500" />
+            <span>과목별 리포트</span>
+            {examHistory.length > 0 && (
+              <span className="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-blue-500/20 text-blue-600 dark:text-blue-400 font-extrabold">
+                {examHistory.length}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
             onClick={() => setPacerSubView('analytics')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
               pacerSubView === 'analytics'
                 ? 'bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
             <Icon name="barChart" className="w-4 h-4 text-emerald-500" />
-            <span>타임 통계 대시보드</span>
-            {examHistory.length > 0 && (
-              <span className="px-2 py-0.5 text-[10px] font-mono rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold">
-                {examHistory.length}회차
-              </span>
-            )}
+            <span>통계 대시보드</span>
           </button>
         </div>
 
         {/* 우측 퀵 액션 */}
         {pacerSubView === 'timer' && examHistory.length > 0 && (
-          <button
-            type="button"
-            onClick={() => setPacerSubView('analytics')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-colors"
-          >
-            <Icon name="trendingUp" className="w-3.5 h-3.5" />
-            <span>누적 통계 분석 ({examHistory.length}회)</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPacerSubView('reports')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-colors"
+            >
+              <Icon name="fileText" className="w-3.5 h-3.5" />
+              <span>과목별 리포트 ({examHistory.length}회)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPacerSubView('analytics')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-colors"
+            >
+              <Icon name="trendingUp" className="w-3.5 h-3.5" />
+              <span>통계 분석</span>
+            </button>
+          </div>
         )}
       </div>
 
@@ -690,10 +713,89 @@ export const ExamPacer = ({
               })}
             </div>
           </div>
+
+          {/* 타이머 뷰 하단: 현재 선택된 과목의 최근 모의고사 리포트 퀵 프리뷰 */}
+          {!examStarted && examHistory.some((h) => h.subject === selectedSubjectKey) && (
+            <div className="glass-card bg-white/75 dark:bg-zinc-900/75 p-5 rounded-2xl border border-white/60 dark:border-zinc-800 shadow-glass dark:shadow-glass-dark space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Icon name="fileText" className="w-4 h-4 text-blue-500" />
+                  <h4 className="font-extrabold text-sm text-zinc-900 dark:text-white">
+                    {currentSubject.name} 최근 모의고사 기록
+                  </h4>
+                  <span className="text-xs text-zinc-400">
+                    ({examHistory.filter((h) => h.subject === selectedSubjectKey).length}회 완료)
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPacerSubView('reports')}
+                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                >
+                  <span>과목별 전체 리포트 보기</span>
+                  <Icon name="chevronRight" className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* 최근 1회차 요약 박스 */}
+              {(() => {
+                const latestSession = examHistory.find((h) => h.subject === selectedSubjectKey);
+                if (!latestSession) return null;
+                const delta = latestSession.totalDeltaSec !== undefined
+                  ? latestSession.totalDeltaSec
+                  : (latestSession.totalElapsed || 0) - (latestSession.totalTargetSec || 0);
+                const isOver = delta > 0;
+
+                return (
+                  <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200/70 dark:border-zinc-700/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 font-bold text-zinc-800 dark:text-zinc-200">
+                        <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px]">
+                          최신 응시
+                        </span>
+                        <span>{latestSession.presetName || '표준 전략'}</span>
+                        <span className="text-zinc-400 font-normal">{latestSession.date}</span>
+                      </div>
+                      {latestSession.memo && (
+                        <p className="text-zinc-500 dark:text-zinc-400 italic line-clamp-1">
+                          "{latestSession.memo}"
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-mono font-bold text-zinc-700 dark:text-zinc-300">
+                        {formatTime(latestSession.totalElapsed || 0)} 소요
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-md font-bold text-[11px] ${
+                        isOver
+                          ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400'
+                          : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                      }`}>
+                        {isOver ? `+${formatTime(delta)} 지연` : `-${formatTime(Math.abs(delta))} 세이브`}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
       )}
 
-      {/* 2. 타임 통계 대시보드 뷰 (pacerSubView === 'analytics') */}
+      {/* 2. 과목별 실전 모의고사 리포트 리스트 뷰 (pacerSubView === 'reports') */}
+      {pacerSubView === 'reports' && (
+        <SubjectReportList
+          examHistory={examHistory}
+          selectedSubjectKey={selectedSubjectKey}
+          onSelectSubject={handleSelectSubject}
+          setPacerSubView={setPacerSubView}
+          handleUpdateMemo={handleUpdateMemo}
+          handleDeleteExamHistory={handleDeleteExamHistory}
+        />
+      )}
+
+      {/* 3. 타임 통계 대시보드 뷰 (pacerSubView === 'analytics') */}
       {pacerSubView === 'analytics' && (
         <StatsDashboard
           examHistory={examHistory}
