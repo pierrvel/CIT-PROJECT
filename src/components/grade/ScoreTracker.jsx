@@ -55,6 +55,45 @@ export const ScoreTracker = ({
   const [wrongQuestionNos, setWrongQuestionNos] = useState([]);
   const [omrAnswers, setOmrAnswers] = useState({});
 
+  // 2-1. 사설 실모 사용자 직접 설정 등급컷 상태 (localStorage 지속성 지원)
+  const [customCutoffs, setCustomCutoffs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cit_custom_cutoffs');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {
+      korean: [92, 84, 75, 64],
+      math: [84, 75, 65, 53],
+      english: [90, 80, 70, 60],
+      history: [40, 35, 30, 25],
+      inquiry: [45, 40, 34, 26]
+    };
+  });
+
+  const handleUpdateCustomCut = (subKey, gradeIdx, val) => {
+    const num = Math.max(0, Math.min(totalScore, parseInt(val, 10) || 0));
+    setCustomCutoffs((prev) => {
+      const list = [...(prev[subKey] || [90, 80, 70, 60])];
+      list[gradeIdx] = num;
+      const next = { ...prev, [subKey]: list };
+      try {
+        localStorage.setItem('cit_custom_cutoffs', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
+  const handleApplyPresetCut = (subKey, presetCuts) => {
+    setCustomCutoffs((prev) => {
+      const next = { ...prev, [subKey]: presetCuts };
+      try {
+        localStorage.setItem('cit_custom_cutoffs', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+    if (showToast) showToast(`사설 등급컷이 [1컷 ${presetCuts[0]}점] 프리셋으로 적용되었습니다.`, 'success');
+  };
+
   // 연도/회차/과목 변경 핸들러
   const handleSelectYear = (year) => {
     setSelectedYear(year);
@@ -97,10 +136,11 @@ export const ScoreTracker = ({
     else if (key === 'math') setSelectedOptionKey('calculus');
   };
 
-  // 3. 등급 및 컷 대조 평가 산출
+  // 3. 등급 및 컷 대조 평가 산출 (사설 모의고사 시 커스텀 컷 우선 적용)
   const evaluation = useMemo(() => {
-    return calculateGradeByScore(selectedExamId, selectedSubjectKey, selectedOptionKey, score);
-  }, [selectedExamId, selectedSubjectKey, selectedOptionKey, score]);
+    const customCutsToUse = selectedExamId === 'custom_silmo' ? customCutoffs[selectedSubjectKey] : null;
+    return calculateGradeByScore(selectedExamId, selectedSubjectKey, selectedOptionKey, score, customCutsToUse);
+  }, [selectedExamId, selectedSubjectKey, selectedOptionKey, score, customCutoffs]);
 
   // 4. 스마트 OMR 채점 완료 적용 핸들러
   const handleApplyOmrGrade = () => {
@@ -348,6 +388,82 @@ export const ScoreTracker = ({
                 <span className={`px-2.5 py-1 rounded-xl text-xs font-bold border ${currentExam.badgeColor}`}>
                   {currentExam.difficulty}
                 </span>
+              </div>
+            </div>
+          )}
+
+          {/* 사설 실모 탭일 때: 사용자가 직접 등급컷을 입력할 수 있는 전용 창 */}
+          {selectedYear === 'custom' && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-transparent border border-purple-500/20 dark:border-purple-500/30 space-y-3 animate-fadeIn">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-xl bg-purple-600 text-white shadow-xs">
+                    <Icon name="sliders" className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
+                      <span>사설 모의고사 등급컷 직접 설정</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-700 dark:text-purple-300">
+                        {['korean', 'math'].includes(selectedSubjectKey) ? (selectedSubjectKey === 'korean' ? '국어' : '수학') : selectedSubjectKey === 'english' ? '영어' : selectedSubjectKey === 'history' ? '한국사' : '탐구'}
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                      시험지 표지나 학원/커뮤니티의 1~4등급 원점수 컷을 입력하세요. 실시간 등급 및 격차가 즉시 계산됩니다.
+                    </p>
+                  </div>
+                </div>
+
+                {/* 난이도 퀵 프리셋 버튼 */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[11px] font-bold text-zinc-400 shrink-0">빠른 설정:</span>
+                  {[
+                    { label: '🔥 불모의', cuts: [84, 75, 65, 53] },
+                    { label: '⚖️ 적정', cuts: [88, 80, 71, 60] },
+                    { label: '🌊 물모의', cuts: [94, 86, 77, 67] }
+                  ].map((pr) => (
+                    <button
+                      key={pr.label}
+                      type="button"
+                      onClick={() => handleApplyPresetCut(selectedSubjectKey, pr.cuts)}
+                      className="px-2 py-1 rounded-lg text-[11px] font-bold bg-white dark:bg-zinc-800 border border-purple-200 dark:border-zinc-700 text-purple-700 dark:text-purple-300 hover:bg-purple-100/60 dark:hover:bg-purple-900/30 transition-all shadow-2xs"
+                    >
+                      {pr.label} ({pr.cuts[0]}점)
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 1~4등급 원점수 컷 인풋 그리드 */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                {[
+                  { label: '1등급 컷', idx: 0, tagColor: 'text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30' },
+                  { label: '2등급 컷', idx: 1, tagColor: 'text-blue-700 dark:text-blue-400 bg-blue-500/10 border-blue-500/30' },
+                  { label: '3등급 컷', idx: 2, tagColor: 'text-amber-700 dark:text-amber-400 bg-amber-500/10 border-amber-500/30' },
+                  { label: '4등급 컷', idx: 3, tagColor: 'text-orange-700 dark:text-orange-400 bg-orange-500/10 border-orange-500/30' }
+                ].map((item) => {
+                  const val = (customCutoffs[selectedSubjectKey] || [90, 80, 70, 60])[item.idx];
+                  return (
+                    <div
+                      key={item.label}
+                      className="flex items-center justify-between p-2.5 rounded-xl bg-white/95 dark:bg-zinc-800/90 border border-zinc-200 dark:border-zinc-700 shadow-2xs"
+                    >
+                      <span className={`px-2 py-0.5 rounded-lg text-xs font-black border ${item.tagColor}`}>
+                        {item.label}
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          type="number"
+                          min="0"
+                          max={totalScore}
+                          value={val}
+                          onChange={(e) => handleUpdateCustomCut(selectedSubjectKey, item.idx, e.target.value)}
+                          className="w-14 px-2 py-1 text-xs font-black font-mono text-center rounded-lg bg-zinc-100 dark:bg-zinc-700/80 border border-zinc-300 dark:border-zinc-600 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                        <span className="text-xs font-bold text-zinc-400">점</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

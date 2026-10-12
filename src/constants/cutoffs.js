@@ -1151,15 +1151,18 @@ export const getOfficialAnswers = (examId = '2025_csat', subjectKey = 'korean', 
   return sub[optionKey] || Object.values(sub)[0] || null;
 };
 
-// 10. 점수 기준 등급 판정 유틸 함수
-export const calculateGradeByScore = (examId, subjectKey, optionKey, score) => {
+// 10. 점수 기준 등급 판정 유틸 함수 (사설 실모 커스텀 등급컷 지원)
+export const calculateGradeByScore = (examId, subjectKey, optionKey, score, customCuts = null) => {
   const exam = EXAM_CUTOFFS[examId] || EXAM_CUTOFFS['2025_csat'];
   const subData = exam[subjectKey] || exam['korean'];
 
   let cuts = [90, 80, 70, 60];
   let optionName = '';
 
-  if (subData.isAbsolute) {
+  if (customCuts && Array.isArray(customCuts) && customCuts.length === 4) {
+    cuts = customCuts;
+    optionName = '사설 직접설정';
+  } else if (subData.isAbsolute) {
     cuts = subData.cuts || [90, 80, 70, 60];
   } else if (subData.options) {
     const opt = subData.options[optionKey] || Object.values(subData.options)[0];
