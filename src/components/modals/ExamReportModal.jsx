@@ -11,7 +11,8 @@ export const ExamReportModal = ({
   partStatus,
   reviewMemo,
   setReviewMemo,
-  saveExamReport
+  saveExamReport,
+  onGoToGrader
 }) => {
   if (!isOpen) return null;
 
@@ -121,21 +122,38 @@ export const ExamReportModal = ({
           />
         </div>
 
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold rounded-xl text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-          >
-            닫기
-          </button>
-          <button
-            type="button"
-            onClick={saveExamReport}
-            className="px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20"
-          >
-            리포트 영구 저장
-          </button>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
+          <div>
+            {onGoToGrader && (
+              <button
+                type="button"
+                onClick={() => {
+                  saveExamReport();
+                  onGoToGrader();
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 transition-colors"
+              >
+                <Icon name="award" className="w-4 h-4 text-purple-500" />
+                <span>저장 후 실모 채점 & 등급 대조 ➔</span>
+              </button>
+            )}
+          </div>
+          <div className="flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-xs font-semibold rounded-xl text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            >
+              닫기
+            </button>
+            <button
+              type="button"
+              onClick={saveExamReport}
+              className="px-5 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20"
+            >
+              리포트 영구 저장
+            </button>
+          </div>
         </div>
       </div>
     </div>

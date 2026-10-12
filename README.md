@@ -89,9 +89,25 @@
 
 ---
 
-### 5. 🔄 6자리 PIN 기기간 무설치 클라우드 동기화 (`server.py`)
+### 5. 🎯 실모 성적 & 기출 확정 등급컷 트래커 (`ScoreTracker`)
+- **역대 평가원/수능 확정 등급컷 DB 내장 (`cutoffs.js`)**:
+  - 2025학년도 본수능, 2025 9월 모평, 2025 6월 모평, 2024 수능, 사설 실모 프리셋 탑재.
+  - 통합형 수능 체제에 맞춘 선택과목별(국어: 화작/언매, 수학: 미적/확통/기하) 원점수 컷(1~4등급) 자동 대조.
+- **수험생 귀찮음 박멸 3-Way 채점 입력 시스템 (`ScoreInputPanel`)**:
+  - `[ ⚡ 원점수 직접 입력 ]`: 이미 채점된 시험을 3초 만에 슬라이더나 퀵 버튼으로 입력.
+  - `[ 🎯 틀린 번호만 콕! ]`: 시험지에서 틀린 번호(오답)만 클릭하면 2점/3점/4점 배점을 실시간 자동 감산.
+  - `[ 📝 스마트 OMR 풀채점 ]`: 1~5번 객관식 및 주관식 단답형 마킹, 평가원 공식 정답표 자동 채점 연동.
+- **다각도 성적 피드백 & 궤적 분석**:
+  - 1등급 컷 대비 여유/격차 알림 (`1컷 88점 대비 +4점 여유 🟢` / `1컷 진입까지 -2점 🟡`).
+  - 전국 예상 백분위 추정 게이지 & 주요 대학 라인(메디컬, SKY, 서성한, 중경외시) 갭 피드백.
+  - 회차별 성적 추이 SVG 꺾은선 차트 (`ScoreTrendChart`) & 평균 1등급 컷 점선 가이드.
+  - 실전 모의고사 종료 리포트(`ExamReportModal`)에서 저장 후 바로 채점 연동.
+
+---
+
+### 6. 🔄 6자리 PIN 기기간 무설치 클라우드 동기화 (`server.py`)
 - 로그인이나 회원가입 없이 **6자리 고유 PIN 코드**만으로 PC ↔ 태블릿 ↔ 스마트폰 간 완벽 연동.
-- Sprint 플랜, 시험 히스토리, 커스텀 프리셋, 응원 전광판, 캘린더 맞춤/삭제 일정, 테마 설정까지 실시간 백업 및 복원.
+- Sprint 플랜, 시험 히스토리, 성적표 기록, 커스텀 프리셋, 응원 전광판, 캘린더 맞춤/삭제 일정, 테마 설정까지 실시간 백업 및 복원.
 - Python 3 내장 표준 라이브러리(`ThreadingHTTPServer`) 기반 경량 REST 서버 (`rooms_data.json`).
 
 ---
@@ -113,6 +129,7 @@ CIT-PROJECT/
     ├── index.css               # Tailwind 지시어 & 키프레임 애니메이션
     ├── constants/
     │   ├── subjects.js         # 수능 표준 시간표, 영역별 파트 & 전략 프리셋
+    │   ├── cutoffs.js          # 역대 평가원/수능 확정 등급컷 DB 및 공식 정답표
     │   ├── calendar.js         # 2026/2027 공식 대입 마일스톤 20개 & 카테고리
     │   └── wallpapers.js       # 추천 글래스모피즘 배경화면 프리셋
     ├── utils/
@@ -124,6 +141,7 @@ CIT-PROJECT/
         ├── clock/              # CSATAnalogClock (수능 표준 규격 아날로그 시계)
         ├── sprint/             # SprintTab (적응형 주간 플래너 대시보드)
         ├── pacer/              # ExamPacer (실전 타이머), SubjectReportList (과목별 리포트 보관함)
+        ├── grade/              # ScoreTracker (실모 성적 & 등급컷 트래커), ScoreInputPanel, ScoreTrendChart
         ├── lounge/             # LiveLounge, LivePulseBanner, TimeBenchmark, CheerBoard
         ├── calendar/           # CalendarTab, TimelineView, MonthGridView, NextMilestoneHero
         ├── analytics/          # StatsDashboard (누적 통계 차트 & 취약 파트 분석)

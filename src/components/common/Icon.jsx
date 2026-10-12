@@ -42,7 +42,14 @@ const iconMap = {
   lightbulb: LucideIcons.Lightbulb,
   volume2: LucideIcons.Volume2,
   volumeX: LucideIcons.VolumeX,
-  undo: LucideIcons.Undo
+  undo: LucideIcons.Undo,
+  award: LucideIcons.Award,
+  checkSquare: LucideIcons.CheckSquare,
+  chevronRight: LucideIcons.ChevronRight,
+  chevronDown: LucideIcons.ChevronDown,
+  calculator: LucideIcons.Calculator,
+  helpCircle: LucideIcons.HelpCircle,
+  layers: LucideIcons.Layers
 };
 
 export const Icon = ({ name, className = "w-5 h-5", size = 20 }) => {

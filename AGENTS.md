@@ -33,6 +33,7 @@ CIT-PROJECT/
     ├── index.css               # Tailwind CSS 지시어 및 공통 키프레임 애니메이션
     ├── constants/
     │   ├── subjects.js         # 수능 표준 교시/시간표 및 과목별 전략 프리셋
+    │   ├── cutoffs.js          # 역대 평가원/수능 확정 등급컷 DB 및 공식 정답표
     │   └── wallpapers.js       # 추천 배경화면 및 기본 DB URL
     ├── utils/
     │   ├── audio.js            # Web Audio API 오실레이터 타종/차임 합성기
@@ -50,6 +51,10 @@ CIT-PROJECT/
         │   └── SprintTab.jsx   # 적응형 3-Way 재배분 주간 Sprint 플래너
         ├── pacer/
         │   └── ExamPacer.jsx   # 순차 타임어택 모의고사 파이프라인
+        ├── grade/
+        │   ├── ScoreTracker.jsx    # 실모 성적 & 기출 확정 등급컷 트래커 메인
+        │   ├── ScoreInputPanel.jsx # 3-Way 채점 입력기 (원점수 / 틀린번호 콕! / 스마트 OMR)
+        │   └── ScoreTrendChart.jsx # 회차별 점수 궤적 SVG 차트 & 1등급 컷 기준선
         ├── analytics/
         │   └── StatsDashboard.jsx # 타임 통계 대시보드, 누적 차트, 복기 메모
         └── modals/
@@ -101,6 +106,12 @@ CIT-PROJECT/
    - PC ↔ 태블릿 ↔ 스마트폰 간 6자리 PIN으로 데이터 백업 및 복원 (`server.py` + `rooms_data.json`).
 4. **타임 통계 대시보드 & 배경 커스텀/다크모드**:
    - 과목/파트별 실제 소요시간 vs 목표시간 비교 분석 그래프, 사용자 배경화면 및 테마 설정.
+5. **실모 성적 & 기출 확정 등급컷 트래커 (Score & Cutoff Tracker)**:
+   - **역대 기출 확정 컷 DB**: 2025 수능, 2025 9모, 2025 6모, 2024 수능, 사설 실모 프리셋 및 통합형 수능 선택과목별(국어: 화작/언매, 수학: 미적/확통/기하) 원점수 컷.
+   - **3-Way 초간편 채점 모드**: 원점수 직접 입력 / 틀린 번호만 콕! 찍기(배점 자동 감산) / 스마트 OMR 풀채점(평가원 정답표 자동 대조).
+   - **성적 분석 피드백**: 1등급 컷 기준 여유도, 전국 백분위 추정, 주요 대학 라인 백분위 갭 피드백.
+   - **성적 변화 궤적 차트**: 회차별 원점수 변화 SVG 꺾은선 차트 & 1등급 컷 기준선.
+   - **기기간 6자리 PIN 클라우드 동기화**: 성적 히스토리 자동 클라우드 백업/복원 연동.
 
 ---
 

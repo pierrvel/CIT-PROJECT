@@ -3,6 +3,7 @@ import Icon from '../common/Icon';
 import CSATAnalogClock from '../clock/CSATAnalogClock';
 import StatsDashboard from '../analytics/StatsDashboard';
 import SubjectReportList from './SubjectReportList';
+import ScoreTracker from '../grade/ScoreTracker';
 import { formatTime } from '../../utils/pacing';
 
 export const ExamPacer = ({
@@ -72,7 +73,12 @@ export const ExamPacer = ({
   handleUpdateMemo,
   handleDeleteExamHistory,
   handleClearAllHistory,
-  handleLoadSampleHistory
+  handleLoadSampleHistory,
+
+  // 성적 & 등급컷 트래커 props
+  scoreHistory = [],
+  setScoreHistory,
+  showToast
 }) => {
   return (
     <div className="space-y-6">
@@ -120,27 +126,56 @@ export const ExamPacer = ({
             <Icon name="barChart" className="w-4 h-4 text-emerald-500" />
             <span>통계 대시보드</span>
           </button>
+          <button
+            type="button"
+            onClick={() => setPacerSubView('grader')}
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+              pacerSubView === 'grader'
+                ? 'bg-white dark:bg-zinc-900 text-purple-600 dark:text-purple-400 shadow-sm'
+                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+            }`}
+          >
+            <Icon name="award" className="w-4 h-4 text-purple-500" />
+            <span>성적 & 등급컷</span>
+            {scoreHistory.length > 0 && (
+              <span className="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 font-extrabold">
+                {scoreHistory.length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* 우측 퀵 액션 */}
-        {pacerSubView === 'timer' && examHistory.length > 0 && (
-          <div className="flex items-center gap-2">
+        {pacerSubView === 'timer' && (
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => setPacerSubView('reports')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-colors"
+              onClick={() => setPacerSubView('grader')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 transition-colors"
             >
-              <Icon name="fileText" className="w-3.5 h-3.5" />
-              <span>과목별 리포트 ({examHistory.length}회)</span>
+              <Icon name="award" className="w-3.5 h-3.5" />
+              <span>성적 & 등급컷 ({scoreHistory.length}건)</span>
             </button>
-            <button
-              type="button"
-              onClick={() => setPacerSubView('analytics')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-colors"
-            >
-              <Icon name="trendingUp" className="w-3.5 h-3.5" />
-              <span>통계 분석</span>
-            </button>
+            {examHistory.length > 0 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setPacerSubView('reports')}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-colors"
+                >
+                  <Icon name="fileText" className="w-3.5 h-3.5" />
+                  <span>과목별 리포트 ({examHistory.length}회)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPacerSubView('analytics')}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-colors"
+                >
+                  <Icon name="trendingUp" className="w-3.5 h-3.5" />
+                  <span>통계 분석</span>
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -812,6 +847,16 @@ export const ExamPacer = ({
           handleClearAllHistory={handleClearAllHistory}
           handleLoadSampleHistory={handleLoadSampleHistory}
           setPacerSubView={setPacerSubView}
+        />
+      )}
+
+      {/* 4. 기출 공식 등급컷 & 성적 트래커 뷰 (pacerSubView === 'grader') */}
+      {pacerSubView === 'grader' && (
+        <ScoreTracker
+          scoreHistory={scoreHistory}
+          setScoreHistory={setScoreHistory}
+          initialSubjectKey={selectedSubjectKey}
+          showToast={showToast}
         />
       )}
     </div>

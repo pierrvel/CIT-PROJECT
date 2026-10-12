@@ -255,6 +255,19 @@ export function App() {
     return [];
   });
 
+  // 실모 성적 & 등급컷 트래커 상태
+  const [scoreHistory, setScoreHistory] = useState(() => {
+    const saved = localStorage.getItem('dualcore_score_history');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dualcore_score_history', JSON.stringify(scoreHistory));
+  }, [scoreHistory]);
+
   // 타임 통계 대시보드 상태
   const [pacerSubView, setPacerSubView] = useState('timer'); // 'timer' | 'analytics'
   const [analyticsSubjectFilter, setAnalyticsSubjectFilter] = useState('all');
@@ -1025,7 +1038,7 @@ export function App() {
     const syncPayload = {
       pin: targetPin, updatedAt: now, senderId: clientId, version: '2.4.0',
       data: {
-        goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard,
+        goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, scoreHistory, cheerBoard,
         customMilestones, starredMilestoneIds, deletedMilestoneIds,
         settings: { dimOpacity, blurAmount, isDarkMode }
       }
@@ -1055,7 +1068,7 @@ export function App() {
       if (!isSilent) showToast('동기화 서버 연결에 실패했습니다.', 'warn');
       return false;
     }
-  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
+  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, scoreHistory, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
 
   const pullFromServer = useCallback(async (targetPin, isSilent = true) => {
     if (!targetPin || targetPin.length !== 6) return false;
@@ -1082,6 +1095,9 @@ export function App() {
         setSelectedPresetId(cloudData.data.selectedPresetId);
       }
       if (cloudData.data.examHistory) setExamHistory(cloudData.data.examHistory);
+      if (cloudData.data.scoreHistory && Array.isArray(cloudData.data.scoreHistory)) {
+        setScoreHistory(cloudData.data.scoreHistory);
+      }
       if (cloudData.data.cheerBoard && Array.isArray(cloudData.data.cheerBoard)) {
         const cleaned = cloudData.data.cheerBoard.filter((c) => c && !String(c.id).startsWith('cheer_default_'));
         setCheerBoard(cleaned);
@@ -1128,7 +1144,7 @@ export function App() {
       if (autoPushTimerRef.current) clearTimeout(autoPushTimerRef.current);
       autoPushTimerRef.current = setTimeout(() => pushToServer(cleanPin, true), 800);
     }
-  }, [goals, examHistory, subjectPresets, selectedPresetId, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
+  }, [goals, examHistory, scoreHistory, subjectPresets, selectedPresetId, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, autoSyncEnabled, cleanPin, pushToServer]);
 
   // 자동 폴링 (N초 주기)
   useEffect(() => {
@@ -1319,6 +1335,9 @@ export function App() {
             handleDeleteExamHistory={handleDeleteExamHistory}
             handleClearAllHistory={handleClearAllHistory}
             handleLoadSampleHistory={handleLoadSampleHistory}
+            scoreHistory={scoreHistory}
+            setScoreHistory={setScoreHistory}
+            showToast={showToast}
           />
         )}
       </main>
@@ -1403,6 +1422,9 @@ export function App() {
         reviewMemo={reviewMemo}
         setReviewMemo={setReviewMemo}
         saveExamReport={saveExamReport}
+        onGoToGrader={() => {
+          setPacerSubView('grader');
+        }}
       />
     </div>
   );
