@@ -265,16 +265,16 @@ export const EXAM_CUTOFFS = {
     korean: {
       totalScore: 100,
       options: {
-        speech: { name: '화법과 작문', cuts: [95,87,78,67] },
-        media:  { name: '언어와 매체', cuts: [92,84,75,64] }
+        speech: { name: '화법과 작문', cuts: [95,88,79,69] },
+        media:  { name: '언어와 매체', cuts: [92,86,77,66] }
       }
     },
     math: {
       totalScore: 100,
       options: {
-        calculus:  { name: '미적분', cuts: [88,79,68,56] },
-        prob_stat: { name: '확률과 통계', cuts: [94,84,73,61] },
-        geometry:  { name: '기하', cuts: [90,81,70,58] }
+        calculus:  { name: '미적분', cuts: [85,80,73,62] },
+        prob_stat: { name: '확률과 통계', cuts: [87,82,76,65] },
+        geometry:  { name: '기하', cuts: [85,81,74,63] }
       }
     },
     english: { totalScore: 100, isAbsolute: true, cuts: [90, 80, 70, 60] },
@@ -385,15 +385,15 @@ export const EXAM_CUTOFFS = {
     korean: {
       totalScore: 100,
       options: {
-        speech: { name: '화법과 작문', cuts: [96,88,80,69] },
-        media:  { name: '언어와 매체', cuts: [92,84,76,65] }
+        speech: { name: '화법과 작문', cuts: [96,92,86,79] },
+        media:  { name: '언어와 매체', cuts: [92,88,82,75] }
       }
     },
     math: {
       totalScore: 100,
       options: {
-        calculus:  { name: '미적분', cuts: [84,75,65,52] },
-        prob_stat: { name: '확률과 통계', cuts: [88,79,69,57] },
+        calculus:  { name: '미적분', cuts: [84,75,66,51] },
+        prob_stat: { name: '확률과 통계', cuts: [88,79,70,55] },
         geometry:  { name: '기하', cuts: [88,78,68,55] }
       }
     },
@@ -445,16 +445,16 @@ export const EXAM_CUTOFFS = {
     korean: {
       totalScore: 100,
       options: {
-        speech: { name: '화법과 작문', cuts: [86,79,71,61] },
-        media:  { name: '언어와 매체', cuts: [84,77,69,59] }
+        speech: { name: '화법과 작문', cuts: [90,83,73,63] },
+        media:  { name: '언어와 매체', cuts: [85,78,69,59] }
       }
     },
     math: {
       totalScore: 100,
       options: {
-        calculus:  { name: '미적분', cuts: [82,73,63,50] },
-        prob_stat: { name: '확률과 통계', cuts: [90,80,70,57] },
-        geometry:  { name: '기하', cuts: [85,76,66,53] }
+        calculus:  { name: '미적분', cuts: [85,80,73,62] },
+        prob_stat: { name: '확률과 통계', cuts: [87,82,76,65] },
+        geometry:  { name: '기하', cuts: [85,80,74,62] }
       }
     },
     english: { totalScore: 100, isAbsolute: true, cuts: [90, 80, 70, 60] },
