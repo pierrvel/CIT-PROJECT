@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { SUBJECT_META, DEFAULT_SUBJECT_PRESETS } from './constants/subjects';
 import { DEFAULT_CHEERS } from './constants/lounge';
 import { playChime, playSchoolBellSequence } from './utils/audio';
+import { getSyncEndpoint, getFirebaseDbUrl } from './utils/env';
 
 import Header from './components/common/Header';
 import Toast from './components/common/Toast';
@@ -62,7 +63,7 @@ export function App() {
   const [pinInput, setPinInput] = useState(() => localStorage.getItem('dc_last_used_pin') || '');
   const [isSyncing, setIsSyncing] = useState(false);
   const [customFirebaseUrl, setCustomFirebaseUrl] = useState(() => {
-    return localStorage.getItem('dc_custom_firebase_url') || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FIREBASE_DB_URL) || '';
+    return localStorage.getItem('dc_custom_firebase_url') || getFirebaseDbUrl();
   });
   const [showAdvancedSync, setShowAdvancedSync] = useState(false);
 
@@ -1015,16 +1016,7 @@ export function App() {
   };
 
   const getSyncUrl = useCallback((pin) => {
-    const custom = (customFirebaseUrl || '').trim();
-    const envUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FIREBASE_DB_URL ? import.meta.env.VITE_FIREBASE_DB_URL : '').trim();
-    const targetUrl = custom || envUrl;
-    if (targetUrl && !targetUrl.includes('your-project-default') && !targetUrl.includes('dualcore-cockpit-default')) {
-      return `${targetUrl.replace(/\/+$/, '')}/rooms/${pin}.json`;
-    }
-    if (typeof window !== 'undefined' && window.location.protocol.startsWith('http')) {
-      return `${window.location.origin}/rooms/${pin}.json`;
-    }
-    return `http://localhost:8000/rooms/${pin}.json`;
+    return getSyncEndpoint(pin, customFirebaseUrl);
   }, [customFirebaseUrl]);
 
   const pushToServer = useCallback(async (targetPin, isSilent = false) => {

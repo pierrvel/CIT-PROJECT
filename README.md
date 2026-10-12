@@ -132,6 +132,29 @@ CIT-PROJECT/
 
 ---
 
+## 🔐 환경변수 설정 (.env)
+
+중요한 데이터베이스 비밀번호, API KEY, 백엔드 포트 등 민감한 정보는 소스 코드에 직접 하드코딩되지 않으며 환경변수를 통해 안전하게 관리됩니다.
+
+```bash
+# 1. 템플릿을 복사하여 로컬 환경변수 파일 생성
+cp .env.example .env
+```
+
+| 환경변수 키 | 설명 | 기본값 |
+|---|---|---|
+| `VITE_API_BASE_URL` | 프론트엔드 통신용 동기화 서버 엔드포인트 | `http://localhost:8000` |
+| `VITE_FIREBASE_DB_URL` | Firebase 실시간 DB 엔드포인트 (선택) | `""` |
+| `VITE_FIREBASE_API_KEY` | Firebase 웹 API 키 (선택) | `""` |
+| `PORT` | Python 동기화 서버 구동 포트 | `8000` |
+| `SYNC_DATA_FILE` | 동기화 DB 저장 파일명 | `rooms_data.json` |
+| `ALLOWED_ORIGIN` | 백엔드 CORS 허용 출처 | `*` |
+| `DB_PASSWORD` / `API_SECRET_KEY` | 데이터베이스 비밀번호 및 서버 시크릿 키 | `.env`에서 안전하게 분리 보관 |
+
+> **보안 규칙**: `.env` 파일은 `.gitignore`에 등록되어 Git 원격 저장소에 절대 커밋되지 않습니다. Vercel 배포 시에는 프로젝트 대시보드의 **Settings > Environment Variables**에서 주입하십시오.
+
+---
+
 ## 💻 실행 방법
 
 ### 1. 개발 서버 실행

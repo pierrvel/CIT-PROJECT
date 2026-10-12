@@ -73,6 +73,10 @@ CIT-PROJECT/
    - Sprint 플랜, Exam Pacer (3대 화면 모드: Dual/Analog/Digital, 타임어택 파이프라인, Web Audio 타종, 무음 시각 플래시, Wake Lock, Undo Window), PIN 동기화, 타임 통계 대시보드 등 모든 핵심 기능의 무결성을 유지하십시오.
 4. **빌드 검증 필수**:
    - 코드 작업 후 반드시 `npm run build`를 실행하여 컴파일 및 번들링 에러가 0건인지 확인하십시오.
+5. **보안 및 환경변수 원칙 (Security & Secrets First)**:
+   - 데이터베이스 비밀번호, API KEY, 시크릿 토큰 등 모든 민감 정보는 소스 코드에 절대 직접 하드코딩하지 마십시오.
+   - 프론트엔드는 `src/utils/env.js` 및 `import.meta.env.VITE_*`, 백엔드는 `os.environ` 및 `.env` 파일을 통해서만 주입받습니다.
+   - `.env` 파일은 절대 Git에 커밋하지 않으며, 새로운 환경변수가 추가될 경우 반드시 `.env.example` 파일에 템플릿으로 명시하십시오.
 
 ---
 

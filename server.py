@@ -10,9 +10,54 @@ if hasattr(sys.stdout, 'reconfigure'):
     except Exception:
         pass
 
-PORT = 8000
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(BASE_DIR, 'rooms_data.json')
+
+# ------------------------------------------------------------------------------
+# 🔐 내장 경량 .env 파일 로더 (Zero-Dependency)
+# ------------------------------------------------------------------------------
+def load_dotenv(env_path=None):
+    """외부 패키지(python-dotenv) 없이 .env 파일을 읽어 os.environ에 주입합니다."""
+    if env_path is None:
+        env_path = os.path.join(BASE_DIR, '.env')
+    if not os.path.exists(env_path):
+        return
+
+    try:
+        with open(env_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                if '=' in line:
+                    key, val = line.split('=', 1)
+                    key = key.strip()
+                    val = val.strip().strip("'").strip('"')
+                    # 기존 시스템 환경변수를 덮어쓰지 않고 기본값으로 주입
+                    if key and key not in os.environ:
+                        os.environ[key] = val
+    except Exception as e:
+        print(f"[Warn] Failed to load .env file: {e}")
+
+# .env 파일 로드
+load_dotenv()
+
+# ------------------------------------------------------------------------------
+# 🌐 환경변수 설정 읽기 (Fallback 기본값 포함)
+# ------------------------------------------------------------------------------
+PORT = int(os.environ.get('PORT', 8000))
+SYNC_DATA_FILE_NAME = os.environ.get('SYNC_DATA_FILE', 'rooms_data.json')
+DATA_FILE = os.path.join(BASE_DIR, SYNC_DATA_FILE_NAME)
+ALLOWED_ORIGIN = os.environ.get('ALLOWED_ORIGIN', '*')
+
+# 데이터베이스 및 API 보안 키 환경변수 (추후 확장용)
+DB_CONFIG = {
+    "host": os.environ.get("DB_HOST", "localhost"),
+    "port": int(os.environ.get("DB_PORT", 5432)),
+    "name": os.environ.get("DB_NAME", "cit_cockpit_db"),
+    "user": os.environ.get("DB_USER", ""),
+    "password": os.environ.get("DB_PASSWORD", ""),
+    "api_secret": os.environ.get("API_SECRET_KEY", "")
+}
 
 def load_rooms():
     if os.path.exists(DATA_FILE):
@@ -36,10 +81,10 @@ class CockpitServerHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=BASE_DIR, **kwargs)
 
     def end_headers(self):
-        # 모든 기기(PC, 태블릿, 모바일) 접속을 위한 CORS 허용 헤더
-        self.send_header('Access-Control-Allow-Origin', '*')
+        # 환경변수(ALLOWED_ORIGIN) 기반 CORS 허용 헤더
+        self.send_header('Access-Control-Allow-Origin', ALLOWED_ORIGIN)
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
         self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
         super().end_headers()
 
@@ -120,12 +165,20 @@ class CockpitServerHandler(SimpleHTTPRequestHandler):
 def run():
     server_address = ('0.0.0.0', PORT)
     httpd = ThreadingHTTPServer(server_address, CockpitServerHandler)
-    print("=" * 60)
-    print(f"[DualCore Cockpit Server Running] Port: {PORT}")
+    masked_pw = '***' if DB_CONFIG['password'] else '(미설정)'
+    masked_secret = '***' if DB_CONFIG['api_secret'] else '(미설정)'
+
+    print("=" * 65)
+    print(f"[DualCore Cockpit Sync Server Running]")
+    print(f"Server Port:    {PORT} (ENV: PORT)")
     print(f"Local Access:   http://localhost:{PORT}")
     print(f"Network Access: http://0.0.0.0:{PORT}")
+    print(f"Data File:      {DATA_FILE} (ENV: SYNC_DATA_FILE)")
+    print(f"CORS Origin:    {ALLOWED_ORIGIN} (ENV: ALLOWED_ORIGIN)")
+    print(f"DB Config:      {DB_CONFIG['user']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['name']} (PW: {masked_pw})")
+    print(f"API Secret:     {masked_secret}")
     print(f"PIN Sync API:   /rooms/<pin>.json")
-    print("=" * 60)
+    print("=" * 65)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
