@@ -1206,6 +1206,22 @@ export function App() {
     showToast(`'${newGoal.title}' 목표가 등록되었습니다.`, 'success');
   };
 
+  // 정시 대학 역산 목표 -> Sprint 플래너 연계
+  const handleGoToSprintWithGoal = (goalData) => {
+    if (goalData) {
+      setNewGoalForm((prev) => ({
+        ...prev,
+        title: goalData.title || prev.title,
+        unit: goalData.unit || '문제',
+        totalAmount: goalData.totalAmount || 100,
+        dailyCap: goalData.dailyCap || 15
+      }));
+      setNewGoalModal(true);
+    }
+    setActiveTab('sprint');
+    if (soundEnabled) playChime(640, 'sine', 0.05);
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col overflow-x-hidden text-zinc-900 dark:text-zinc-100 font-sans">
       {/* 배경 레이어 및 블러 */}
@@ -1338,6 +1354,7 @@ export function App() {
             scoreHistory={scoreHistory}
             setScoreHistory={setScoreHistory}
             showToast={showToast}
+            onGoToSprint={handleGoToSprintWithGoal}
           />
         )}
       </main>

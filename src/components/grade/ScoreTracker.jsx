@@ -18,7 +18,8 @@ export const ScoreTracker = ({
   scoreHistory = [],
   setScoreHistory,
   initialSubjectKey = 'korean',
-  showToast
+  showToast,
+  onGoToAdmission
 }) => {
   // 1. 선택 상태 (연도 -> 6/9/수능 2단계 탭 구조)
   const [selectedYear, setSelectedYear] = useState('2025');
@@ -317,6 +318,28 @@ export const ScoreTracker = ({
       {/* 1. 상단 컨트롤 바: 시험 회차 선택 + 과목 탭 + 선택과목 칩 */}
       {/* ========================================================================= */}
       <div className="glass-card bg-white/80 dark:bg-zinc-900/80 rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 p-5 sm:p-6 shadow-glass dark:shadow-glass-dark space-y-4">
+        {/* 상단 퀵 네비게이션: 정시 대학 라인 판정기 */}
+        {onGoToAdmission && (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200/60 dark:border-zinc-800/60">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                <Icon name="award" className="w-4 h-4" />
+              </span>
+              <span className="text-xs sm:text-sm font-black text-zinc-800 dark:text-zinc-200">
+                모의고사 과목별 채점이 끝나셨나요?
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={onGoToAdmission}
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-md shadow-indigo-600/20 active:scale-95 transition-all"
+            >
+              <Icon name="target" className="w-3.5 h-3.5" />
+              <span>전과목 합산 정시 대학 라인 보러가기 ➔</span>
+            </button>
+          </div>
+        )}
+
         {/* 시험 선택 2단계 탭: 1단계 연도 선택 -> 2단계 6/9/수능 선택 */}
         <div className="flex flex-col gap-3">
           {/* 1단계: 학년도 선택 탭 */}

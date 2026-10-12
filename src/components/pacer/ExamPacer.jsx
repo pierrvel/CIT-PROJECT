@@ -4,6 +4,7 @@ import CSATAnalogClock from '../clock/CSATAnalogClock';
 import StatsDashboard from '../analytics/StatsDashboard';
 import SubjectReportList from './SubjectReportList';
 import ScoreTracker from '../grade/ScoreTracker';
+import AdmissionPredictor from '../admission/AdmissionPredictor';
 import { formatTime } from '../../utils/pacing';
 
 export const ExamPacer = ({
@@ -11,6 +12,7 @@ export const ExamPacer = ({
   pacerSubView,
   setPacerSubView,
   examHistory,
+  onGoToSprint,
 
   // 과목 및 프리셋
   selectedSubjectKey,
@@ -142,6 +144,21 @@ export const ExamPacer = ({
                 {scoreHistory.length}
               </span>
             )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setPacerSubView('admission')}
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+              pacerSubView === 'admission'
+                ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+            }`}
+          >
+            <Icon name="target" className="w-4 h-4 text-indigo-500" />
+            <span>정시 대학 라인</span>
+            <span className="px-1.5 py-0.5 text-[9px] font-mono rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-extrabold">
+              NEW
+            </span>
           </button>
         </div>
 
@@ -857,6 +874,16 @@ export const ExamPacer = ({
           setScoreHistory={setScoreHistory}
           initialSubjectKey={selectedSubjectKey}
           showToast={showToast}
+          onGoToAdmission={() => setPacerSubView('admission')}
+        />
+      )}
+
+      {/* 5. 정시 모의배치 & 대학 라인 판정기 뷰 (pacerSubView === 'admission') */}
+      {pacerSubView === 'admission' && (
+        <AdmissionPredictor
+          scoreHistory={scoreHistory}
+          showToast={showToast}
+          onGoToSprint={onGoToSprint}
         />
       )}
     </div>
