@@ -4,6 +4,8 @@ import ScoreInputPanel from './ScoreInputPanel';
 import ScoreTrendChart from './ScoreTrendChart';
 import {
   HISTORICAL_EXAMS,
+  EXAM_YEARS,
+  EXAM_TYPES,
   EXAM_CUTOFFS,
   getQuestionScores,
   getQuestionMetas,
@@ -18,7 +20,9 @@ export const ScoreTracker = ({
   initialSubjectKey = 'korean',
   showToast
 }) => {
-  // 1. 선택 상태
+  // 1. 선택 상태 (연도 -> 6/9/수능 2단계 탭 구조)
+  const [selectedYear, setSelectedYear] = useState('2025');
+  const [selectedType, setSelectedType] = useState('csat');
   const [selectedExamId, setSelectedExamId] = useState('2025_csat');
   const [selectedSubjectKey, setSelectedSubjectKey] = useState(initialSubjectKey);
   const [selectedOptionKey, setSelectedOptionKey] = useState(() => {
@@ -51,7 +55,38 @@ export const ScoreTracker = ({
   const [wrongQuestionNos, setWrongQuestionNos] = useState([]);
   const [omrAnswers, setOmrAnswers] = useState({});
 
-  // 과목이나 시험 변경 시 상태 리셋/조정
+  // 연도/회차/과목 변경 핸들러
+  const handleSelectYear = (year) => {
+    setSelectedYear(year);
+    if (year === 'custom') {
+      handleSelectExam('custom_silmo');
+    } else {
+      const nextExamId = `${year}_${selectedType}`;
+      handleSelectExam(nextExamId);
+    }
+  };
+
+  const handleSelectType = (type) => {
+    setSelectedType(type);
+    if (selectedYear !== 'custom') {
+      const nextExamId = `${selectedYear}_${type}`;
+      handleSelectExam(nextExamId);
+    }
+  };
+
+  const handleSelectExam = (examId) => {
+    setSelectedExamId(examId);
+    const target = HISTORICAL_EXAMS.find((e) => e.id === examId);
+    if (target) {
+      if (target.year) setSelectedYear(target.year);
+      if (target.type) setSelectedType(target.type);
+    }
+    const newTotal = (EXAM_CUTOFFS[examId]?.[selectedSubjectKey]?.totalScore) || 100;
+    setScore(newTotal);
+    setWrongQuestionNos([]);
+    setOmrAnswers({});
+  };
+
   const handleSelectSubject = (key) => {
     setSelectedSubjectKey(key);
     const newTotal = (EXAM_CUTOFFS[selectedExamId]?.[key]?.totalScore) || 100;
@@ -60,14 +95,6 @@ export const ScoreTracker = ({
     setOmrAnswers({});
     if (key === 'korean') setSelectedOptionKey('speech');
     else if (key === 'math') setSelectedOptionKey('calculus');
-  };
-
-  const handleSelectExam = (examId) => {
-    setSelectedExamId(examId);
-    const newTotal = (EXAM_CUTOFFS[examId]?.[selectedSubjectKey]?.totalScore) || 100;
-    setScore(newTotal);
-    setWrongQuestionNos([]);
-    setOmrAnswers({});
   };
 
   // 3. 등급 및 컷 대조 평가 산출
@@ -250,39 +277,83 @@ export const ScoreTracker = ({
       {/* 1. 상단 컨트롤 바: 시험 회차 선택 + 과목 탭 + 선택과목 칩 */}
       {/* ========================================================================= */}
       <div className="glass-card bg-white/80 dark:bg-zinc-900/80 rounded-3xl border border-zinc-200/80 dark:border-zinc-800/80 p-5 sm:p-6 shadow-glass dark:shadow-glass-dark space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* 시험 회차 선택 셀렉터 */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-zinc-500">기출/모의고사 회차:</span>
-              <select
-                value={selectedExamId}
-                onChange={(e) => handleSelectExam(e.target.value)}
-                className="px-3 py-2 text-xs sm:text-sm font-extrabold rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                {HISTORICAL_EXAMS.map((ex) => (
-                  <option key={ex.id} value={ex.id}>
-                    {ex.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* 난이도 뱃지 */}
-            <span
-              className={`px-2.5 py-1 rounded-xl text-xs font-bold border ${currentExam.badgeColor}`}
-            >
-              {currentExam.difficulty}
+        {/* 시험 선택 2단계 탭: 1단계 연도 선택 -> 2단계 6/9/수능 선택 */}
+        <div className="flex flex-col gap-3">
+          {/* 1단계: 학년도 선택 탭 */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-black text-zinc-500 flex items-center gap-1 shrink-0">
+              <Icon name="layers" className="w-3.5 h-3.5 text-indigo-500" />
+              <span>1단계 연도:</span>
             </span>
-
-            {/* 실제 시험 시행일 뱃지 (학년도와 구분 명확화) */}
-            {currentExam.examDate && (
-              <span className="px-2.5 py-1 rounded-xl text-xs font-bold border border-zinc-200/80 dark:border-zinc-700/80 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-300 flex items-center gap-1.5 shadow-xs">
-                <Icon name="calendar" className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                <span>시행일: <strong className="text-zinc-900 dark:text-white font-mono">{currentExam.examDate}</strong></span>
-              </span>
-            )}
+            <div className="flex flex-wrap items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-800/90 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80">
+              {EXAM_YEARS.map((yr) => (
+                <button
+                  key={yr.id}
+                  type="button"
+                  onClick={() => handleSelectYear(yr.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
+                    selectedYear === yr.id
+                      ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50'
+                  }`}
+                >
+                  {yr.name}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* 2단계: 회차 선택 탭 (6모 / 9모 / 본수능) */}
+          {selectedYear !== 'custom' && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-black text-zinc-500 flex items-center gap-1 shrink-0">
+                <Icon name="checkCircle" className="w-3.5 h-3.5 text-indigo-500" />
+                <span>2단계 회차:</span>
+              </span>
+              <div className="flex flex-wrap items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-800/90 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80">
+                {EXAM_TYPES.map((t) => {
+                  const examForThisType = HISTORICAL_EXAMS.find(e => e.year === selectedYear && e.type === t.id);
+                  return (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => handleSelectType(t.id)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all ${
+                        selectedType === t.id
+                          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50'
+                      }`}
+                    >
+                      <span>{t.name}</span>
+                      {examForThisType?.examDate && (
+                        <span className={`text-[10px] font-mono px-1 rounded ${
+                          selectedType === t.id ? 'bg-indigo-700 text-indigo-100' : 'text-zinc-400'
+                        }`}>
+                          {examForThisType.examDate.slice(5)}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* 현재 선택된 시험 상세 정보 뱃지들 */}
+              <div className="flex flex-wrap items-center gap-2 ml-auto">
+                {currentExam.examDate && (
+                  <span className="px-2.5 py-1 rounded-xl text-xs font-bold border border-zinc-200/80 dark:border-zinc-700/80 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-300 flex items-center gap-1.5 shadow-xs">
+                    <Icon name="calendar" className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                    <span>시행일: <strong className="text-zinc-900 dark:text-white font-mono">{currentExam.examDate}</strong></span>
+                  </span>
+                )}
+                <span className={`px-2.5 py-1 rounded-xl text-xs font-bold border ${currentExam.badgeColor}`}>
+                  {currentExam.difficulty}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60">
 
           {/* 과목 탭 */}
           <div className="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700 self-start lg:self-auto">
