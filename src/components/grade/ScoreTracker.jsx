@@ -5,8 +5,8 @@ import ScoreTrendChart from './ScoreTrendChart';
 import {
   HISTORICAL_EXAMS,
   EXAM_CUTOFFS,
-  DEFAULT_QUESTION_SCORES,
-  OFFICIAL_ANSWER_KEYS,
+  getQuestionScores,
+  getOfficialAnswers,
   calculateGradeByScore,
   TARGET_COLLEGES
 } from '../../constants/cutoffs';
@@ -20,7 +20,9 @@ export const ScoreTracker = ({
   // 1. 선택 상태
   const [selectedExamId, setSelectedExamId] = useState('2025_csat');
   const [selectedSubjectKey, setSelectedSubjectKey] = useState(initialSubjectKey);
-  const [selectedOptionKey, setSelectedOptionKey] = useState('calculus'); // 국어는 speech/media, 수학은 calculus/prob_stat/geometry
+  const [selectedOptionKey, setSelectedOptionKey] = useState(() => {
+    return initialSubjectKey === 'korean' ? 'speech' : 'calculus';
+  });
   const [activeInputMode, setActiveInputMode] = useState('wrong_picks'); // 'direct' | 'wrong_picks' | 'omr'
   const [examMemo, setExamMemo] = useState('');
 
@@ -30,9 +32,14 @@ export const ScoreTracker = ({
   const subjectCutoffData = examCutoffData[selectedSubjectKey] || examCutoffData['korean'];
   const totalScore = subjectCutoffData.totalScore || 100;
 
-  // 문항 배점 테이블 및 공식 정답표
-  const questions = DEFAULT_QUESTION_SCORES[selectedSubjectKey] || DEFAULT_QUESTION_SCORES['korean'];
-  const officialAnswers = OFFICIAL_ANSWER_KEYS[selectedExamId]?.[selectedSubjectKey] || null;
+  // 문항 배점 테이블 및 공식 정답표 (선택과목 동적 반영)
+  const questions = useMemo(() => {
+    return getQuestionScores(selectedSubjectKey, selectedOptionKey);
+  }, [selectedSubjectKey, selectedOptionKey]);
+
+  const officialAnswers = useMemo(() => {
+    return getOfficialAnswers(selectedExamId, selectedSubjectKey, selectedOptionKey);
+  }, [selectedExamId, selectedSubjectKey, selectedOptionKey]);
 
   // 2. 점수 및 채점 상태
   const [score, setScore] = useState(totalScore);
@@ -300,7 +307,12 @@ export const ScoreTracker = ({
               <button
                 key={opt.key}
                 type="button"
-                onClick={() => setSelectedOptionKey(opt.key)}
+                onClick={() => {
+                  setSelectedOptionKey(opt.key);
+                  setWrongQuestionNos([]);
+                  setOmrAnswers({});
+                  setScore(totalScore);
+                }}
                 className={`px-3 py-1 rounded-xl text-xs font-bold border transition-colors ${
                   selectedOptionKey === opt.key
                     ? 'bg-indigo-600 text-white border-indigo-600'
@@ -324,7 +336,12 @@ export const ScoreTracker = ({
               <button
                 key={opt.key}
                 type="button"
-                onClick={() => setSelectedOptionKey(opt.key)}
+                onClick={() => {
+                  setSelectedOptionKey(opt.key);
+                  setWrongQuestionNos([]);
+                  setOmrAnswers({});
+                  setScore(totalScore);
+                }}
                 className={`px-3 py-1 rounded-xl text-xs font-bold border transition-colors ${
                   selectedOptionKey === opt.key
                     ? 'bg-indigo-600 text-white border-indigo-600'
