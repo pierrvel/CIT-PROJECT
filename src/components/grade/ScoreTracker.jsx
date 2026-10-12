@@ -648,37 +648,101 @@ export const ScoreTracker = ({
               </div>
             </div>
 
-            {/* 등급컷 가이드 테이블 */}
+            {/* 등급컷 가이드 테이블 (등급별 득점 구간 & 내 점수 위치 하이라이트) */}
             <div className="border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden text-xs">
-              <div className="bg-zinc-100 dark:bg-zinc-800 px-3 py-2 font-bold text-zinc-600 dark:text-zinc-300 flex justify-between">
-                <span>공식 확정 원점수 등급컷</span>
-                <span className="font-mono text-[10px] text-zinc-400">1~4등급 기준</span>
+              <div className="bg-zinc-100 dark:bg-zinc-800 px-3 py-2 font-bold text-zinc-600 dark:text-zinc-300 flex justify-between items-center">
+                <span>공식 확정 원점수 등급컷 및 득점 구간</span>
+                <span className="font-mono text-[10px] text-zinc-400">1~4등급 기준선</span>
               </div>
               <div className="grid grid-cols-4 divide-x divide-zinc-200 dark:divide-zinc-800 p-2 text-center bg-white dark:bg-zinc-900 font-mono">
-                <div>
-                  <div className="text-[10px] text-zinc-400">1등급</div>
-                  <div className="font-bold text-emerald-600 dark:text-emerald-400">
+                {/* 1등급 */}
+                <div className={`p-1 rounded-xl transition-all ${evaluation.grade === 1 ? 'bg-emerald-500/10 ring-2 ring-emerald-500/40' : ''}`}>
+                  <div className="text-[10px] text-zinc-400 font-bold">1등급 컷</div>
+                  <div className="text-sm font-black text-emerald-600 dark:text-emerald-400">
                     {evaluation.cuts[0]}점
                   </div>
+                  <div className="text-[9px] text-zinc-500 mt-0.5">
+                    {evaluation.cuts[0]}점 만점
+                  </div>
+                  {evaluation.grade === 1 && (
+                    <span className="inline-block mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-emerald-500 text-white">
+                      내 등급 📍
+                    </span>
+                  )}
                 </div>
-                <div>
-                  <div className="text-[10px] text-zinc-400">2등급</div>
-                  <div className="font-bold text-blue-600 dark:text-blue-400">
+
+                {/* 2등급 */}
+                <div className={`p-1 rounded-xl transition-all ${evaluation.grade === 2 ? 'bg-blue-500/10 ring-2 ring-blue-500/40' : ''}`}>
+                  <div className="text-[10px] text-zinc-400 font-bold">2등급 컷</div>
+                  <div className="text-sm font-black text-blue-600 dark:text-blue-400">
                     {evaluation.cuts[1]}점
                   </div>
+                  <div className="text-[9px] text-zinc-500 mt-0.5">
+                    {evaluation.cuts[1]}~{evaluation.cuts[0] - 1}점
+                  </div>
+                  {evaluation.grade === 2 && (
+                    <span className="inline-block mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-blue-500 text-white">
+                      내 등급 📍
+                    </span>
+                  )}
                 </div>
-                <div>
-                  <div className="text-[10px] text-zinc-400">3등급</div>
-                  <div className="font-bold text-amber-600 dark:text-amber-400">
+
+                {/* 3등급 */}
+                <div className={`p-1 rounded-xl transition-all ${evaluation.grade === 3 ? 'bg-amber-500/10 ring-2 ring-amber-500/40' : ''}`}>
+                  <div className="text-[10px] text-zinc-400 font-bold">3등급 컷</div>
+                  <div className="text-sm font-black text-amber-600 dark:text-amber-400">
                     {evaluation.cuts[2]}점
                   </div>
+                  <div className="text-[9px] text-zinc-500 mt-0.5">
+                    {evaluation.cuts[2]}~{evaluation.cuts[1] - 1}점
+                  </div>
+                  {evaluation.grade === 3 && (
+                    <span className="inline-block mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-amber-500 text-white">
+                      내 등급 📍
+                    </span>
+                  )}
                 </div>
-                <div>
-                  <div className="text-[10px] text-zinc-400">4등급</div>
-                  <div className="font-bold text-zinc-500">
+
+                {/* 4등급 */}
+                <div className={`p-1 rounded-xl transition-all ${evaluation.grade === 4 ? 'bg-orange-500/10 ring-2 ring-orange-500/40' : ''}`}>
+                  <div className="text-[10px] text-zinc-400 font-bold">4등급 컷</div>
+                  <div className="text-sm font-black text-orange-600 dark:text-orange-400">
                     {evaluation.cuts[3]}점
                   </div>
+                  <div className="text-[9px] text-zinc-500 mt-0.5">
+                    {evaluation.cuts[3]}~{evaluation.cuts[2] - 1}점
+                  </div>
+                  {evaluation.grade === 4 && (
+                    <span className="inline-block mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-orange-500 text-white">
+                      내 등급 📍
+                    </span>
+                  )}
                 </div>
+              </div>
+
+              {/* 구간 안내 팁 */}
+              <div className="bg-zinc-50 dark:bg-zinc-800/50 px-3 py-1.5 text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center justify-between border-t border-zinc-200 dark:border-zinc-800">
+                <span>
+                  현재 점수 <strong>{score}점</strong>은{' '}
+                  <strong className="text-zinc-900 dark:text-white">
+                    {evaluation.grade}등급 구간
+                    {evaluation.grade === 1
+                      ? `(${evaluation.cuts[0]}점)`
+                      : evaluation.grade === 2
+                      ? `(${evaluation.cuts[1]}~${evaluation.cuts[0] - 1}점)`
+                      : evaluation.grade === 3
+                      ? `(${evaluation.cuts[2]}~${evaluation.cuts[1] - 1}점)`
+                      : evaluation.grade === 4
+                      ? `(${evaluation.cuts[3]}~${evaluation.cuts[2] - 1}점)`
+                      : `(${evaluation.cuts[3] - 1}점 이하)`}
+                  </strong>
+                  에 해당합니다.
+                </span>
+                {evaluation.grade > 1 && evaluation.cuts[evaluation.grade - 2] && (
+                  <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">
+                    {evaluation.grade - 1}등급까지 +{evaluation.cuts[evaluation.grade - 2] - score}점 필요
+                  </span>
+                )}
               </div>
             </div>
 
