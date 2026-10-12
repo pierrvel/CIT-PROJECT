@@ -6,6 +6,7 @@ import {
   HISTORICAL_EXAMS,
   EXAM_CUTOFFS,
   getQuestionScores,
+  getQuestionMetas,
   getOfficialAnswers,
   calculateGradeByScore,
   TARGET_COLLEGES
@@ -32,10 +33,14 @@ export const ScoreTracker = ({
   const subjectCutoffData = examCutoffData[selectedSubjectKey] || examCutoffData['korean'];
   const totalScore = subjectCutoffData.totalScore || 100;
 
-  // 문항 배점 테이블 및 공식 정답표 (선택과목 동적 반영)
+  // 문항 배점 테이블 및 공식 정답표 (회차/선택과목 동적 반영)
   const questions = useMemo(() => {
-    return getQuestionScores(selectedSubjectKey, selectedOptionKey);
-  }, [selectedSubjectKey, selectedOptionKey]);
+    return getQuestionScores(selectedExamId, selectedSubjectKey, selectedOptionKey);
+  }, [selectedExamId, selectedSubjectKey, selectedOptionKey]);
+
+  const questionMetas = useMemo(() => {
+    return getQuestionMetas(selectedExamId, selectedSubjectKey, selectedOptionKey);
+  }, [selectedExamId, selectedSubjectKey, selectedOptionKey]);
 
   const officialAnswers = useMemo(() => {
     return getOfficialAnswers(selectedExamId, selectedSubjectKey, selectedOptionKey);
@@ -269,6 +274,14 @@ export const ScoreTracker = ({
             >
               {currentExam.difficulty}
             </span>
+
+            {/* 실제 시험 시행일 뱃지 (학년도와 구분 명확화) */}
+            {currentExam.examDate && (
+              <span className="px-2.5 py-1 rounded-xl text-xs font-bold border border-zinc-200/80 dark:border-zinc-700/80 bg-zinc-50 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-300 flex items-center gap-1.5 shadow-xs">
+                <Icon name="calendar" className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                <span>시행일: <strong className="text-zinc-900 dark:text-white font-mono">{currentExam.examDate}</strong></span>
+              </span>
+            )}
           </div>
 
           {/* 과목 탭 */}
@@ -372,6 +385,7 @@ export const ScoreTracker = ({
             omrAnswers={omrAnswers}
             setOmrAnswers={setOmrAnswers}
             questions={questions}
+            questionMetas={questionMetas}
             officialAnswers={officialAnswers}
             onApplyOmrGrade={handleApplyOmrGrade}
           />

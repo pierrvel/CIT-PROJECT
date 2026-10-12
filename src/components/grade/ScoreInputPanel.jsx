@@ -12,6 +12,7 @@ export const ScoreInputPanel = ({
   omrAnswers = {},
   setOmrAnswers,
   questions = [],
+  questionMetas = [],
   officialAnswers = null,
   onApplyOmrGrade
 }) => {
@@ -277,11 +278,15 @@ export const ScoreInputPanel = ({
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 gap-2 max-h-[380px] overflow-y-auto p-1 pr-2">
             {questions.map((q) => {
               const isWrong = wrongQuestionNos.includes(q.no);
+              const qMeta = questionMetas.find((m) => m.no === q.no);
+              const isLowRate = qMeta?.correctRate && parseInt(qMeta.correctRate, 10) < 50;
+
               return (
                 <button
                   key={q.no}
                   type="button"
                   onClick={() => toggleWrongQuestion(q.no)}
+                  title={qMeta ? `전국 정답률: ${qMeta.correctRate} (난이도: ${qMeta.difficulty || '-'})` : undefined}
                   className={`relative flex flex-col items-center justify-between p-2 rounded-xl border transition-all duration-150 ${
                     isWrong
                       ? 'bg-rose-500 text-white border-rose-600 shadow-md scale-95 ring-2 ring-rose-400/40'
@@ -310,8 +315,20 @@ export const ScoreInputPanel = ({
                     </span>
                   </div>
 
-                  {/* 영역 태그 */}
-                  {q.part && (
+                  {/* 정답률 칩 (메가스터디 전국 정답률 데이터) */}
+                  {qMeta?.correctRate ? (
+                    <span
+                      className={`text-[9px] font-mono font-bold mt-0.5 px-1 rounded ${
+                        isWrong
+                          ? 'text-rose-100'
+                          : isLowRate
+                          ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400'
+                          : 'text-zinc-400'
+                      }`}
+                    >
+                      {qMeta.correctRate}
+                    </span>
+                  ) : q.part ? (
                     <span
                       className={`text-[9px] mt-0.5 truncate max-w-[50px] ${
                         isWrong ? 'text-rose-100 font-bold' : 'text-zinc-400'
@@ -319,7 +336,7 @@ export const ScoreInputPanel = ({
                     >
                       {q.part}
                     </span>
-                  )}
+                  ) : null}
                 </button>
               );
             })}
