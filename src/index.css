@@ -24,7 +24,39 @@
 ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.7); }
 
 .digital-timer { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
-.glass-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.glass-card { backdrop-filter: blur(24px) saturate(190%); -webkit-backdrop-filter: blur(24px) saturate(190%); }
+.apple-card { backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%); box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2); }
+
+/* Apple Control Center range slider */
+input[type="range"].apple-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+  outline: none;
+  height: 8px;
+  transition: all 0.2s ease;
+}
+html.dark input[type="range"].apple-slider {
+  background: rgba(255, 255, 255, 0.15);
+}
+html.theme-paper input[type="range"].apple-slider {
+  background: #d6e2d4;
+}
+input[type="range"].apple-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+input[type="range"].apple-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
 
 @keyframes slideInUp { 
   from { transform: translateY(100%); opacity: 0; } 

@@ -1,4 +1,27 @@
 import React from 'react';
+import {
+  Clock,
+  FileText,
+  BarChart3,
+  Award,
+  Target,
+  Settings,
+  Bookmark,
+  Trash2,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  Sparkles,
+  Bell,
+  Lightbulb,
+  Play,
+  Pause,
+  FastForward,
+  CheckCircle2,
+  ChevronRight,
+  ArrowLeft,
+  ArrowRight
+} from 'lucide-react';
 import Icon from '../common/Icon';
 import CSATAnalogClock from '../clock/CSATAnalogClock';
 import StatsDashboard from '../analytics/StatsDashboard';
@@ -84,164 +107,183 @@ export const ExamPacer = ({
 }) => {
   return (
     <div className="space-y-6">
-      {/* [Pacer 서브 헤더 탭바]: 실전 타임어택 vs 과목별 리포트 vs 타임 통계 대시보드 */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-zinc-200/60 dark:border-zinc-800/60">
-        <div className="inline-flex p-1 bg-zinc-200/70 dark:bg-zinc-800/70 backdrop-blur-md rounded-2xl border border-zinc-300/40 dark:border-zinc-700/40 shadow-inner">
+      {/* ── 1. 애플 스타일 서브 네비게이션 세그먼트 바 ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-black/5 dark:border-white/10">
+        <div className="inline-flex p-1 rounded-2xl bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/5 backdrop-blur-xl">
           <button
             type="button"
             onClick={() => setPacerSubView('timer')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
               pacerSubView === 'timer'
-                ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-white shadow-sm border border-black/[0.04] dark:border-white/10'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
-            <Icon name="clock" className="w-4 h-4" />
+            <Clock className="w-4 h-4" />
             <span>실전 타임어택</span>
           </button>
+
           <button
             type="button"
             onClick={() => setPacerSubView('reports')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
               pacerSubView === 'reports'
-                ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-sm border border-black/[0.04] dark:border-white/10'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
-            <Icon name="fileText" className="w-4 h-4 text-blue-500" />
+            <FileText className="w-4 h-4" />
             <span>과목별 리포트</span>
             {examHistory.length > 0 && (
-              <span className="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-blue-500/20 text-blue-600 dark:text-blue-400 font-extrabold">
+              <span className="px-1.5 py-0.2 text-[10px] font-mono rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 font-extrabold">
                 {examHistory.length}
               </span>
             )}
           </button>
+
           <button
             type="button"
             onClick={() => setPacerSubView('analytics')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
               pacerSubView === 'analytics'
-                ? 'bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
+                ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-black/[0.04] dark:border-white/10'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
-            <Icon name="barChart" className="w-4 h-4 text-emerald-500" />
+            <BarChart3 className="w-4 h-4" />
             <span>통계 대시보드</span>
           </button>
+
           <button
             type="button"
             onClick={() => setPacerSubView('grader')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
               pacerSubView === 'grader'
-                ? 'bg-white dark:bg-zinc-900 text-purple-600 dark:text-purple-400 shadow-sm'
+                ? 'bg-white dark:bg-zinc-800 text-purple-600 dark:text-purple-400 shadow-sm border border-black/[0.04] dark:border-white/10'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
-            <Icon name="award" className="w-4 h-4 text-purple-500" />
+            <Award className="w-4 h-4" />
             <span>성적 & 등급컷</span>
             {scoreHistory.length > 0 && (
-              <span className="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-400 font-extrabold">
+              <span className="px-1.5 py-0.2 text-[10px] font-mono rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 font-extrabold">
                 {scoreHistory.length}
               </span>
             )}
           </button>
+
           <button
             type="button"
             onClick={() => setPacerSubView('admission')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-200 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
               pacerSubView === 'admission'
-                ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-black/[0.04] dark:border-white/10'
                 : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
             }`}
           >
-            <Icon name="target" className="w-4 h-4 text-indigo-500" />
+            <Target className="w-4 h-4" />
             <span>정시 대학 라인</span>
-            <span className="px-1.5 py-0.5 text-[9px] font-mono rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-extrabold">
+            <span className="px-1.5 py-0.2 text-[9px] font-mono rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-extrabold">
               NEW
             </span>
           </button>
         </div>
 
-        {/* 우측 퀵 액션 */}
-        {pacerSubView === 'timer' && (
-          <div className="flex flex-wrap items-center gap-2">
+        {/* 시험 진행 중이거나 리포트가 있을 때 우측 퀵 버튼 */}
+        {pacerSubView === 'timer' && examHistory.length > 0 && (
+          <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setPacerSubView('grader')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 transition-colors"
+              onClick={() => setIsReportModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-indigo-500/10 hover:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 transition-all"
             >
-              <Icon name="award" className="w-3.5 h-3.5" />
-              <span>성적 & 등급컷 ({scoreHistory.length}건)</span>
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>최근 리포트 ({examHistory.length}회)</span>
             </button>
-            {examHistory.length > 0 && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setPacerSubView('reports')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-colors"
-                >
-                  <Icon name="fileText" className="w-3.5 h-3.5" />
-                  <span>과목별 리포트 ({examHistory.length}회)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPacerSubView('analytics')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 transition-colors"
-                >
-                  <Icon name="trendingUp" className="w-3.5 h-3.5" />
-                  <span>통계 분석</span>
-                </button>
-              </>
-            )}
           </div>
         )}
       </div>
 
-      {/* 1. 타임어택 타이머 뷰 (pacerSubView === 'timer') */}
+      {/* ── 2. 타임어택 메인 뷰 (pacerSubView === 'timer') ── */}
       {pacerSubView === 'timer' && (
         <div className="space-y-6">
-          {/* 상단 컨트롤 및 모드 셀렉터 */}
-          <div className="glass-card bg-white/75 dark:bg-zinc-900/75 p-5 rounded-2xl border border-white/60 dark:border-zinc-800 shadow-glass dark:shadow-glass-dark">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-              {/* 과목 & 프리셋 선택 컨트롤 */}
-              <div className="flex flex-wrap items-center gap-2.5">
+          {/* 애플 컨트롤 센터 스타일 상단 2분할 위젯 카드 */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            {/* 위젯 A: 과목 & 파이프라인 전략 (7 cols) */}
+            <div className="lg:col-span-7 glass-card bg-white/75 dark:bg-zinc-900/75 p-5 rounded-[26px] border border-white/60 dark:border-white/10 shadow-sm flex flex-col justify-between gap-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                    <Target className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white tracking-tight">
+                      과목 및 풀이 전략
+                    </h3>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
+                      수능 표준 시험 시간표 및 과목별 파이프라인 순서
+                    </p>
+                  </div>
+                </div>
+
+                <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-black/[0.04] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 border border-black/5 dark:border-white/5">
+                  {currentPreset?.isSystem ? '공식 표준' : '사용자 커스텀'}
+                </span>
+              </div>
+
+              {/* 드롭다운 셀렉터 그룹 */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {/* 과목 선택 */}
-                <div className="flex items-center gap-1.5">
-                  <label className="text-xs font-bold text-zinc-600 dark:text-zinc-400">과목:</label>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 pl-1">과목 선택</label>
                   <select
                     disabled={examStarted}
                     value={selectedSubjectKey}
                     onChange={(e) => handleSelectSubject(e.target.value)}
-                    className="px-3 py-1.5 text-xs sm:text-sm font-bold rounded-xl bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-60 shadow-sm"
+                    className="w-full px-3 py-2 text-xs sm:text-sm font-bold rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/5 dark:border-white/10 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-50 cursor-pointer transition-all"
                   >
-                    <option value="korean">1교시 국어 (08:40 ~ 10:00, 80분)</option>
-                    <option value="math">2교시 수학 (10:30 ~ 12:10, 100분)</option>
-                    <option value="english">3교시 영어 (13:10 ~ 14:20, 70분)</option>
-                    <option value="history">4교시 한국사 (14:50 ~ 15:20, 30분)</option>
-                    <option value="inquiry">4교시 탐구 (15:35 ~ 16:15, 30~40분)</option>
-                    <option value="secondLang">5교시 제2외국어/한문 (17:35 ~ 18:05, 30분)</option>
+                    <option value="korean" className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">1교시 국어 (08:40 ~ 10:00, 80분)</option>
+                    <option value="math" className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">2교시 수학 (10:30 ~ 12:10, 100분)</option>
+                    <option value="english" className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">3교시 영어 (13:10 ~ 14:20, 70분)</option>
+                    <option value="history" className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">4교시 한국사 (14:50 ~ 15:20, 30분)</option>
+                    <option value="inquiry" className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">4교시 탐구 (15:35 ~ 16:15, 30~40분)</option>
+                    <option value="secondLang" className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">5교시 제2외국어 (17:35 ~ 18:05, 30분)</option>
                   </select>
                 </div>
 
-                {/* 프리셋 선택 */}
-                <div className="flex items-center gap-1.5 bg-white dark:bg-zinc-800 px-2 py-1 rounded-xl border border-zinc-300 dark:border-zinc-700 shadow-sm">
-                  <Icon name="bookmark" className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                  <label className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 hidden sm:inline">전략:</label>
-                  <select
-                    disabled={examStarted}
-                    value={selectedPresetId}
-                    onChange={(e) => handleSelectPreset(e.target.value)}
-                    className="bg-transparent text-xs sm:text-sm font-bold text-zinc-900 dark:text-white focus:outline-none pr-1 py-0.5 disabled:opacity-60 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
-                  >
-                    {currentSubjectPresets.map((p) => (
-                      <option key={p.id} value={p.id} className="text-zinc-900 dark:text-zinc-100 bg-white dark:bg-zinc-800">
-                        {p.name} {p.isSystem ? '(표준)' : '(커스텀)'}
-                      </option>
-                    ))}
-                  </select>
+                {/* 전략 선택 */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 pl-1">순서 전략</label>
+                  <div className="relative">
+                    <select
+                      disabled={examStarted}
+                      value={selectedPresetId}
+                      onChange={(e) => handleSelectPreset(e.target.value)}
+                      className="w-full pl-8 pr-3 py-2 text-xs sm:text-sm font-bold rounded-xl bg-black/[0.03] dark:bg-white/[0.05] border border-black/5 dark:border-white/10 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-50 cursor-pointer truncate transition-all"
+                    >
+                      {currentSubjectPresets.map((p) => (
+                        <option key={p.id} value={p.id} className="bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white">
+                          {p.name} {p.isSystem ? '(표준)' : '(커스텀)'}
+                        </option>
+                      ))}
+                    </select>
+                    <Bookmark className="w-3.5 h-3.5 text-indigo-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
+              </div>
 
-                {/* 프리셋 저장 */}
+              {/* 하단 전략 관리 도구 바 */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-black/5 dark:border-white/5">
+                <button
+                  type="button"
+                  disabled={examStarted}
+                  onClick={openTimeEditModal}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-black/[0.03] hover:bg-black/[0.06] dark:bg-white/[0.05] dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-200 border border-black/5 dark:border-white/5 disabled:opacity-50 transition-all"
+                >
+                  <Settings className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+                  <span>시간 조절</span>
+                </button>
+
                 <button
                   type="button"
                   disabled={examStarted}
@@ -249,11 +291,10 @@ export const ExamPacer = ({
                     setNewPresetName(`${currentSubject.name} 커스텀 전략`);
                     setIsSavePresetModalOpen(true);
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/80 disabled:opacity-50 transition-colors shadow-xs"
-                  title="현재 파트 순서 및 시간 배분을 새 프리셋으로 영구 저장"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 hover:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 disabled:opacity-50 transition-all"
                 >
-                  <Icon name="bookmark" className="w-3.5 h-3.5" />
-                  <span>프리셋 저장</span>
+                  <Bookmark className="w-3.5 h-3.5" />
+                  <span>새 전략 저장</span>
                 </button>
 
                 {!currentPreset?.isSystem && (
@@ -261,10 +302,10 @@ export const ExamPacer = ({
                     type="button"
                     disabled={examStarted}
                     onClick={handleDeleteCurrentPreset}
-                    className="p-1.5 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 transition-colors"
+                    className="p-1.5 rounded-full text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 transition-colors"
                     title="현재 커스텀 프리셋 삭제"
                   >
-                    <Icon name="trash" className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 )}
 
@@ -272,259 +313,197 @@ export const ExamPacer = ({
                   type="button"
                   disabled={examStarted}
                   onClick={handleResetSubjectPresets}
-                  className="p-1.5 rounded-xl text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 transition-colors"
+                  className="p-1.5 rounded-full text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-black/[0.05] dark:hover:bg-white/10 border border-black/5 dark:border-white/5 transition-colors ml-auto"
                   title="과목 표준 프리셋으로 초기화"
                 >
-                  <Icon name="rotateCcw" className="w-3.5 h-3.5" />
+                  <RotateCcw className="w-3.5 h-3.5" />
                 </button>
+              </div>
+            </div>
 
-                <button
-                  type="button"
-                  disabled={examStarted}
-                  onClick={openTimeEditModal}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 disabled:opacity-50 transition-colors"
-                >
-                  <Icon name="settings" className="w-3.5 h-3.5 text-zinc-500" />
-                  <span>시간 조절</span>
-                </button>
-
-                {/* 무음/소리 모드 & 볼륨 */}
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-xs">
-                  <button
-                    type="button"
-                    onClick={toggleMuteMode}
-                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-bold transition-all ${
-                      isMuteMode
-                        ? 'bg-rose-100 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-800 ring-2 ring-rose-500/20'
-                        : 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800'
-                    }`}
-                  >
-                    <Icon name={isMuteMode ? 'volumeX' : 'volume2'} className="w-3.5 h-3.5" />
-                    <span>{isMuteMode ? '🔇 무음 플래시' : '🔊 소리 모드'}</span>
-                  </button>
-
-                  <div className="flex items-center gap-1.5 pl-1.5 border-l border-zinc-300 dark:border-zinc-700">
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={isMuteMode ? 0 : pacerVolume}
-                      disabled={isMuteMode}
-                      onChange={(e) => setPacerVolume(Number(e.target.value))}
-                      className="w-14 sm:w-20 h-1.5 bg-zinc-300 dark:bg-zinc-600 rounded-lg appearance-none cursor-pointer accent-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                      title={`타종 볼륨: ${isMuteMode ? 0 : pacerVolume}%`}
-                    />
-                    <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 w-7 text-right font-bold">
-                      {isMuteMode ? '0%' : `${pacerVolume}%`}
-                    </span>
+            {/* 위젯 B: 오디오 & 집중 환경 컨트롤 센터 (5 cols) */}
+            <div className="lg:col-span-5 glass-card bg-white/75 dark:bg-zinc-900/75 p-5 rounded-[26px] border border-white/60 dark:border-white/10 shadow-sm flex flex-col justify-between gap-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <Volume2 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white tracking-tight">
+                      집중 환경 및 오디오
+                    </h3>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
+                      Web Audio 타종 및 화면 꺼짐 방지 제어
+                    </p>
                   </div>
                 </div>
 
-                {/* 타종 테스트 */}
-                <div className="inline-flex rounded-xl p-0.5 bg-zinc-200/70 dark:bg-zinc-800 border border-zinc-300/40 dark:border-zinc-700">
+                {/* 화면 꺼짐 방지 토글 */}
+                {isWakeLockSupported ? (
+                  <button
+                    type="button"
+                    onClick={toggleWakeLock}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
+                      isWakeLockActive
+                        ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                        : 'bg-black/[0.03] dark:bg-white/[0.05] text-zinc-500 dark:text-zinc-400 border-black/5 dark:border-white/5'
+                    }`}
+                    title="화면 꺼짐 방지 (Wake Lock) 토글"
+                  >
+                    <Lightbulb className={`w-3 h-3 ${isWakeLockActive ? 'text-emerald-500 fill-emerald-500' : 'text-zinc-400'}`} />
+                    <span>{isWakeLockActive ? '화면 유지 ON' : '화면 유지 OFF'}</span>
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-zinc-400">화면 유지 미지원</span>
+                )}
+              </div>
+
+              {/* 볼륨 슬라이더 및 모드 전환 (애플 컨트롤 슬라이더 스타일) */}
+              <div className="p-3 rounded-2xl bg-black/[0.02] dark:bg-white/[0.04] border border-black/5 dark:border-white/5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={toggleMuteMode}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                      isMuteMode
+                        ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                        : 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20'
+                    }`}
+                  >
+                    {isMuteMode ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                    <span>{isMuteMode ? '무음 시각 플래시' : '타종 소리 모드'}</span>
+                  </button>
+
+                  <span className="text-xs font-mono font-bold text-zinc-600 dark:text-zinc-300">
+                    {isMuteMode ? '0%' : `${pacerVolume}%`}
+                  </span>
+                </div>
+
+                <div className="pt-1">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={isMuteMode ? 0 : pacerVolume}
+                    disabled={isMuteMode}
+                    onChange={(e) => setPacerVolume(Number(e.target.value))}
+                    className="w-full apple-slider disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                    title={`타종 볼륨: ${isMuteMode ? 0 : pacerVolume}%`}
+                  />
+                </div>
+              </div>
+
+              {/* 타종음 테스트 프리뷰 버튼 */}
+              <div className="flex items-center justify-between text-xs pt-1 border-t border-black/5 dark:border-white/5">
+                <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400">타종 테스트:</span>
+                <div className="inline-flex rounded-full p-0.5 bg-black/[0.03] dark:bg-white/[0.05] border border-black/5 dark:border-white/5">
                   <button
                     type="button"
                     onClick={() => triggerExamChime('start')}
-                    className="px-2.5 py-1 text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 rounded-lg flex items-center gap-1"
+                    className="px-2.5 py-1 text-[11px] font-bold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-800 rounded-full flex items-center gap-1 transition-all"
                   >
-                    <Icon name={isMuteMode ? 'sparkles' : 'bell'} className="w-3 h-3 text-indigo-500" />
+                    <Bell className="w-3 h-3 text-indigo-500" />
                     <span>본령</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => triggerExamChime('warning10m')}
-                    className="px-2.5 py-1 text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 rounded-lg"
+                    className="px-2.5 py-1 text-[11px] font-bold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-800 rounded-full transition-all"
                   >
                     10분전
                   </button>
                   <button
                     type="button"
                     onClick={() => triggerExamChime('end')}
-                    className="px-2.5 py-1 text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 rounded-lg"
+                    className="px-2.5 py-1 text-[11px] font-bold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-800 rounded-full transition-all"
                   >
                     종료령
                   </button>
                 </div>
-
-                {/* Wake Lock */}
-                {isWakeLockSupported ? (
-                  <button
-                    type="button"
-                    onClick={toggleWakeLock}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all shadow-xs ${
-                      !wakeLockEnabled
-                        ? 'bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700'
-                        : isWakeLockActive
-                        ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 ring-2 ring-emerald-500/20'
-                        : 'bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700'
-                    }`}
-                  >
-                    <Icon name="lightbulb" className={`w-3.5 h-3.5 ${isWakeLockActive ? 'text-emerald-500 fill-emerald-500/20' : 'text-zinc-400'}`} />
-                    <span>화면 꺼짐 방지</span>
-                    <span className="flex items-center gap-1 font-mono text-[10px] ml-0.5">
-                      {isWakeLockActive ? (
-                        <span className="flex items-center gap-1">
-                          <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                          </span>
-                          <span className="font-extrabold text-emerald-600 dark:text-emerald-400">ON</span>
-                        </span>
-                      ) : !wakeLockEnabled ? (
-                        <span className="text-zinc-400">OFF</span>
-                      ) : (
-                        <span className="flex items-center gap-1">
-                          <span className="inline-block w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-600"></span>
-                          <span className="text-zinc-400">대기</span>
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                ) : (
-                  <div
-                    title="이 브라우저는 Screen Wake Lock API를 지원하지 않습니다."
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-zinc-100/50 dark:bg-zinc-800/40 text-zinc-400 border border-zinc-200/50 dark:border-zinc-700/50 opacity-60 cursor-not-allowed"
-                  >
-                    <Icon name="lightbulb" className="w-3.5 h-3.5 text-zinc-400" />
-                    <span>화면 꺼짐 방지 미지원</span>
-                  </div>
-                )}
-              </div>
-
-              {/* 제어 버튼 그룹 */}
-              <div className="flex items-center gap-2">
-                {examStarted && (
-                  <button
-                    type="button"
-                    onClick={() => setIsExamRunning(!isExamRunning)}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm ${
-                      isExamRunning
-                        ? 'bg-amber-500 hover:bg-amber-600 text-white'
-                        : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                    }`}
-                  >
-                    <Icon name={isExamRunning ? 'pause' : 'play'} className="w-4 h-4 fill-current" />
-                    <span>{isExamRunning ? '일시정지 (P)' : '재개 (P)'}</span>
-                  </button>
-                )}
-
-                {examStarted && (
-                  <button
-                    type="button"
-                    onClick={handleResetExam}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-zinc-200/80 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-700"
-                  >
-                    <Icon name="rotateCcw" className="w-3.5 h-3.5" />
-                    <span>초기화</span>
-                  </button>
-                )}
-
-                {examHistory.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setIsReportModalOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20"
-                  >
-                    <Icon name="barChart" className="w-3.5 h-3.5" />
-                    <span>최근 리포트 ({examHistory.length})</span>
-                  </button>
-                )}
               </div>
             </div>
           </div>
 
-          {/* 중앙 메인 타이머 & 실전 페이스 게이지 */}
-          <div className="glass-card bg-white/70 dark:bg-zinc-900/70 p-6 sm:p-10 rounded-3xl border border-white/80 dark:border-zinc-800 shadow-glass dark:shadow-glass-dark text-center relative overflow-hidden">
-            <div className={`absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 rounded-full blur-3xl pointer-events-none transition-opacity duration-700 ${
-              isExamRunning ? 'bg-indigo-500/20 dark:bg-indigo-500/30' : 'bg-transparent'
-            }`} />
+          {/* ── 3. 메인 히어로 스테이지 (CSAT 시계 & 대형 타이머 & 액션 바) ── */}
+          <div className="glass-card bg-white/75 dark:bg-zinc-900/75 p-6 sm:p-10 rounded-[32px] border border-white/80 dark:border-white/10 shadow-xl dark:shadow-2xl text-center relative overflow-hidden">
+            {/* 시험 가동 시 앰비언트 글로우 */}
+            <div
+              className={`absolute -top-32 left-1/2 -translate-x-1/2 w-[32rem] h-64 rounded-full blur-3xl pointer-events-none transition-opacity duration-1000 ${
+                isExamRunning ? 'bg-indigo-500/20 dark:bg-indigo-500/25' : 'bg-transparent'
+              }`}
+            />
 
             <div className="relative z-10 flex flex-col items-center">
-              {/* 상단 1: 공식 수능 시간표 뱃지 & 종합 페이스 & 화면 꺼짐 방지 배지 */}
-              <div className="mb-2 flex flex-wrap items-center justify-center gap-2">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-indigo-50/90 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-800/60 shadow-xs">
-                  <span>🏛️ {currentSubject.period} {currentSubject.name}</span>
-                  <span className="text-zinc-400 dark:text-zinc-600">|</span>
-                  <span className="font-mono">{currentSubject.startTimeStr} ~ {currentSubject.endTimeStr} ({currentSubject.totalMinutes}분)</span>
+              {/* 상단 메타 바: 교시 배지 + 종합 페이스 + 시계 모드 스위처 */}
+              <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-black/5 dark:border-white/5">
+                {/* 좌측: 교시 배지 & 실시간 페이스 델타 */}
+                <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                    <span>🏛️ {currentSubject.period} {currentSubject.name}</span>
+                    <span className="opacity-40">|</span>
+                    <span className="font-mono">{currentSubject.startTimeStr} ~ {currentSubject.endTimeStr} ({currentSubject.totalMinutes}분)</span>
+                  </div>
+
+                  {examStarted && (
+                    <div className={`inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-mono font-bold transition-all ${
+                      overallPacing.delta > 0
+                        ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 animate-pulse'
+                        : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                    }`}>
+                      <span>
+                        {overallPacing.delta > 0
+                          ? `⚠️ 종합 페이스: +${formatTime(overallPacing.delta)} 지연 중`
+                          : `✨ 종합 페이스: -${formatTime(Math.abs(overallPacing.delta))} 여유 확보`}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {examStarted ? (
-                  <div className={`inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold transition-all ${
-                    overallPacing.delta > 0
-                      ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 animate-pulse'
-                      : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
-                  }`}>
-                    <span>
-                      {overallPacing.delta > 0
-                        ? `⚠️ 종합 페이스: +${formatTime(overallPacing.delta)} 지연 중 (마킹 주의)`
-                        : `✨ 종합 페이스: -${formatTime(Math.abs(overallPacing.delta))} 여유 확보 (안정적)`}
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500 font-semibold hidden sm:inline">
-                    • {currentSubject.presetName}
-                  </span>
-                )}
-
-                {examStarted && isWakeLockSupported && (
-                  <div
-                    onClick={toggleWakeLock}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border cursor-pointer select-none transition-all ${
-                      isWakeLockActive
-                        ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 animate-pulse'
-                        : 'bg-zinc-200/60 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 border-zinc-300 dark:border-zinc-700'
+                {/* 우측: 시계 표시 모드 세그먼트 스위처 */}
+                <div className="inline-flex p-1 rounded-full bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/5 backdrop-blur-md self-center sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => setTimerDisplayMode('dual')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                      timerDisplayMode === 'dual'
+                        ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-white shadow-xs'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
                     }`}
-                    title="클릭하여 화면 꺼짐 방지 토글"
                   >
-                    <Icon name="lightbulb" className={`w-3 h-3 ${isWakeLockActive ? 'text-emerald-500 fill-emerald-500' : 'text-zinc-400'}`} />
-                    <span>{isWakeLockActive ? '화면 켜짐 유지 🟢' : '화면 유지 OFF ⚪'}</span>
-                  </div>
-                )}
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>듀얼 뷰</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTimerDisplayMode('analog')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                      timerDisplayMode === 'analog'
+                        ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-white shadow-xs'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>🕰️ 시계만</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTimerDisplayMode('digital')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                      timerDisplayMode === 'digital'
+                        ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-white shadow-xs'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>⏱️ 디지털만</span>
+                  </button>
+                </div>
               </div>
 
-              {/* 상단 2: 타이머 표시 모드 세그먼트 스위처 */}
-              <div className="mb-4 inline-flex p-1 bg-zinc-200/60 dark:bg-zinc-800/60 rounded-2xl border border-zinc-300/40 dark:border-zinc-700/50 shadow-inner">
-                <button
-                  type="button"
-                  onClick={() => setTimerDisplayMode('dual')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all ${
-                    timerDisplayMode === 'dual'
-                      ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-                  }`}
-                >
-                  <Icon name="clock" className="w-3.5 h-3.5" />
-                  <span>듀얼 뷰</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTimerDisplayMode('analog')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all ${
-                    timerDisplayMode === 'analog'
-                      ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-                  }`}
-                >
-                  <span>🕰️ 수능 시계만</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTimerDisplayMode('digital')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all ${
-                    timerDisplayMode === 'digital'
-                      ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                      : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-                  }`}
-                >
-                  <span>⏱️ 디지털만</span>
-                </button>
-              </div>
-
-              {/* 메인 타이머 디스플레이 영역 */}
+              {/* ── 타이머 메인 뷰 (듀얼 / 아날로그 / 디지털) ── */}
               {timerDisplayMode === 'dual' && (
-                <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-6 sm:gap-8 my-2">
-                  <div className="flex flex-col items-center justify-center p-4 bg-zinc-50/70 dark:bg-zinc-800/40 rounded-3xl border border-zinc-200/60 dark:border-zinc-700/50 shadow-inner">
-                    <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 mb-2 flex items-center gap-1.5">
+                <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-8 my-2">
+                  {/* 좌측: 수능 시험장 규격 아날로그 시계 */}
+                  <div className="flex flex-col items-center justify-center p-6 bg-black/[0.02] dark:bg-white/[0.03] rounded-[28px] border border-black/5 dark:border-white/5 shadow-inner">
+                    <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
                       <span>수능 시험장 표준 시계 ({currentSubject.startTimeStr} ~ {currentSubject.endTimeStr})</span>
                     </div>
@@ -539,22 +518,25 @@ export const ExamPacer = ({
                     />
                   </div>
 
+                  {/* 우측: 애플 카운트다운 타이머 & 현재 파트 다이내믹 아일랜드 */}
                   <div className="flex flex-col items-center justify-center p-2">
                     <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500 font-bold mb-1">
                       전체 시험 잔여 시간
                     </div>
-                    <div className="text-6xl sm:text-7xl lg:text-8xl font-black font-mono tracking-tight text-zinc-900 dark:text-white digital-timer drop-shadow-sm my-1">
+                    <div className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black font-mono tracking-tighter text-zinc-900 dark:text-white digital-timer drop-shadow-sm my-1">
                       {formatTime(remainingSeconds)}
                     </div>
-                    <div className="mt-3 w-full max-w-xs px-4 py-2.5 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-center shadow-xs">
-                      <div className="text-[11px] font-bold text-indigo-500 dark:text-indigo-400">
+
+                    {/* 현재 파트 다이내믹 캡슐 */}
+                    <div className="mt-4 w-full max-w-xs px-5 py-3 rounded-2xl bg-indigo-500/10 dark:bg-white/[0.05] border border-indigo-500/20 dark:border-white/10 text-center shadow-xs">
+                      <div className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
                         현재 파트 ({currentPartIndex + 1}/{pipelineParts.length})
                       </div>
-                      <div className="text-base font-black text-indigo-950 dark:text-indigo-200 truncate mt-0.5">
+                      <div className="text-base sm:text-lg font-black text-zinc-900 dark:text-white truncate mt-0.5">
                         {pipelineParts[currentPartIndex]?.name || '시험 준비'}
                       </div>
-                      <div className="text-xs font-mono text-indigo-600/80 dark:text-indigo-300/80 mt-0.5">
-                        목표: {pipelineParts[currentPartIndex]?.targetMinutes}분 | 소요: {formatTime(partElapsed[pipelineParts[currentPartIndex]?.id] || 0)}
+                      <div className="text-xs font-mono text-zinc-600 dark:text-zinc-400 mt-0.5">
+                        목표 {pipelineParts[currentPartIndex]?.targetMinutes}분 · 소요 {formatTime(partElapsed[pipelineParts[currentPartIndex]?.id] || 0)}
                       </div>
                     </div>
                   </div>
@@ -562,22 +544,22 @@ export const ExamPacer = ({
               )}
 
               {timerDisplayMode === 'analog' && (
-                <div className="flex flex-col items-center justify-center my-3">
+                <div className="flex flex-col items-center justify-center my-4">
                   <CSATAnalogClock
                     subjectMeta={currentSubject}
                     totalExamSeconds={totalExamSeconds}
                     remainingSeconds={remainingSeconds}
                     isExamRunning={isExamRunning}
                     isDark={isDarkMode}
-                    sizeClass="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-88 lg:h-88"
+                    sizeClass="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-96 lg:h-96"
                     currentPartName={pipelineParts[currentPartIndex]?.name}
                   />
-                  <div className="mt-4 flex items-center gap-3 px-4 py-2 rounded-2xl bg-zinc-100/90 dark:bg-zinc-800/90 border border-zinc-200 dark:border-zinc-700 shadow-sm">
-                    <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">잔여 시간:</span>
-                    <span className="text-2xl font-black font-mono text-zinc-900 dark:text-white">
+                  <div className="mt-5 flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/10 shadow-sm">
+                    <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 font-bold">잔여 시간:</span>
+                    <span className="text-3xl font-black font-mono text-zinc-900 dark:text-white">
                       {formatTime(remainingSeconds)}
                     </span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold truncate max-w-[140px]">
+                    <span className="text-xs px-3 py-1 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-bold truncate max-w-[150px]">
                       {pipelineParts[currentPartIndex]?.name}
                     </span>
                   </div>
@@ -585,20 +567,32 @@ export const ExamPacer = ({
               )}
 
               {timerDisplayMode === 'digital' && (
-                <div className="my-2">
-                  <div className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-mono tracking-tight text-zinc-900 dark:text-white digital-timer drop-shadow-sm my-1">
+                <div className="my-6">
+                  <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500 font-bold mb-2">
+                    전체 시험 잔여 시간
+                  </div>
+                  <div className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-black font-mono tracking-tighter text-zinc-900 dark:text-white digital-timer drop-shadow-sm my-2">
                     {formatTime(remainingSeconds)}
+                  </div>
+                  <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-indigo-500/10 dark:bg-white/[0.06] border border-indigo-500/20 dark:border-white/10">
+                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                      Step {currentPartIndex + 1}: {pipelineParts[currentPartIndex]?.name}
+                    </span>
+                    <span className="opacity-40">·</span>
+                    <span className="text-xs font-mono text-zinc-600 dark:text-zinc-300">
+                      목표 {pipelineParts[currentPartIndex]?.targetMinutes}분
+                    </span>
                   </div>
                 </div>
               )}
 
-              {/* 전체 시험 잔여율 바 */}
-              <div className="w-full max-w-xl mx-auto mt-3 mb-4">
-                <div className="flex items-center justify-between text-[11px] font-mono font-bold text-zinc-500 dark:text-zinc-400 mb-1 px-1">
-                  <span>경과: {formatTime(totalExamSeconds - remainingSeconds)}</span>
-                  <span>잔여: {formatTime(remainingSeconds)} / {currentSubject.totalMinutes}분</span>
+              {/* 전체 시험 잔여율 프로그레스 바 */}
+              <div className="w-full max-w-xl mx-auto mt-4 mb-4">
+                <div className="flex items-center justify-between text-[11px] font-mono font-bold text-zinc-500 dark:text-zinc-400 mb-1.5 px-1">
+                  <span>경과 {formatTime(totalExamSeconds - remainingSeconds)}</span>
+                  <span>잔여 {formatTime(remainingSeconds)} / {currentSubject.totalMinutes}분</span>
                 </div>
-                <div className="w-full h-2.5 bg-zinc-200/70 dark:bg-zinc-800 rounded-full overflow-hidden p-0.5 border border-zinc-200/40 dark:border-zinc-700/40">
+                <div className="w-full h-2.5 bg-black/[0.06] dark:bg-white/[0.08] rounded-full overflow-hidden p-0.5 border border-black/5 dark:border-white/5">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-indigo-500 to-rose-500 transition-all duration-300"
                     style={{ width: `${(remainingSeconds / totalExamSeconds) * 100}%` }}
@@ -606,54 +600,85 @@ export const ExamPacer = ({
                 </div>
               </div>
 
-              {/* 실전 트리거 버튼 */}
-              <div className="w-full max-w-lg mx-auto pt-2">
-                {!examStarted ? (
-                  <button
-                    type="button"
-                    onClick={handleStartExam}
-                    className="w-full min-h-[60px] py-4 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-lg sm:text-xl shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-3 transition-all"
-                  >
-                    <Icon name="play" className="w-6 h-6 fill-current" />
-                    <span>시험 시작 (1번 파트부터 가동) [Space]</span>
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleNextPart}
-                    className={`w-full min-h-[64px] py-4 px-6 rounded-2xl active:scale-95 text-white font-black text-lg sm:text-xl shadow-xl flex items-center justify-center gap-3 transition-all ${
-                      currentPartIndex >= pipelineParts.length - 1
-                        ? 'bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 shadow-rose-600/30'
-                        : 'bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 shadow-emerald-600/30 animate-pulse-glow'
-                    }`}
-                  >
-                    <Icon name="fastForward" className="w-6 h-6" />
-                    <span>
-                      {currentPartIndex >= pipelineParts.length - 1
-                        ? '🏁 시험 종료 및 리포트 (Space Bar)'
-                        : `⏩ [${pipelineParts[currentPartIndex]?.name}] 풀이 완료 ➔ 다음 파트 (Space Bar)`}
-                    </span>
-                  </button>
-                )}
+              {/* ── 하단 컨트롤 독 (Apple Floating Dock) ── */}
+              <div className="w-full max-w-xl mx-auto pt-3">
+                <div className="flex items-center justify-center gap-2.5">
+                  {!examStarted ? (
+                    <button
+                      type="button"
+                      onClick={handleStartExam}
+                      className="flex-1 min-h-[58px] py-4 px-8 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-base sm:text-lg shadow-xl shadow-indigo-600/25 flex items-center justify-center gap-3 transition-all select-none"
+                    >
+                      <Play className="w-5 h-5 fill-current" />
+                      <span>시험 시작 (1번 파트부터 가동) [Space]</span>
+                    </button>
+                  ) : (
+                    <>
+                      {/* 일시정지 / 재개 버튼 */}
+                      <button
+                        type="button"
+                        onClick={() => setIsExamRunning(!isExamRunning)}
+                        className={`px-4 sm:px-5 py-4 rounded-full text-xs sm:text-sm font-bold flex items-center gap-2 transition-all active:scale-95 shadow-sm select-none ${
+                          isExamRunning
+                            ? 'bg-amber-500 hover:bg-amber-600 text-white'
+                            : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                        }`}
+                        title="단축키: P"
+                      >
+                        {isExamRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
+                        <span className="hidden sm:inline">{isExamRunning ? '일시정지 (P)' : '재개 (P)'}</span>
+                      </button>
 
-                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-2 font-mono">
-                  단축키: <strong>Space Bar</strong> = 다음 파트로 넘어가기 | <strong>P</strong> = 일시정지/재개
+                      {/* 다음 파트 넘어가기 버튼 (메인) */}
+                      <button
+                        type="button"
+                        onClick={handleNextPart}
+                        className={`flex-1 min-h-[58px] py-4 px-6 rounded-full active:scale-95 text-white font-black text-base sm:text-lg shadow-xl flex items-center justify-center gap-3 transition-all select-none ${
+                          currentPartIndex >= pipelineParts.length - 1
+                            ? 'bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 shadow-rose-600/30'
+                            : 'bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 shadow-emerald-600/25 animate-pulse-glow'
+                        }`}
+                      >
+                        <FastForward className="w-5 h-5" />
+                        <span className="truncate">
+                          {currentPartIndex >= pipelineParts.length - 1
+                            ? '🏁 시험 종료 및 리포트 (Space)'
+                            : `⏩ [${pipelineParts[currentPartIndex]?.name}] 완료 ➔ 다음 파트 (Space)`}
+                        </span>
+                      </button>
+
+                      {/* 리셋 버튼 */}
+                      <button
+                        type="button"
+                        onClick={handleResetExam}
+                        className="p-4 rounded-full bg-black/[0.05] dark:bg-white/[0.08] hover:bg-black/[0.08] dark:hover:bg-white/15 text-zinc-600 dark:text-zinc-300 transition-all active:scale-95"
+                        title="시험 초기화"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-2.5 font-mono select-none">
+                  키보드 단축키: <strong className="text-zinc-600 dark:text-zinc-300">Space Bar</strong> (다음 파트) · <strong className="text-zinc-600 dark:text-zinc-300">P</strong> (일시정지/재개)
                 </p>
               </div>
             </div>
           </div>
 
-          {/* 순서 배열 기반 순차 파이프라인 카드 그리드 */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
+          {/* ── 4. 순차 파이프라인 카드 그리드 (Sequential Flow) ── */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
               <div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                  <span>🎯 순차 풀이 파이프라인 (Sequential Flow)</span>
+                <h3 className="text-base sm:text-lg font-black text-zinc-900 dark:text-white flex items-center gap-2 tracking-tight">
+                  <Target className="w-4 h-4 text-indigo-500" />
+                  <span>순차 풀이 파이프라인 (Sequential Flow)</span>
                 </h3>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   {!examStarted
-                    ? '시험 전 ◀ ▶ 버튼으로 학생 맞춤형 풀이 순서로 자유롭게 재배치하세요.'
-                    : '현재 파트 목표 시간을 초과해도 타이머는 멈추지 않고 실시간 초과량을 정밀 기록합니다.'}
+                    ? '시험 시작 전 ◀ ▶ 버튼으로 나만의 맞춤 순서로 자유롭게 재배치할 수 있습니다.'
+                    : '각 파트의 목표 시간을 넘겨도 타이머는 멈추지 않고 실시간 초과량을 정밀 기록합니다.'}
                 </p>
               </div>
             </div>
@@ -671,18 +696,19 @@ export const ExamPacer = ({
                 return (
                   <div
                     key={part.id}
-                    className={`rounded-2xl p-5 border transition-all duration-200 relative overflow-hidden flex flex-col justify-between select-none ${
+                    className={`rounded-[24px] p-5 border transition-all duration-300 relative overflow-hidden flex flex-col justify-between select-none ${
                       isActive
                         ? isOvertime
-                          ? 'glass-card bg-rose-50/90 dark:bg-rose-950/40 border-rose-500 shadow-glow-rose ring-2 ring-rose-500/50 scale-[1.03] animate-pulse'
-                          : 'glass-card bg-indigo-50/90 dark:bg-indigo-950/40 border-indigo-500 shadow-glow-indigo ring-2 ring-indigo-500/50 scale-[1.03]'
+                          ? 'glass-card bg-rose-50/90 dark:bg-rose-950/40 border-rose-500/60 shadow-lg shadow-rose-500/20 ring-2 ring-rose-500/40 scale-[1.02]'
+                          : 'glass-card bg-indigo-50/90 dark:bg-indigo-950/40 border-indigo-500/60 shadow-lg shadow-indigo-500/20 ring-2 ring-indigo-500/40 scale-[1.02]'
                         : isCompleted
-                        ? 'glass-card bg-zinc-100/60 dark:bg-zinc-800/40 border-zinc-200 dark:border-zinc-700/60 opacity-80'
-                        : 'glass-card bg-white/70 dark:bg-zinc-900/70 border-white/60 dark:border-zinc-800 opacity-60'
+                        ? 'glass-card bg-black/[0.02] dark:bg-white/[0.03] border-emerald-500/30 dark:border-emerald-500/20 opacity-90'
+                        : 'glass-card bg-white/70 dark:bg-zinc-900/70 border-black/5 dark:border-white/10 opacity-75'
                     }`}
                   >
+                    {/* 상단 액티브 림 */}
                     {isActive && (
-                      <div className={`absolute top-0 left-0 right-0 h-1.5 ${isOvertime ? 'bg-rose-600' : 'bg-indigo-600'} animate-pulse`} />
+                      <div className={`absolute top-0 left-0 right-0 h-1.5 ${isOvertime ? 'bg-rose-500' : 'bg-indigo-500'} animate-pulse`} />
                     )}
 
                     <div>
@@ -694,7 +720,7 @@ export const ExamPacer = ({
                               : 'bg-indigo-600 text-white'
                             : isCompleted
                             ? 'bg-emerald-600 text-white'
-                            : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400'
+                            : 'bg-black/[0.05] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-400'
                         }`}>
                           {isActive
                             ? isOvertime ? '🔥 초과 풀이 중' : '⚡ 현재 풀이 중'
@@ -708,24 +734,24 @@ export const ExamPacer = ({
                               disabled={idx === 0}
                               onClick={() => movePartSequence(idx, -1)}
                               title="앞 순서로 이동"
-                              className="p-1 rounded-lg bg-zinc-200/80 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 disabled:opacity-30 hover:bg-white dark:hover:bg-zinc-700 transition-colors"
+                              className="p-1 rounded-full bg-black/[0.04] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 disabled:opacity-20 hover:bg-black/[0.08] dark:hover:bg-white/15 transition-all"
                             >
-                              <Icon name="arrowLeft" className="w-3.5 h-3.5" />
+                              <ArrowLeft className="w-3.5 h-3.5" />
                             </button>
                             <button
                               type="button"
                               disabled={idx === pipelineParts.length - 1}
                               onClick={() => movePartSequence(idx, 1)}
                               title="뒤 순서로 이동"
-                              className="p-1 rounded-lg bg-zinc-200/80 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 disabled:opacity-30 hover:bg-white dark:hover:bg-zinc-700 transition-colors"
+                              className="p-1 rounded-full bg-black/[0.04] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 disabled:opacity-20 hover:bg-black/[0.08] dark:hover:bg-white/15 transition-all"
                             >
-                              <Icon name="arrowRight" className="w-3.5 h-3.5" />
+                              <ArrowRight className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         )}
                       </div>
 
-                      <h4 className="font-extrabold text-base text-zinc-900 dark:text-white leading-snug">
+                      <h4 className="font-black text-base text-zinc-900 dark:text-white leading-snug tracking-tight">
                         {part.name}
                       </h4>
 
@@ -734,9 +760,9 @@ export const ExamPacer = ({
                       </p>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-zinc-200/50 dark:border-zinc-800/80 space-y-1.5 font-mono text-xs">
+                    <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/5 space-y-1 font-mono text-xs">
                       <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
-                        <span>목표 시간:</span>
+                        <span>목표:</span>
                         <strong>{part.targetMinutes}분 (00:00)</strong>
                       </div>
 
@@ -750,12 +776,12 @@ export const ExamPacer = ({
                       {(isActive || isCompleted) && (
                         <div className="pt-1 flex items-center justify-between">
                           <span className="text-[11px] text-zinc-400">목표 대비:</span>
-                          <span className={`px-2 py-0.5 rounded-md font-bold text-xs ${
+                          <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${
                             isOvertime
-                              ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 animate-pulse'
-                              : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                              ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
+                              : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
                           }`}>
-                            {isOvertime ? `+${formatTime(deltaSec)} 지연!` : `-${formatTime(Math.abs(deltaSec))} 여유`}
+                            {isOvertime ? `+${formatTime(deltaSec)} 지연` : `-${formatTime(Math.abs(deltaSec))} 여유`}
                           </span>
                         </div>
                       )}
@@ -766,16 +792,16 @@ export const ExamPacer = ({
             </div>
           </div>
 
-          {/* 타이머 뷰 하단: 현재 선택된 과목의 최근 모의고사 리포트 퀵 프리뷰 */}
+          {/* ── 5. 최근 응시 모의고사 요약 위젯 카드 ── */}
           {!examStarted && examHistory.some((h) => h.subject === selectedSubjectKey) && (
-            <div className="glass-card bg-white/75 dark:bg-zinc-900/75 p-5 rounded-2xl border border-white/60 dark:border-zinc-800 shadow-glass dark:shadow-glass-dark space-y-3">
+            <div className="glass-card bg-white/75 dark:bg-zinc-900/75 p-5 rounded-[26px] border border-white/60 dark:border-white/10 shadow-sm space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Icon name="fileText" className="w-4 h-4 text-blue-500" />
-                  <h4 className="font-extrabold text-sm text-zinc-900 dark:text-white">
+                  <FileText className="w-4 h-4 text-blue-500" />
+                  <h4 className="font-black text-sm text-zinc-900 dark:text-white tracking-tight">
                     {currentSubject.name} 최근 모의고사 기록
                   </h4>
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-xs text-zinc-400 font-mono">
                     ({examHistory.filter((h) => h.subject === selectedSubjectKey).length}회 완료)
                   </span>
                 </div>
@@ -785,11 +811,10 @@ export const ExamPacer = ({
                   className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                 >
                   <span>과목별 전체 리포트 보기</span>
-                  <Icon name="chevronRight" className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* 최근 1회차 요약 박스 */}
               {(() => {
                 const latestSession = examHistory.find((h) => h.subject === selectedSubjectKey);
                 if (!latestSession) return null;
@@ -799,10 +824,10 @@ export const ExamPacer = ({
                 const isOver = delta > 0;
 
                 return (
-                  <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200/70 dark:border-zinc-700/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div className="p-3.5 rounded-2xl bg-black/[0.02] dark:bg-white/[0.04] border border-black/5 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 font-bold text-zinc-800 dark:text-zinc-200">
-                        <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px]">
+                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px]">
                           최신 응시
                         </span>
                         <span>{latestSession.presetName || '표준 전략'}</span>
@@ -819,7 +844,7 @@ export const ExamPacer = ({
                       <span className="font-mono font-bold text-zinc-700 dark:text-zinc-300">
                         {formatTime(latestSession.totalElapsed || 0)} 소요
                       </span>
-                      <span className={`px-2 py-0.5 rounded-md font-bold text-[11px] ${
+                      <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] ${
                         isOver
                           ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400'
                           : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
@@ -835,7 +860,7 @@ export const ExamPacer = ({
         </div>
       )}
 
-      {/* 2. 과목별 실전 모의고사 리포트 리스트 뷰 (pacerSubView === 'reports') */}
+      {/* ── 3. 과목별 실전 모의고사 리포트 리스트 뷰 ── */}
       {pacerSubView === 'reports' && (
         <SubjectReportList
           examHistory={examHistory}
@@ -847,7 +872,7 @@ export const ExamPacer = ({
         />
       )}
 
-      {/* 3. 타임 통계 대시보드 뷰 (pacerSubView === 'analytics') */}
+      {/* ── 4. 타임 통계 대시보드 뷰 ── */}
       {pacerSubView === 'analytics' && (
         <StatsDashboard
           examHistory={examHistory}
@@ -867,7 +892,7 @@ export const ExamPacer = ({
         />
       )}
 
-      {/* 4. 기출 공식 등급컷 & 성적 트래커 뷰 (pacerSubView === 'grader') */}
+      {/* ── 5. 기출 공식 등급컷 & 성적 트래커 뷰 ── */}
       {pacerSubView === 'grader' && (
         <ScoreTracker
           scoreHistory={scoreHistory}
@@ -878,7 +903,7 @@ export const ExamPacer = ({
         />
       )}
 
-      {/* 5. 정시 모의배치 & 대학 라인 판정기 뷰 (pacerSubView === 'admission') */}
+      {/* ── 6. 정시 모의배치 & 대학 라인 판정기 뷰 ── */}
       {pacerSubView === 'admission' && (
         <AdmissionPredictor
           scoreHistory={scoreHistory}
