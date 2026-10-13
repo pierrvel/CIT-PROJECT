@@ -7,6 +7,28 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        'cs-bg': '#f4f8f0',
+        'cs-paper': '#fbfcf8',
+        'cs-paper-2': '#f7faf4',
+        'cs-line': '#e1e9df',
+        'cs-line-strong': '#d6e2d4',
+        'cs-ink': '#1f2c24',
+        'cs-muted': '#7d8a80',
+        'cs-green': '#8fb99a',
+        'cs-green-soft': '#dfeedd',
+        'cs-green-softer': '#edf5e9',
+        'cs-green-deep': '#45624d',
+        'cs-cream': '#f7f2df',
+        'cs-danger': '#a5483c',
+        'cs-warn': '#7a6233',
+        'cs-action': '#739c7e',
+      },
+      borderRadius: {
+        'cs': '22px',
+        'cs-sm': '14px',
+        'cs-lg': '28px',
+      },
       fontFamily: {
         sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', '"Helvetica Neue"', '"Segoe UI"', '"Apple SD Gothic Neo"', '"Noto Sans KR"', '"Malgun Gothic"', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']

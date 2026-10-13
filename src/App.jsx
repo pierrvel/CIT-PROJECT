@@ -43,6 +43,22 @@ export function App() {
     }
   }, [isDarkMode]);
 
+  // ClassSpace 내추럴 페이퍼 테마 동기화
+  const [isPaperTheme, setIsPaperTheme] = useState(() => {
+    const saved = localStorage.getItem('dc_paper_theme');
+    return saved === null ? true : saved === 'true'; // 기본 활성화로 테스트 제공
+  });
+
+  useEffect(() => {
+    if (isPaperTheme) {
+      document.documentElement.classList.add('theme-paper');
+      localStorage.setItem('dc_paper_theme', 'true');
+    } else {
+      document.documentElement.classList.remove('theme-paper');
+      localStorage.setItem('dc_paper_theme', 'false');
+    }
+  }, [isPaperTheme]);
+
   // 토스트 메시지 시스템
   const [toasts, setToasts] = useState([]);
   const showToast = useCallback((message, type = 'info') => {
@@ -1254,6 +1270,8 @@ export function App() {
         onOpenBg={() => setIsBgModalOpen(true)}
         isDarkMode={isDarkMode}
         setIsDarkMode={setIsDarkMode}
+        isPaperTheme={isPaperTheme}
+        setIsPaperTheme={setIsPaperTheme}
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
       />

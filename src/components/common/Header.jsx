@@ -29,6 +29,8 @@ export const Header = ({
   onOpenBg,
   isDarkMode,
   setIsDarkMode,
+  isPaperTheme,
+  setIsPaperTheme,
   isFullscreen,
   toggleFullscreen
 }) => {
@@ -112,6 +114,20 @@ export const Header = ({
             className="p-2 sm:p-2.5 rounded-xl text-zinc-600 dark:text-zinc-300 bg-white/60 dark:bg-zinc-800/60 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/70 dark:border-zinc-700/60 shadow-sm transition-all"
           >
             <Icon name="image" className="w-4 h-4 text-indigo-500" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsPaperTheme(!isPaperTheme)}
+            title={isPaperTheme ? "내추럴 페이퍼 테마 켜짐 (클릭시 클래식 모드)" : "ClassSpace 내추럴 페이퍼 테마 켜기"}
+            className={`flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-bold transition-all border shadow-sm ${
+              isPaperTheme
+                ? 'bg-[#dfeedd] text-[#45624d] border-[#8fb99a] shadow-sm'
+                : 'bg-white/60 dark:bg-zinc-800/60 text-zinc-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-800 border-zinc-200/70 dark:border-zinc-700/60'
+            }`}
+          >
+            <span>🌿</span>
+            <span className="hidden md:inline">{isPaperTheme ? '페이퍼 테마' : '클래식 테마'}</span>
           </button>
 
           <button
