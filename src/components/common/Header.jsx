@@ -132,8 +132,14 @@ export const Header = ({
 
           <button
             type="button"
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            title="다크모드 토글"
+            onClick={() => {
+              if (isPaperTheme) {
+                setIsDarkMode(true);
+              } else {
+                setIsDarkMode(!isDarkMode);
+              }
+            }}
+            title={isPaperTheme ? "다크 모드로 전환" : (isDarkMode ? "라이트 모드로 전환" : "다크 모드로 전환")}
             className="p-2 sm:p-2.5 rounded-xl text-zinc-600 dark:text-zinc-300 bg-white/60 dark:bg-zinc-800/60 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/70 dark:border-zinc-700/60 shadow-sm transition-all"
           >
             <Icon name={isDarkMode ? 'sun' : 'moon'} className="w-4 h-4 text-amber-500 dark:text-amber-400" />

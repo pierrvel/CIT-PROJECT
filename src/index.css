@@ -71,64 +71,187 @@ html.theme-paper {
   --cs-bg: #f4f8f0;
   --cs-paper: #fbfcf8;
   --cs-line: #e1e9df;
+  --cs-line-strong: #d6e2d4;
   --cs-ink: #1f2c24;
+  --cs-muted: #5e6f63;
   --cs-green-deep: #45624d;
+  --cs-green-hover: #344b3b;
   --cs-green-soft: #dfeedd;
+  --cs-green-softer: #edf5e9;
+  --cs-cream: #f7f2df;
 }
 
+html.theme-paper,
 html.theme-paper body {
   background-color: #f4f8f0 !important;
   color: #1f2c24 !important;
 }
 
+/* 1. 고정 배경 레이어 통일 */
+html.theme-paper .fixed.inset-0.-z-30 {
+  background-color: #f4f8f0 !important;
+}
+html.theme-paper .fixed.inset-0.-z-20 {
+  display: none !important;
+}
+
+/* 2. 카드 및 서피스 컨테이너 */
 html.theme-paper .glass-card {
-  background-color: rgba(251, 252, 248, 0.94) !important;
-  border-color: rgba(225, 233, 223, 0.9) !important;
-  box-shadow: 0 12px 36px rgba(71, 92, 76, 0.075) !important;
+  background-color: rgba(251, 252, 248, 0.96) !important;
+  border-color: rgba(225, 233, 223, 0.95) !important;
+  box-shadow: 0 10px 30px rgba(69, 98, 77, 0.06) !important;
   border-radius: 22px !important;
+  color: #1f2c24 !important;
 }
 
 html.theme-paper header {
-  background-color: rgba(249, 251, 247, 0.95) !important;
+  background-color: rgba(251, 252, 248, 0.95) !important;
   border-color: #e1e9df !important;
+  box-shadow: 0 4px 20px rgba(69, 98, 77, 0.04) !important;
 }
 
+/* 3. 텍스트 가독성 */
+html.theme-paper h1,
+html.theme-paper h2,
+html.theme-paper h3,
+html.theme-paper h4,
+html.theme-paper h5,
+html.theme-paper h6,
+html.theme-paper strong {
+  color: #1f2c24 !important;
+}
+
+html.theme-paper p,
+html.theme-paper span,
+html.theme-paper div {
+  color: inherit;
+}
+
+html.theme-paper .text-zinc-900,
+html.theme-paper .text-zinc-800,
+html.theme-paper .text-zinc-700 {
+  color: #1f2c24 !important;
+}
+
+html.theme-paper .text-zinc-600,
+html.theme-paper .text-zinc-500,
+html.theme-paper .text-zinc-400 {
+  color: #5e6f63 !important;
+}
+
+/* 4. 디지털 타이머 & 대형 숫자 */
+html.theme-paper .digital-timer {
+  color: #1f2c24 !important;
+}
+
+/* 5. 알약 탭바 및 세그먼트 컨트롤 */
+html.theme-paper .bg-zinc-200\/70,
+html.theme-paper .bg-zinc-200\/80,
+html.theme-paper .bg-zinc-100 {
+  background-color: #edf5e9 !important;
+  border-color: #d6e2d4 !important;
+}
+
+/* 액티브 알약 탭 (선택된 탭) */
+html.theme-paper .bg-white.shadow-sm,
+html.theme-paper .bg-white.shadow-xs {
+  background-color: #ffffff !important;
+  color: #45624d !important;
+  border-color: #d6e2d4 !important;
+  box-shadow: 0 2px 8px rgba(69, 98, 77, 0.08) !important;
+}
+
+/* 활성화된 어두운 버튼/필터 (ClassSpace 딥 그린으로 통일) */
+html.theme-paper .bg-zinc-900.text-white,
+html.theme-paper .bg-zinc-800.text-white {
+  background-color: #45624d !important;
+  color: #ffffff !important;
+  border-color: #344b3b !important;
+}
+
+/* 6. 메인 브랜드 액센트 (인디고 -> ClassSpace 딥 그린) */
 html.theme-paper .text-indigo-600,
-html.theme-paper .text-indigo-500,
-html.theme-paper .dark\:text-indigo-400 {
+html.theme-paper .text-indigo-500 {
   color: #45624d !important;
 }
 
 html.theme-paper .bg-indigo-600,
 html.theme-paper .bg-indigo-500 {
   background-color: #45624d !important;
+  color: #ffffff !important;
 }
 
-html.theme-paper .hover\:bg-indigo-700:hover {
+html.theme-paper .hover\:bg-indigo-700:hover,
+html.theme-paper .hover\:bg-indigo-600:hover {
   background-color: #344b3b !important;
 }
 
+html.theme-paper .bg-indigo-50,
+html.theme-paper .bg-indigo-50\/70,
+html.theme-paper .bg-indigo-50\/80,
 html.theme-paper .bg-indigo-500\/10,
-html.theme-paper .bg-indigo-600\/10,
-html.theme-paper .dark\:bg-indigo-400\/10 {
-  background-color: #dfeedd !important;
+html.theme-paper .bg-indigo-600\/10 {
+  background-color: #edf5e9 !important;
+  border-color: #d6e2d4 !important;
   color: #45624d !important;
 }
 
 html.theme-paper .border-indigo-500\/20,
-html.theme-paper .border-indigo-500\/30 {
-  border-color: #8fb99a !important;
+html.theme-paper .border-indigo-500\/30,
+html.theme-paper .border-indigo-100,
+html.theme-paper .border-indigo-200,
+html.theme-paper .border-indigo-200\/80 {
+  border-color: #d6e2d4 !important;
 }
 
 html.theme-paper .shadow-indigo-600\/25,
 html.theme-paper .shadow-indigo-500\/20 {
-  box-shadow: 0 8px 22px rgba(82, 120, 91, 0.16) !important;
+  box-shadow: 0 8px 22px rgba(69, 98, 77, 0.16) !important;
 }
 
+/* 7. 입력 폼 & 셀렉트 박스 */
+html.theme-paper input,
+html.theme-paper select,
+html.theme-paper textarea {
+  background-color: #fbfcf8 !important;
+  border-color: #d6e2d4 !important;
+  color: #1f2c24 !important;
+}
+
+html.theme-paper input:focus,
+html.theme-paper select:focus,
+html.theme-paper textarea:focus {
+  border-color: #45624d !important;
+  box-shadow: 0 0 0 3px rgba(69, 98, 77, 0.15) !important;
+}
+
+/* 8. 경계선 톤 통일 */
+html.theme-paper .border-zinc-200,
+html.theme-paper .border-zinc-300,
+html.theme-paper .border-zinc-200\/50,
+html.theme-paper .border-zinc-200\/60,
+html.theme-paper .border-zinc-200\/70 {
+  border-color: #e1e9df !important;
+}
+
+/* 9. 알림 & 상태 배지 */
+html.theme-paper .bg-amber-50 {
+  background-color: #f7f2df !important;
+  border-color: #e5dac1 !important;
+  color: #6e5a27 !important;
+}
+
+html.theme-paper .bg-emerald-50 {
+  background-color: #edf5e9 !important;
+  border-color: #c9dec6 !important;
+  color: #344b3b !important;
+}
+
+/* 10. 스크롤바 */
 html.theme-paper ::-webkit-scrollbar-thumb {
-  background: #b9d4b4 !important;
+  background: #c3d6c1 !important;
 }
 html.theme-paper ::-webkit-scrollbar-thumb:hover {
-  background: #8fb99a !important;
+  background: #9bb798 !important;
 }
 

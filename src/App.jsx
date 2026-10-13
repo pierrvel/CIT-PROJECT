@@ -24,40 +24,62 @@ import ExamReportModal from './components/modals/ExamReportModal';
 export function App() {
   // 1. 네비게이션 & 환경 상태
   const [activeTab, setActiveTab] = useState('pacer'); // 'sprint' | 'pacer'
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('dc_theme');
-    if (saved !== null) return saved === 'dark';
-    return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  // 테마 모드 상태: 'paper' (ClassSpace 감성 페이퍼) | 'dark' (클래식 다크) | 'light' (클래식 라이트)
+  const [themeMode, setThemeMode] = useState(() => {
+    const savedPaper = localStorage.getItem('dc_paper_theme');
+    if (savedPaper === 'true') return 'paper';
+    if (savedPaper === 'false') {
+      const savedTheme = localStorage.getItem('dc_theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
+    }
+    return 'paper'; // 기본값: ClassSpace 감성 페이퍼 모드
   });
+
+  const isPaperTheme = themeMode === 'paper';
+  const isDarkMode = themeMode === 'dark';
+
+  const setIsPaperTheme = (val) => {
+    setThemeMode((prev) => {
+      const nextPaper = typeof val === 'function' ? val(prev === 'paper') : val;
+      if (nextPaper) return 'paper';
+      const last = localStorage.getItem('dc_last_mode') || 'dark';
+      return last === 'paper' ? 'dark' : last;
+    });
+  };
+
+  const setIsDarkMode = (val) => {
+    setThemeMode((prev) => {
+      const nextDark = typeof val === 'function' ? val(prev === 'dark') : val;
+      if (nextDark) return 'dark';
+      return 'light';
+    });
+  };
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  // 다크모드 동기화 (document.documentElement 'dark' 클래스 제어)
+  // 단일 통합 테마 동기화 (document.documentElement 'dark' 및 'theme-paper' 상호 배타적 관리)
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('dc_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('dc_theme', 'light');
-    }
-  }, [isDarkMode]);
-
-  // ClassSpace 내추럴 페이퍼 테마 동기화
-  const [isPaperTheme, setIsPaperTheme] = useState(() => {
-    const saved = localStorage.getItem('dc_paper_theme');
-    return saved === null ? true : saved === 'true'; // 기본 활성화로 테스트 제공
-  });
-
-  useEffect(() => {
-    if (isPaperTheme) {
-      document.documentElement.classList.add('theme-paper');
+    const root = document.documentElement;
+    if (themeMode === 'paper') {
+      root.classList.add('theme-paper');
+      root.classList.remove('dark');
       localStorage.setItem('dc_paper_theme', 'true');
-    } else {
-      document.documentElement.classList.remove('theme-paper');
+      localStorage.setItem('dc_theme', 'paper');
+    } else if (themeMode === 'dark') {
+      root.classList.remove('theme-paper');
+      root.classList.add('dark');
       localStorage.setItem('dc_paper_theme', 'false');
+      localStorage.setItem('dc_theme', 'dark');
+      localStorage.setItem('dc_last_mode', 'dark');
+    } else {
+      root.classList.remove('theme-paper');
+      root.classList.remove('dark');
+      localStorage.setItem('dc_paper_theme', 'false');
+      localStorage.setItem('dc_theme', 'light');
+      localStorage.setItem('dc_last_mode', 'light');
     }
-  }, [isPaperTheme]);
+  }, [themeMode]);
 
   // 토스트 메시지 시스템
   const [toasts, setToasts] = useState([]);
@@ -1239,22 +1261,26 @@ export function App() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-x-hidden text-zinc-900 dark:text-zinc-100 font-sans">
+    <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'bg-[#f4f8f0] text-[#1f2c24]' : 'text-zinc-900 dark:text-zinc-100'} font-sans`}>
       {/* 배경 레이어 및 블러 */}
-      <div className="fixed inset-0 -z-30 bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500" />
-      <div
-        className="fixed inset-0 -z-20 opacity-60 dark:opacity-30 pointer-events-none transition-all duration-700"
-        style={{
-          backgroundImage: 'radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%)'
-        }}
-      />
+      <div className={`fixed inset-0 -z-30 transition-colors duration-500 ${isPaperTheme ? 'bg-[#f4f8f0]' : 'bg-zinc-50 dark:bg-zinc-950'}`} />
+      {!isPaperTheme && (
+        <div
+          className="fixed inset-0 -z-20 opacity-60 dark:opacity-30 pointer-events-none transition-all duration-700"
+          style={{
+            backgroundImage: 'radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%)'
+          }}
+        />
+      )}
       {bgImage && (
         <div
           className="fixed inset-0 -z-10 bg-cover bg-center transition-all duration-500 transform scale-105"
           style={{ backgroundImage: `url(${bgImage})`, filter: `blur(${blurAmount}px)` }}
         />
       )}
-      <div className="fixed inset-0 -z-10 bg-black pointer-events-none transition-opacity duration-300" style={{ opacity: dimOpacity }} />
+      {!isPaperTheme && (
+        <div className="fixed inset-0 -z-10 bg-black pointer-events-none transition-opacity duration-300" style={{ opacity: dimOpacity }} />
+      )}
 
       {/* 헤더 */}
       <Header
