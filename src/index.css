@@ -115,48 +115,55 @@ html.theme-paper {
 
 html.theme-paper,
 html.theme-paper body {
-  background-color: #f4f8f0 !important;
-  color: #1f2c24 !important;
+  background-color: #f4f8f0;
+  color: #1f2c24;
 }
 
-/* 1. 고정 배경 레이어 통일 */
-html.theme-paper .fixed.inset-0.-z-30 {
-  background-color: #f4f8f0 !important;
-}
-html.theme-paper .fixed.inset-0.-z-20 {
-  display: none !important;
+html.theme-paper.has-custom-bg,
+html.theme-paper.has-custom-bg body {
+  background-color: transparent !important;
 }
 
-/* 2. 카드 및 서피스 컨테이너 */
+/* 1. 카드 및 서피스 컨테이너 */
 html.theme-paper .glass-card {
-  background-color: rgba(251, 252, 248, 0.96) !important;
-  border-color: rgba(225, 233, 223, 0.95) !important;
-  box-shadow: 0 10px 30px rgba(69, 98, 77, 0.06) !important;
-  border-radius: 22px !important;
-  color: #1f2c24 !important;
+  background-color: rgba(251, 252, 248, 0.96);
+  border-color: rgba(225, 233, 223, 0.95);
+  box-shadow: 0 10px 30px rgba(69, 98, 77, 0.06);
+  border-radius: 22px;
+  color: #1f2c24;
+}
+
+/* 커스텀 배경화면 활성화 시 글래스모피즘 투명도 */
+html.theme-paper.has-custom-bg .glass-card,
+html.theme-paper .has-custom-bg .glass-card {
+  background-color: rgba(251, 252, 248, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(130%) !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 12px 36px rgba(31, 44, 36, 0.14) !important;
 }
 
 html.theme-paper header {
-  background-color: rgba(251, 252, 248, 0.95) !important;
-  border-color: #e1e9df !important;
-  box-shadow: 0 4px 20px rgba(69, 98, 77, 0.04) !important;
+  background-color: rgba(251, 252, 248, 0.95);
+  border-color: #e1e9df;
+  box-shadow: 0 4px 20px rgba(69, 98, 77, 0.04);
 }
 
-/* 3. 텍스트 가독성 */
+html.theme-paper.has-custom-bg header,
+html.theme-paper .has-custom-bg header {
+  background-color: rgba(251, 252, 248, 0.85) !important;
+  backdrop-filter: blur(16px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(130%) !important;
+}
+
+/* 2. 텍스트 가독성 및 고대비 보존 */
 html.theme-paper h1,
 html.theme-paper h2,
 html.theme-paper h3,
 html.theme-paper h4,
 html.theme-paper h5,
-html.theme-paper h6,
-html.theme-paper strong {
-  color: #1f2c24 !important;
-}
-
-html.theme-paper p,
-html.theme-paper span,
-html.theme-paper div {
-  color: inherit;
+html.theme-paper h6 {
+  color: #1f2c24;
 }
 
 html.theme-paper .text-zinc-900,
@@ -169,6 +176,52 @@ html.theme-paper .text-zinc-600,
 html.theme-paper .text-zinc-500,
 html.theme-paper .text-zinc-400 {
   color: #5e6f63 !important;
+}
+
+/* 토스트 메시지 및 알림 텍스트 가독성 절대 보장 */
+.toast-item,
+html.theme-paper .toast-item {
+  color: #ffffff !important;
+}
+.toast-item .toast-text,
+html.theme-paper .toast-item .toast-text {
+  color: #ffffff !important;
+}
+
+/* 필수 컬러 유틸리티 보존 */
+html.theme-paper .text-white,
+html.theme-paper .text-white * {
+  color: #ffffff !important;
+}
+
+html.theme-paper .text-rose-600,
+html.theme-paper .text-rose-500 {
+  color: #e11d48 !important;
+}
+
+html.theme-paper .text-amber-600,
+html.theme-paper .text-amber-500 {
+  color: #d97706 !important;
+}
+
+html.theme-paper .text-emerald-600,
+html.theme-paper .text-emerald-500 {
+  color: #059669 !important;
+}
+
+/* 에러 & 경고 박스 */
+html.theme-paper .bg-rose-50,
+html.theme-paper .bg-rose-50\/70,
+html.theme-paper .bg-rose-50\/80 {
+  background-color: #fdf2f2 !important;
+  border-color: #fecaca !important;
+}
+html.theme-paper .text-rose-900 {
+  color: #9f1239 !important;
+}
+html.theme-paper .text-rose-800,
+html.theme-paper .text-rose-700 {
+  color: #be123c !important;
 }
 
 /* 4. 디지털 타이머 & 대형 숫자 */

@@ -20,6 +20,8 @@ const iconMap = {
   minus: LucideIcons.Minus,
   check: LucideIcons.Check,
   alertTriangle: LucideIcons.AlertTriangle,
+  alertCircle: LucideIcons.AlertCircle,
+  info: LucideIcons.Info,
   trash2: LucideIcons.Trash2,
   trash: LucideIcons.Trash,
   sparkles: LucideIcons.Sparkles,

@@ -91,9 +91,38 @@ export function App() {
 
   // 2. 글래스모피즘 & 배경화면 커스텀 상태
   const [bgImage, setBgImage] = useState(() => localStorage.getItem('dc_bg_image') || null);
-  const [dimOpacity, setDimOpacity] = useState(() => Number(localStorage.getItem('dc_dim_opacity')) || 0.15);
-  const [blurAmount, setBlurAmount] = useState(() => Number(localStorage.getItem('dc_blur_amount')) || 12);
+  const [dimOpacity, setDimOpacity] = useState(() => {
+    const saved = localStorage.getItem('dc_dim_opacity');
+    return saved !== null ? Number(saved) : 0.15;
+  });
+  const [blurAmount, setBlurAmount] = useState(() => {
+    const saved = localStorage.getItem('dc_blur_amount');
+    return saved !== null ? Number(saved) : 12;
+  });
   const [isBgModalOpen, setIsBgModalOpen] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (bgImage) {
+      root.classList.add('has-custom-bg');
+      try {
+        localStorage.setItem('dc_bg_image', bgImage);
+      } catch (e) {
+        console.warn('[Cockpit] Failed to persist bgImage to localStorage:', e);
+      }
+    } else {
+      root.classList.remove('has-custom-bg');
+      localStorage.removeItem('dc_bg_image');
+    }
+  }, [bgImage]);
+
+  useEffect(() => {
+    localStorage.setItem('dc_dim_opacity', String(dimOpacity));
+  }, [dimOpacity]);
+
+  useEffect(() => {
+    localStorage.setItem('dc_blur_amount', String(blurAmount));
+  }, [blurAmount]);
 
   // 3. 6자리 PIN 클라우드 동기화 시스템 상태
   const [clientId] = useState(() => 'client_' + Math.random().toString(36).slice(2, 9));
@@ -1261,28 +1290,45 @@ export function App() {
   };
 
   return (
-    <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'bg-[#f4f8f0] text-[#1f2c24]' : 'text-zinc-900 dark:text-zinc-100'} font-sans`}>
-      {/* 배경 레이어 및 블러 */}
-      <div className={`fixed inset-0 -z-30 transition-colors duration-500 ${isPaperTheme ? 'bg-[#f4f8f0]' : 'bg-zinc-50 dark:bg-zinc-950'}`} />
-      {!isPaperTheme && (
-        <div
-          className="fixed inset-0 -z-20 opacity-60 dark:opacity-30 pointer-events-none transition-all duration-700"
-          style={{
-            backgroundImage: 'radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%)'
-          }}
-        />
-      )}
-      {bgImage && (
-        <div
-          className="fixed inset-0 -z-10 bg-cover bg-center transition-all duration-500 transform scale-105"
-          style={{ backgroundImage: `url(${bgImage})`, filter: `blur(${blurAmount}px)` }}
-        />
-      )}
-      {!isPaperTheme && (
-        <div className="fixed inset-0 -z-10 bg-black pointer-events-none transition-opacity duration-300" style={{ opacity: dimOpacity }} />
-      )}
+    <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'text-[#1f2c24]' : 'text-zinc-900 dark:text-zinc-100'} ${bgImage ? 'has-custom-bg' : ''} font-sans`}>
+      {/* 고정 배경 레이어 (z-0) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        {/* 1. 기본 베이스 톤 (페이퍼 / 라이트 / 다크) */}
+        <div className={`absolute inset-0 transition-colors duration-500 ${isPaperTheme ? 'bg-[#f4f8f0]' : 'bg-zinc-50 dark:bg-zinc-950'}`} />
 
-      {/* 헤더 */}
+        {/* 2. 비페이퍼 모드 앰비언트 그라디언트 (커스텀 배경 이미지가 없을 때만) */}
+        {!isPaperTheme && !bgImage && (
+          <div
+            className="absolute inset-0 opacity-60 dark:opacity-30 transition-all duration-700"
+            style={{
+              backgroundImage: 'radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%), radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%)'
+            }}
+          />
+        )}
+
+        {/* 3. 커스텀 배경 이미지 */}
+        {bgImage && (
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-all duration-500 transform scale-105"
+            style={{
+              backgroundImage: `url(${bgImage})`,
+              filter: `blur(${blurAmount}px)`
+            }}
+          />
+        )}
+
+        {/* 4. 어둡기 조절 오버레이 (Dim) - 배경 이미지가 있을 때 페이퍼 및 다크/라이트 모두 적용 */}
+        {bgImage && (
+          <div
+            className="absolute inset-0 bg-black transition-opacity duration-300"
+            style={{ opacity: dimOpacity }}
+          />
+        )}
+      </div>
+
+      {/* 헤더 & 본문 래퍼 (relative z-10) */}
+      <div className="relative z-10 flex flex-col flex-1">
+        {/* 헤더 */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -1402,6 +1448,7 @@ export function App() {
           />
         )}
       </main>
+      </div>
 
       {/* 공통 오버레이 & 위젯 */}
       <Toast toasts={toasts} />
@@ -1425,6 +1472,7 @@ export function App() {
         setDimOpacity={setDimOpacity}
         blurAmount={blurAmount}
         setBlurAmount={setBlurAmount}
+        showToast={showToast}
       />
 
       <SyncModal
