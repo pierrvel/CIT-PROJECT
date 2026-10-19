@@ -91,6 +91,26 @@ export function App() {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000);
   }, []);
 
+  // 텍스트 다이어트 모드 상태: 불필요한 설명문을 숨겨 시각적 피로도를 낮춤 (비교 토글 가능)
+  const [isTextMinimal, setIsTextMinimal] = useState(() => {
+    const saved = localStorage.getItem('dc_text_minimal');
+    return saved !== null ? saved === 'true' : true;
+  });
+
+  const toggleTextMinimal = useCallback(() => {
+    setIsTextMinimal((prev) => {
+      const next = !prev;
+      localStorage.setItem('dc_text_minimal', String(next));
+      showToast(
+        next
+          ? '👀 텍스트 다이어트 ON: 설명문을 숨겨 눈의 피로를 최소화합니다.'
+          : '📖 텍스트 다이어트 OFF: 모든 상세 설명문과 안내를 다시 표시합니다.',
+        'info'
+      );
+      return next;
+    });
+  }, [showToast]);
+
   // PWA (Progressive Web App) 설치 상태 및 이벤트 제어
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -1410,6 +1430,8 @@ export function App() {
             playChime={playChime}
             setNewGoalModal={setNewGoalModal}
             showToast={showToast}
+            isTextMinimal={isTextMinimal}
+            toggleTextMinimal={toggleTextMinimal}
           />
         )}
 
@@ -1437,6 +1459,8 @@ export function App() {
 
         {activeTab === 'pacer' && (
           <ExamPacer
+            isTextMinimal={isTextMinimal}
+            toggleTextMinimal={toggleTextMinimal}
             pacerSubView={pacerSubView}
             setPacerSubView={setPacerSubView}
             examHistory={examHistory}

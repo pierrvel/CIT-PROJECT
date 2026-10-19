@@ -11,7 +11,9 @@ export const SprintTab = ({
   soundEnabled,
   playChime,
   setNewGoalModal,
-  showToast
+  showToast,
+  isTextMinimal = true,
+  toggleTextMinimal
 }) => {
   const [strategyModalGoal, setStrategyModalGoal] = useState(null);
   const [pruneInputVal, setPruneInputVal] = useState(0);
@@ -58,9 +60,11 @@ export const SprintTab = ({
               목표 {goals.length}개
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-            지연 발생 시 3가지 적응형 재배분 전략(강제 상향 / 주말 이월 / 범위 가지치기)을 지원합니다.
-          </p>
+          {!isTextMinimal && (
+            <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+              지연 발생 시 3가지 적응형 재배분 전략(강제 상향 / 주말 이월 / 범위 가지치기)을 지원합니다.
+            </p>
+          )}
         </div>
 
         <button

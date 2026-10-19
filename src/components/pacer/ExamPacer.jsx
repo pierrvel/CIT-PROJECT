@@ -31,6 +31,10 @@ import AdmissionPredictor from '../admission/AdmissionPredictor';
 import { formatTime } from '../../utils/pacing';
 
 export const ExamPacer = ({
+  // 텍스트 다이어트 모드 & 비교 토글
+  isTextMinimal = true,
+  toggleTextMinimal,
+
   // 서브 뷰 상태
   pacerSubView,
   setPacerSubView,
@@ -192,9 +196,25 @@ export const ExamPacer = ({
           </div>
         </div>
 
-        {/* 시험 진행 중이거나 리포트가 있을 때 우측 퀵 버튼 */}
-        {pacerSubView === 'timer' && examHistory.length > 0 && (
-          <div className="flex items-center gap-2 shrink-0">
+        {/* 우측 퀵 버튼 그룹 (텍스트 다이어트 비교 토글 + 최근 리포트) */}
+        <div className="flex items-center gap-2 shrink-0">
+          {toggleTextMinimal && (
+            <button
+              type="button"
+              onClick={toggleTextMinimal}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                isTextMinimal
+                  ? 'bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-600 dark:text-indigo-400 border-indigo-500/30 shadow-xs'
+                  : 'bg-black/[0.04] dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400 border-black/5 dark:border-white/10 hover:bg-black/[0.08] dark:hover:bg-white/10'
+              }`}
+              title="클릭하여 설명문 표시(원래 뷰)와 간소화(텍스트 다이어트)를 즉시 비교할 수 있습니다"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isTextMinimal ? '텍스트 다이어트: ON' : '텍스트 다이어트: OFF'}</span>
+            </button>
+          )}
+
+          {pacerSubView === 'timer' && examHistory.length > 0 && (
             <button
               type="button"
               onClick={() => setIsReportModalOpen(true)}
@@ -203,8 +223,8 @@ export const ExamPacer = ({
               <BarChart3 className="w-3.5 h-3.5" />
               <span>최근 리포트 ({examHistory.length}회)</span>
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* ── 2. 타임어택 메인 뷰 (pacerSubView === 'timer') ── */}
@@ -223,9 +243,11 @@ export const ExamPacer = ({
                     <h3 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white tracking-tight">
                       과목 및 풀이 전략
                     </h3>
-                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
-                      수능 표준 시험 시간표 및 과목별 파이프라인 순서
-                    </p>
+                    {!isTextMinimal && (
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
+                        수능 표준 시험 시간표 및 과목별 파이프라인 순서
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -335,9 +357,11 @@ export const ExamPacer = ({
                     <h3 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white tracking-tight">
                       집중 환경 및 오디오
                     </h3>
-                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
-                      Web Audio 타종 및 화면 꺼짐 방지 제어
-                    </p>
+                    {!isTextMinimal && (
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
+                        Web Audio 타종 및 화면 꺼짐 방지 제어
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -613,7 +637,7 @@ export const ExamPacer = ({
                       className="flex-1 min-h-[58px] py-4 px-8 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-base sm:text-lg shadow-xl shadow-indigo-600/25 flex items-center justify-center gap-3 transition-all select-none"
                     >
                       <Play className="w-5 h-5 fill-current" />
-                      <span>시험 시작 (1번 파트부터 가동) [Space]</span>
+                      <span>{isTextMinimal ? '시험 시작' : '시험 시작 (1번 파트부터 가동) [Space]'}</span>
                     </button>
                   ) : (
                     <>
@@ -629,7 +653,11 @@ export const ExamPacer = ({
                         title="단축키: P"
                       >
                         {isExamRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
-                        <span className="hidden sm:inline">{isExamRunning ? '일시정지 (P)' : '재개 (P)'}</span>
+                        <span className="hidden sm:inline">
+                          {isTextMinimal
+                            ? (isExamRunning ? '일시정지' : '재개')
+                            : (isExamRunning ? '일시정지 (P)' : '재개 (P)')}
+                        </span>
                       </button>
 
                       {/* 다음 파트 넘어가기 버튼 (메인) */}
@@ -645,8 +673,8 @@ export const ExamPacer = ({
                         <FastForward className="w-5 h-5" />
                         <span className="truncate">
                           {currentPartIndex >= pipelineParts.length - 1
-                            ? '🏁 시험 종료 및 리포트 (Space)'
-                            : `⏩ [${pipelineParts[currentPartIndex]?.name}] 완료 ➔ 다음 파트 (Space)`}
+                            ? (isTextMinimal ? '시험 종료 및 리포트' : '🏁 시험 종료 및 리포트 (Space)')
+                            : (isTextMinimal ? `${pipelineParts[currentPartIndex]?.name} 완료 ➔ 다음 파트` : `⏩ [${pipelineParts[currentPartIndex]?.name}] 완료 ➔ 다음 파트 (Space)`)}
                         </span>
                       </button>
 
@@ -663,9 +691,15 @@ export const ExamPacer = ({
                   )}
                 </div>
 
-                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-2.5 font-mono select-none">
-                  키보드 단축키: <strong className="text-zinc-600 dark:text-zinc-300">Space Bar</strong> (다음 파트) · <strong className="text-zinc-600 dark:text-zinc-300">P</strong> (일시정지/재개)
-                </p>
+                {!isTextMinimal ? (
+                  <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-2.5 font-mono select-none">
+                    키보드 단축키: <strong className="text-zinc-600 dark:text-zinc-300">Space Bar</strong> (다음 파트) · <strong className="text-zinc-600 dark:text-zinc-300">P</strong> (일시정지/재개)
+                  </p>
+                ) : (
+                  <p className="text-[10px] text-zinc-400/80 dark:text-zinc-500/80 mt-2 font-mono select-none">
+                    단축키: Space (다음) · P (일시정지)
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -678,11 +712,13 @@ export const ExamPacer = ({
                   <Target className="w-4 h-4 text-indigo-500" />
                   <span>순차 풀이 파이프라인 (Sequential Flow)</span>
                 </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {!examStarted
-                    ? '시험 시작 전 ◀ ▶ 버튼으로 나만의 맞춤 순서로 자유롭게 재배치할 수 있습니다.'
-                    : '각 파트의 목표 시간을 넘겨도 타이머는 멈추지 않고 실시간 초과량을 정밀 기록합니다.'}
-                </p>
+                {!isTextMinimal && (
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {!examStarted
+                      ? '시험 시작 전 ◀ ▶ 버튼으로 나만의 맞춤 순서로 자유롭게 재배치할 수 있습니다.'
+                      : '각 파트의 목표 시간을 넘겨도 타이머는 멈추지 않고 실시간 초과량을 정밀 기록합니다.'}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -726,8 +762,8 @@ export const ExamPacer = ({
                             : 'bg-black/[0.05] dark:bg-white/[0.08] text-zinc-600 dark:text-zinc-400'
                         }`}>
                           {isActive
-                            ? isOvertime ? '🔥 초과 풀이 중' : '⚡ 현재 풀이 중'
-                            : isCompleted ? '✓ 완료' : `Step ${idx + 1}`}
+                            ? isOvertime ? (isTextMinimal ? '초과' : '🔥 초과 풀이 중') : (isTextMinimal ? '풀이 중' : '⚡ 현재 풀이 중')
+                            : isCompleted ? (isTextMinimal ? '완료' : '✓ 완료') : `Step ${idx + 1}`}
                         </span>
 
                         {!examStarted && (
@@ -758,19 +794,21 @@ export const ExamPacer = ({
                         {part.name}
                       </h4>
 
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
-                        {part.desc}
-                      </p>
+                      {!isTextMinimal && (
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2">
+                          {part.desc}
+                        </p>
+                      )}
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/5 space-y-1 font-mono text-xs">
                       <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
-                        <span>목표:</span>
-                        <strong>{part.targetMinutes}분 (00:00)</strong>
+                        <span>{isTextMinimal ? '목표' : '목표:'}</span>
+                        <strong>{isTextMinimal ? `${part.targetMinutes}분` : `${part.targetMinutes}분 (00:00)`}</strong>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-zinc-500 dark:text-zinc-400">실제 소요:</span>
+                        <span className="text-zinc-500 dark:text-zinc-400">{isTextMinimal ? '소요' : '실제 소요:'}</span>
                         <strong className={`text-sm ${isActive ? 'text-indigo-600 dark:text-indigo-400 font-black' : 'text-zinc-800 dark:text-zinc-200'}`}>
                           {formatTime(actualSec)}
                         </strong>
@@ -778,13 +816,13 @@ export const ExamPacer = ({
 
                       {(isActive || isCompleted) && (
                         <div className="pt-1 flex items-center justify-between">
-                          <span className="text-[11px] text-zinc-400">목표 대비:</span>
+                          <span className="text-[11px] text-zinc-400">{isTextMinimal ? '편차' : '목표 대비:'}</span>
                           <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${
                             isOvertime
                               ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
                               : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
                           }`}>
-                            {isOvertime ? `+${formatTime(deltaSec)} 지연` : `-${formatTime(Math.abs(deltaSec))} 여유`}
+                            {isOvertime ? `+${formatTime(deltaSec)}` : `-${formatTime(Math.abs(deltaSec))}`}
                           </span>
                         </div>
                       )}
