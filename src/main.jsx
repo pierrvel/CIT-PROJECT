@@ -68,3 +68,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+window.__COCKPIT_MOUNTED__ = true;
