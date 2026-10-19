@@ -91,26 +91,6 @@ export function App() {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000);
   }, []);
 
-  // 텍스트 다이어트 모드 상태: 불필요한 설명문을 숨겨 시각적 피로도를 낮춤 (비교 토글 가능)
-  const [isTextMinimal, setIsTextMinimal] = useState(() => {
-    const saved = localStorage.getItem('dc_text_minimal');
-    return saved !== null ? saved === 'true' : true;
-  });
-
-  const toggleTextMinimal = useCallback(() => {
-    setIsTextMinimal((prev) => {
-      const next = !prev;
-      localStorage.setItem('dc_text_minimal', String(next));
-      showToast(
-        next
-          ? '👀 텍스트 다이어트 ON: 설명문을 숨겨 눈의 피로를 최소화합니다.'
-          : '📖 텍스트 다이어트 OFF: 모든 상세 설명문과 안내를 다시 표시합니다.',
-        'info'
-      );
-      return next;
-    });
-  }, [showToast]);
-
   // PWA (Progressive Web App) 설치 상태 및 이벤트 제어
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -1073,70 +1053,6 @@ export function App() {
     }
   };
 
-  const handleLoadSampleHistory = () => {
-    const sampleData = [
-      {
-        id: "hist_1710000001",
-        date: "2026-10-05 14:30",
-        subject: "korean",
-        subjectName: "국어 영역",
-        presetName: "실전 전략 A (문학 선풀이형)",
-        totalTargetSec: 4800,
-        totalActualSec: 4690,
-        totalDeltaSec: -110,
-        totalElapsed: 4690,
-        parts: [
-          { name: "문학", targetSec: 1320, targetMinutes: 22, actualSec: 1200, actualSeconds: 1200, deltaSec: -120, delta: -120, completed: true },
-          { name: "선택과목", targetSec: 780, targetMinutes: 13, actualSec: 810, actualSeconds: 810, deltaSec: +30, delta: +30, completed: true },
-          { name: "독서", targetSec: 2100, targetMinutes: 35, actualSec: 2160, actualSeconds: 2160, deltaSec: +60, delta: +60, completed: true },
-          { name: "마킹 및 검토", targetSec: 600, targetMinutes: 10, actualSec: 520, actualSeconds: 520, deltaSec: -80, delta: -80, completed: true }
-        ],
-        memo: "문학에서 시간 단축 성공했으나 독서 법경제 지문에서 1분 지체됨."
-      },
-      {
-        id: "hist_1710000002",
-        date: "2026-10-04 10:15",
-        subject: "math",
-        subjectName: "수학 영역",
-        presetName: "실전 전략 B (비킬러 스피드런)",
-        totalTargetSec: 6000,
-        totalActualSec: 6100,
-        totalDeltaSec: +100,
-        totalElapsed: 6100,
-        parts: [
-          { name: "공통 비킬러 (스피드런)", targetSec: 1800, targetMinutes: 30, actualSec: 1710, actualSeconds: 1710, deltaSec: -90, delta: -90, completed: true },
-          { name: "선택과목 (미적/기하/확통)", targetSec: 1080, targetMinutes: 18, actualSec: 1140, actualSeconds: 1140, deltaSec: +60, delta: +60, completed: true },
-          { name: "준킬러·킬러 집중 공략", targetSec: 2400, targetMinutes: 40, actualSec: 2620, actualSeconds: 2620, deltaSec: +220, delta: +220, completed: true },
-          { name: "철저한 단답형 재검토", targetSec: 720, targetMinutes: 12, actualSec: 630, actualSeconds: 630, deltaSec: -90, delta: -90, completed: true }
-        ],
-        memo: "22번 수열 귀납 추론에서 계산 꼬여 3분 초과됨. 과감히 넘기는 결단 필요."
-      },
-      {
-        id: "hist_1710000003",
-        date: "2026-10-02 16:40",
-        subject: "english",
-        subjectName: "영어 영역",
-        presetName: "실전 전략 A (듣기 시간 독해 병행형)",
-        totalTargetSec: 4200,
-        totalActualSec: 4040,
-        totalDeltaSec: -160,
-        totalElapsed: 4040,
-        parts: [
-          { name: "듣기 + 하위 독해 병행", targetSec: 1200, targetMinutes: 20, actualSec: 1140, actualSeconds: 1140, deltaSec: -60, delta: -60, completed: true },
-          { name: "독해 전반 (대의파악·도표)", targetSec: 1380, targetMinutes: 23, actualSec: 1320, actualSeconds: 1320, deltaSec: -60, delta: -60, completed: true },
-          { name: "빈칸/순서/삽입 킬러 집중", targetSec: 1140, targetMinutes: 19, actualSec: 1110, actualSeconds: 1110, deltaSec: -30, delta: -30, completed: true },
-          { name: "마킹 및 최종 검토", targetSec: 480, targetMinutes: 8, actualSec: 470, actualSeconds: 470, deltaSec: -10, delta: -10, completed: true }
-        ],
-        memo: "듣기 평가 중 안내문/도표 5문항 선풀이 전략 성공. 빈칸 34번에 안정적 4분 확보."
-      }
-    ];
-    const merged = [...sampleData, ...examHistory];
-    setExamHistory(merged);
-    localStorage.setItem('dc_exam_history', JSON.stringify(merged));
-    if (soundEnabled) playChime(950, 'sine', 0.12);
-    showToast('샘플 모의고사 실전 기록 3회분이 추가되었습니다!', 'success');
-  };
-
   // 6. 동기화 & 데이터 파이프라인
   const cleanPin = pinInput.trim().replace(/\D/g, '').slice(0, 6);
 
@@ -1430,8 +1346,6 @@ export function App() {
             playChime={playChime}
             setNewGoalModal={setNewGoalModal}
             showToast={showToast}
-            isTextMinimal={isTextMinimal}
-            toggleTextMinimal={toggleTextMinimal}
           />
         )}
 
@@ -1459,8 +1373,6 @@ export function App() {
 
         {activeTab === 'pacer' && (
           <ExamPacer
-            isTextMinimal={isTextMinimal}
-            toggleTextMinimal={toggleTextMinimal}
             pacerSubView={pacerSubView}
             setPacerSubView={setPacerSubView}
             examHistory={examHistory}
@@ -1514,7 +1426,6 @@ export function App() {
             handleUpdateMemo={handleUpdateMemo}
             handleDeleteExamHistory={handleDeleteExamHistory}
             handleClearAllHistory={handleClearAllHistory}
-            handleLoadSampleHistory={handleLoadSampleHistory}
             scoreHistory={scoreHistory}
             setScoreHistory={setScoreHistory}
             showToast={showToast}

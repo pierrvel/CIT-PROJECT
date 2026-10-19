@@ -16,7 +16,6 @@ export const StatsDashboard = ({
   handleUpdateMemo,
   handleDeleteExamHistory,
   handleClearAllHistory,
-  handleLoadSampleHistory,
   setPacerSubView
 }) => {
   // 필터링된 히스토리
@@ -132,15 +131,6 @@ export const StatsDashboard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handleLoadSampleHistory}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 transition-colors"
-            title="모의고사 3회분 샘플 데이터 로드 (국어/수학/영어)"
-          >
-            <Icon name="sparkles" className="w-3.5 h-3.5 text-indigo-500" />
-            <span>샘플 데이터 추가</span>
-          </button>
           {examHistory.length > 0 && (
             <button
               type="button"
@@ -425,16 +415,9 @@ export const StatsDashboard = ({
             <div>
               <h4 className="font-bold text-base text-zinc-700 dark:text-zinc-300">저장된 모의고사 기록이 없습니다</h4>
               <p className="text-xs text-zinc-400 mt-1 max-w-sm">
-                Exam Pacer에서 모의고사를 완주하거나, 상단의 <strong>[샘플 데이터 추가]</strong> 버튼을 눌러 통계 대시보드를 바로 확인해보세요.
+                Exam Pacer에서 모의고사를 완주하면 파트별 소요 시간과 페이스 통계가 이곳에 자동 기록됩니다.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleLoadSampleHistory}
-              className="mt-2 px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/30 transition-all"
-            >
-              3회분 샘플 데이터 로드하기
-            </button>
           </div>
         ) : (
           <div className="space-y-3">

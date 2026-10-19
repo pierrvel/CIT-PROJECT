@@ -16,9 +16,7 @@ export const AdmissionPredictor = ({
   scoreHistory = [],
   showToast,
   onGoToSprint,
-  onOpenShareCard,
-  isTextMinimal = true,
-  toggleTextMinimal
+  onOpenShareCard
 }) => {
   // 1. 선택 상태
   const [selectedExamId, setSelectedExamId] = useState('2025_csat');
@@ -41,7 +39,7 @@ export const AdmissionPredictor = ({
   const [isScoreInputCollapsed, setIsScoreInputCollapsed] = useState(() => {
     const saved = localStorage.getItem('dc_fold_admission_scores');
     if (saved !== null) return saved === 'true';
-    return isTextMinimal; // 텍스트 다이어트 모드일 때 기본 접힌 상태로 쾌적하게 시작
+    return true; // 기본적으로 접힌 상태로 쾌적하게 시작
   });
 
   const [isTargetCollapsed, setIsTargetCollapsed] = useState(() => {
@@ -244,38 +242,15 @@ export const AdmissionPredictor = ({
                     ADIGA 70% CUT DB
                   </span>
                 </h2>
-                {!isTextMinimal ? (
-                  <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5 font-medium">
-                    대교협 대입정보포털 <b>'어디가' 최종 등록자 공식 70% 컷</b> 및 대형 입시기관 정시 확정 배치표 기반 실시간 매칭
-                  </p>
-                ) : (
-                  <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium">
-                    대교협 70% 컷 & 대형 입시기관 정시 배치표 기반 실시간 매칭
-                  </p>
-                )}
+                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5 font-medium">
+                  대교협 70% 컷 & 대형 입시기관 정시 배치표 기반 실시간 매칭
+                </p>
               </div>
             </div>
           </div>
 
           {/* 퀵 액션 버튼들 */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* 텍스트 다이어트 비교 토글 버튼 */}
-            {toggleTextMinimal && (
-              <button
-                type="button"
-                onClick={toggleTextMinimal}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border ${
-                  isTextMinimal
-                    ? 'bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-600 dark:text-indigo-400 border-indigo-500/30 shadow-xs'
-                    : 'bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700'
-                }`}
-                title="설명문을 숨기고 화면을 콤팩트하게 접는 텍스트 다이어트 모드"
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>{isTextMinimal ? '👀 텍스트 다이어트: ON' : '📖 텍스트 다이어트: OFF'}</span>
-              </button>
-            )}
-
             <button
               type="button"
               onClick={handleLoadFromHistory}
@@ -370,15 +345,10 @@ export const AdmissionPredictor = ({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
             <h3 className="text-base sm:text-lg font-black text-zinc-900 dark:text-white tracking-tight">
-              {isTextMinimal ? '수능 종합 성적 통지표' : '실채점 종합 성적 통지표 시뮬레이터'}
+              수능 종합 성적 통지표
             </h3>
           </div>
           <div className="flex items-center gap-2">
-            {!isTextMinimal && (
-              <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono hidden md:inline">
-                슬라이더를 조절하여 원점수 변화에 따른 대학 라인을 실시간으로 확인하세요
-              </span>
-            )}
             {/* 성적 슬라이더 접기 / 펼치기 토글 버튼 */}
             <button
               type="button"
@@ -568,12 +538,6 @@ export const AdmissionPredictor = ({
                   <span className="text-xs text-zinc-400 font-bold">점</span>
                 </div>
               </div>
-              {!isTextMinimal && (
-                <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 pt-1 border-t border-zinc-200/40 dark:border-zinc-700/40">
-                  <span>90점 이상 1등급</span>
-                  <span>80점 이상 2등급</span>
-                </div>
-              )}
             </div>
 
             {/* 한국사 (절대평가) */}
@@ -605,12 +569,6 @@ export const AdmissionPredictor = ({
                   <span className="text-xs text-zinc-400 font-bold">점</span>
                 </div>
               </div>
-              {!isTextMinimal && (
-                <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400 pt-1 border-t border-zinc-200/40 dark:border-zinc-700/40">
-                  <span>40점 이상 1등급 만점</span>
-                  <span>대부분 대학 1~4등급 감점 없음</span>
-                </div>
-              )}
             </div>
 
             {/* 탐구 1 */}
@@ -696,9 +654,6 @@ export const AdmissionPredictor = ({
               </span>
               <span className="text-xs text-indigo-600 dark:text-indigo-400 font-bold">%</span>
             </div>
-            {!isTextMinimal && (
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">상위권 정시 모의지원 척도</p>
-            )}
           </div>
 
           {/* 2. 국수탐 표준점수 합 */}
@@ -710,9 +665,6 @@ export const AdmissionPredictor = ({
               </span>
               <span className="text-xs text-blue-600 dark:text-blue-400 font-bold">점</span>
             </div>
-            {!isTextMinimal && (
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-0.5">만점 약 420점 내외 기준</p>
-            )}
           </div>
 
           {/* 3. 전국 상위 누적 백분위 */}
@@ -752,7 +704,7 @@ export const AdmissionPredictor = ({
               <Icon name="target" className="w-5 h-5" />
             </span>
             <h3 className="text-base sm:text-lg font-black text-zinc-900 dark:text-white tracking-tight">
-              {isTextMinimal ? '목표 대학 역산' : '목표 대학 역산(Reverse) 가이드라인'}
+              목표 대학 역산
             </h3>
           </div>
 
@@ -873,11 +825,6 @@ export const AdmissionPredictor = ({
                   </span>
                 )}
               </h3>
-              {!isTextMinimal && (
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                  📍 표시가 현재 내 점수 구간입니다
-                </p>
-              )}
             </div>
           </div>
 
@@ -1012,11 +959,6 @@ export const AdmissionPredictor = ({
                 총 {evaluatedUniversities.length}개 학과
               </span>
             </h3>
-            {!isTextMinimal && (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                내 백분위 평균과 대학별 70% 컷을 대조하여 합격 유력도를 4단계로 분류합니다
-              </p>
-            )}
           </div>
 
           {/* 검색창 및 판정 필터 */}

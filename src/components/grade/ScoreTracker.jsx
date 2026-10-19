@@ -232,71 +232,6 @@ export const ScoreTracker = ({
     }
   };
 
-  const handleLoadSampleHistory = () => {
-    const samples = [
-      {
-        id: 'sample_score_1',
-        date: '2026-10-02 16:30',
-        examId: '2025_mock06',
-        examName: '2025학년도 6월 모의평가 (평가원)',
-        subjectKey: 'math',
-        subjectName: '수학',
-        optionKey: 'calculus',
-        optionName: '미적분',
-        score: 84,
-        totalScore: 100,
-        grade: 1,
-        cut1: 78,
-        deltaFromCut1: 6,
-        percentile: 98,
-        wrongCount: 4,
-        wrongQuestionNos: [15, 21, 22, 30],
-        memo: '불수학 시험이었으나 준킬러 방어로 1등급 컷(+6점) 안정권 확보.'
-      },
-      {
-        id: 'sample_score_2',
-        date: '2026-10-06 14:10',
-        examId: '2025_mock09',
-        examName: '2025학년도 9월 모의평가 (평가원)',
-        subjectKey: 'math',
-        subjectName: '수학',
-        optionKey: 'calculus',
-        optionName: '미적분',
-        score: 92,
-        totalScore: 100,
-        grade: 1,
-        cut1: 92,
-        deltaFromCut1: 0,
-        percentile: 96,
-        wrongCount: 2,
-        wrongQuestionNos: [22, 29],
-        memo: '물수학 기조라 92점이 1컷 턱걸이. 실수를 절대 줄여야 함.'
-      },
-      {
-        id: 'sample_score_3',
-        date: '2026-10-10 11:20',
-        examId: '2025_csat',
-        examName: '2025학년도 수능 (2024.11 시행)',
-        subjectKey: 'korean',
-        subjectName: '국어',
-        optionKey: 'media',
-        optionName: '언어와 매체',
-        score: 94,
-        totalScore: 100,
-        grade: 1,
-        cut1: 92,
-        deltaFromCut1: 2,
-        percentile: 97,
-        wrongCount: 3,
-        wrongQuestionNos: [12, 28, 42],
-        memo: '문학 연계 체감 높았음. 독서 1지문에서 3점 감점.'
-      }
-    ];
-
-    setScoreHistory(samples);
-    if (showToast) showToast('샘플 성적 데이터 3건이 로드되었습니다.', 'info');
-  };
-
   // 등급별 컬러 스타일
   const getGradeBadgeStyle = (g) => {
     switch (g) {
@@ -889,16 +824,6 @@ export const ScoreTracker = ({
               </p>
             </div>
           </div>
-
-          {scoreHistory.length === 0 && (
-            <button
-              type="button"
-              onClick={handleLoadSampleHistory}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold border border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
-            >
-              샘플 성적 3건 로드
-            </button>
-          )}
         </div>
 
         {scoreHistory.length === 0 ? (
