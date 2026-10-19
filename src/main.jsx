@@ -70,3 +70,28 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 
 window.__COCKPIT_MOUNTED__ = true;
+
+// Service Worker 등록 (PWA 오프라인 구동 및 앱 셸 캐싱 지원)
+if ('serviceWorker' in navigator && (import.meta.env.PROD || window.location.search.includes('pwa=1'))) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((reg) => {
+        console.log('[Cockpit PWA] Service Worker 활성화 완료 (Scope:', reg.scope, ')');
+        reg.addEventListener('updatefound', () => {
+          const installingWorker = reg.installing;
+          if (installingWorker) {
+            installingWorker.addEventListener('statechange', () => {
+              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('[Cockpit PWA] 새로운 버전이 준비되었습니다. 다음 접속 시 자동 적용됩니다.');
+              }
+            });
+          }
+        });
+      })
+      .catch((err) => {
+        console.warn('[Cockpit PWA] Service Worker 등록 실패:', err);
+      });
+  });
+}
+

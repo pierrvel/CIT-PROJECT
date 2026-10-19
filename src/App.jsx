@@ -21,6 +21,7 @@ import PartEditModal from './components/modals/PartEditModal';
 import SavePresetModal from './components/modals/SavePresetModal';
 import ExamReportModal from './components/modals/ExamReportModal';
 import ShareCardModal from './components/share/ShareCardModal';
+import InstallModal from './components/modals/InstallModal';
 
 export function App() {
   // 1. 네비게이션 & 환경 상태
@@ -89,6 +90,35 @@ export function App() {
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000);
   }, []);
+
+  // PWA (Progressive Web App) 설치 상태 및 이벤트 제어
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  });
+
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+      showToast('🎉 듀얼코어 콕핏이 기기에 성공적으로 설치되었습니다!', 'success');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, [showToast]);
 
   // 2. 글래스모피즘 & 배경화면 커스텀 상태
   const [bgImage, setBgImage] = useState(() => localStorage.getItem('dc_bg_image') || null);
@@ -1364,6 +1394,8 @@ export function App() {
         setIsPaperTheme={setIsPaperTheme}
         isFullscreen={isFullscreen}
         toggleFullscreen={toggleFullscreen}
+        onOpenInstall={() => setIsInstallModalOpen(true)}
+        isInstalled={isInstalled}
       />
 
       {/* 메인 뷰 */}
@@ -1562,6 +1594,13 @@ export function App() {
         singleData={shareCardConfig.singleData}
         overallData={shareCardConfig.overallData}
         showToast={showToast}
+      />
+
+      <InstallModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+        deferredPrompt={deferredPrompt}
+        onInstallSuccess={() => showToast('🎉 앱 설치가 완료되었습니다!', 'success')}
       />
     </div>
   );

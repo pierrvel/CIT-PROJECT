@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, Calendar, Moon, Sun, Sparkles, Image, Maximize2, Minimize2, Cloud, Zap } from 'lucide-react';
+import { Globe, Calendar, Moon, Sun, Sparkles, Image, Maximize2, Minimize2, Cloud, Zap, Download } from 'lucide-react';
 import Icon from './Icon';
 
 const TABS = [
@@ -32,7 +32,9 @@ export const Header = ({
   isPaperTheme,
   setIsPaperTheme,
   isFullscreen,
-  toggleFullscreen
+  toggleFullscreen,
+  onOpenInstall,
+  isInstalled
 }) => {
   return (
     <header className="sticky top-2 sm:top-3 z-40 w-full px-3 sm:px-6 mb-4">
@@ -89,6 +91,19 @@ export const Header = ({
 
         {/* 3. 우측: 애플 컨트롤 센터 스타일 유틸리티 캡슐 */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* PWA 앱 설치 버튼 (아직 미설치된 브라우저 탭 상태일 때) */}
+          {!isInstalled && (
+            <button
+              type="button"
+              onClick={onOpenInstall}
+              className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-full text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border border-indigo-200 dark:border-indigo-800/60 active:scale-95 transition-all select-none"
+              title="앱으로 설치 (100% 오프라인 지원)"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden xl:inline text-[11px]">앱 설치</span>
+            </button>
+          )}
+
           {/* PIN 클라우드 동기화 알약 */}
           <button
             type="button"
