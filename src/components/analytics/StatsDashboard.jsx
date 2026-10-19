@@ -16,6 +16,7 @@ export const StatsDashboard = ({
   handleUpdateMemo,
   handleDeleteExamHistory,
   handleClearAllHistory,
+  handleDeleteSubjectHistory,
   setPacerSubView
 }) => {
   // 필터링된 히스토리
@@ -131,15 +132,29 @@ export const StatsDashboard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {examHistory.length > 0 && (
+          {filteredHistory.length > 0 && (
             <button
               type="button"
-              onClick={handleClearAllHistory}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 transition-colors"
-              title="누적 시험 기록 전체 삭제"
+              onClick={() => {
+                if (handleDeleteSubjectHistory) {
+                  handleDeleteSubjectHistory(analyticsSubjectFilter);
+                } else if (handleClearAllHistory) {
+                  handleClearAllHistory();
+                }
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-900/50 transition-all shadow-xs active:scale-95"
+              title={
+                analyticsSubjectFilter === 'all'
+                  ? '모든 과목 모의고사 기록 전체 삭제'
+                  : `${SUBJECT_META[analyticsSubjectFilter]?.name || '과목'} 기록 전체 삭제`
+              }
             >
-              <Icon name="trash" className="w-3.5 h-3.5" />
-              <span>전체 초기화</span>
+              <Icon name="trash2" className="w-3.5 h-3.5" />
+              <span>
+                {analyticsSubjectFilter === 'all'
+                  ? '전체 초기화'
+                  : `${SUBJECT_META[analyticsSubjectFilter]?.name.replace(' 영역', '') || '과목'} 전체 삭제 (${filteredHistory.length}건)`}
+              </span>
             </button>
           )}
           <button
@@ -397,14 +412,45 @@ export const StatsDashboard = ({
 
       {/* 4. 회차별 상세 기록 리스트 */}
       <div className="glass-card bg-white/80 dark:bg-zinc-900/80 p-5 rounded-2xl border border-white/60 dark:border-zinc-800 shadow-glass dark:shadow-glass-dark space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-200/60 dark:border-zinc-800/60">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-zinc-200/60 dark:border-zinc-800/60">
           <div className="flex items-center gap-2">
             <Icon name="fileText" className="w-5 h-5 text-indigo-500" />
             <h3 className="font-extrabold text-base sm:text-lg text-zinc-900 dark:text-white">
               회차별 실전 복기 피드 ({filteredHistory.length}회차)
             </h3>
           </div>
-          <span className="text-xs text-zinc-400">클릭하여 파트별 상세 및 복기 메모 확인</span>
+
+          <div className="flex items-center gap-2">
+            {filteredHistory.length > 0 && (
+              <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 p-0.5 rounded-xl border border-zinc-200/80 dark:border-zinc-700/80 text-[11px] font-bold select-none">
+                <button
+                  type="button"
+                  onClick={() => setExpandedHistoryId('__all__')}
+                  className={`px-2.5 py-1 rounded-lg transition-all ${
+                    expandedHistoryId === '__all__'
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  }`}
+                  title="모든 회차 상세 분석 펼치기"
+                >
+                  모두 펼치기
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setExpandedHistoryId('__none__')}
+                  className={`px-2.5 py-1 rounded-lg transition-all ${
+                    expandedHistoryId === '__none__'
+                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-xs'
+                      : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  }`}
+                  title="모든 회차 상세 분석 접기"
+                >
+                  모두 접기
+                </button>
+              </div>
+            )}
+            <span className="text-xs text-zinc-400 hidden sm:inline">클릭하여 파트별 상세 및 복기 메모 확인</span>
+          </div>
         </div>
 
         {filteredHistory.length === 0 ? (
@@ -422,7 +468,11 @@ export const StatsDashboard = ({
         ) : (
           <div className="space-y-3">
             {filteredHistory.map((session, sIdx) => {
-              const isExpanded = expandedHistoryId === session.id || (expandedHistoryId === null && sIdx === 0);
+              const isExpanded = expandedHistoryId === '__all__'
+                ? true
+                : expandedHistoryId === '__none__'
+                ? false
+                : expandedHistoryId === session.id || (expandedHistoryId === null && sIdx === 0);
               const delta = session.totalDeltaSec !== undefined ? session.totalDeltaSec : ((session.totalElapsed || 0) - (session.totalTargetSec || 0));
               const isOvertime = delta > 0;
               const pList = session.parts || session.partsResult || [];

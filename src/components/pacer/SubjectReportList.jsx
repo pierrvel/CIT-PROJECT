@@ -10,6 +10,7 @@ export const SubjectReportList = ({
   setPacerSubView,
   handleUpdateMemo,
   handleDeleteExamHistory,
+  handleDeleteSubjectHistory,
   handleStartExamWithSubject
 }) => {
   // 1. 과목 필터 상태 (props로 넘어온 selectedSubjectKey가 있으면 초기값으로 반영)
@@ -159,6 +160,11 @@ export const SubjectReportList = ({
     }
   };
 
+  // 모든 카드 펼침/접힘 상태 판별
+  const allExpanded = filteredAndSortedReports.length > 0 && filteredAndSortedReports.every((r) => expandedIds.has(r.id));
+  const noneExpanded = filteredAndSortedReports.length === 0 || !filteredAndSortedReports.some((r) => expandedIds.has(r.id));
+  const expandedCount = filteredAndSortedReports.filter((r) => expandedIds.has(r.id)).length;
+
   // 메모 편집 시작
   const startEditingMemo = (session) => {
     setEditingMemoId(session.id);
@@ -226,21 +232,35 @@ export const SubjectReportList = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-center">
-            <button
-              type="button"
-              onClick={() => handleToggleAll(true)}
-              className="px-2.5 py-1 text-[11px] font-bold rounded-lg text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800 transition-colors"
-            >
-              모두 펼치기
-            </button>
-            <button
-              type="button"
-              onClick={() => handleToggleAll(false)}
-              className="px-2.5 py-1 text-[11px] font-bold rounded-lg text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800 transition-colors"
-            >
-              모두 접기
-            </button>
+          <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
+            {filteredAndSortedReports.length > 0 && (
+              <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 p-0.5 rounded-xl border border-zinc-200/80 dark:border-zinc-700/80 text-[11px] font-bold">
+                <button
+                  type="button"
+                  onClick={() => handleToggleAll(true)}
+                  className={`px-2.5 py-1 rounded-lg transition-all ${
+                    allExpanded
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  }`}
+                  title="모든 회차 상세 분석 펼치기"
+                >
+                  모두 펼치기
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleToggleAll(false)}
+                  className={`px-2.5 py-1 rounded-lg transition-all ${
+                    noneExpanded
+                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-xs'
+                      : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  }`}
+                  title="모든 회차 상세 분석 접기"
+                >
+                  모두 접기
+                </button>
+              </div>
+            )}
             {setPacerSubView && (
               <button
                 type="button"
@@ -361,57 +381,116 @@ export const SubjectReportList = ({
         </div>
       )}
 
-      {/* 3. 리포트 리스트 상단 컨트롤러 (정렬 & 오차 필터) */}
+      {/* 3. 리포트 리스트 상단 컨트롤러 (정렬 & 오차 필터 & 모두 펼치기/접기 & 과목별 전체 삭제) */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-1">
-        <div className="flex items-center gap-1.5 bg-white/60 dark:bg-zinc-800/60 p-1 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80 text-xs">
-          <button
-            type="button"
-            onClick={() => setPaceFilter('all')}
-            className={`px-3 py-1 rounded-xl font-bold transition-all ${
-              paceFilter === 'all'
-                ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
-                : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}
-          >
-            전체 ({filteredAndSortedReports.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setPaceFilter('ontime')}
-            className={`px-3 py-1 rounded-xl font-bold transition-all flex items-center gap-1 ${
-              paceFilter === 'ontime'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-400'
-            }`}
-          >
-            <span>정시/세이브</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setPaceFilter('overtime')}
-            className={`px-3 py-1 rounded-xl font-bold transition-all flex items-center gap-1 ${
-              paceFilter === 'overtime'
-                ? 'bg-rose-600 text-white shadow-xs'
-                : 'text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400'
-            }`}
-          >
-            <span>시간 초과</span>
-          </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {/* 페이스 필터 캡슐 */}
+          <div className="flex items-center gap-1.5 bg-white/60 dark:bg-zinc-800/60 p-1 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80 text-xs">
+            <button
+              type="button"
+              onClick={() => setPaceFilter('all')}
+              className={`px-3 py-1 rounded-xl font-bold transition-all ${
+                paceFilter === 'all'
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+              }`}
+            >
+              전체 ({filteredAndSortedReports.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaceFilter('ontime')}
+              className={`px-3 py-1 rounded-xl font-bold transition-all flex items-center gap-1 ${
+                paceFilter === 'ontime'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-400'
+              }`}
+            >
+              <span>정시/세이브</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaceFilter('overtime')}
+              className={`px-3 py-1 rounded-xl font-bold transition-all flex items-center gap-1 ${
+                paceFilter === 'overtime'
+                  ? 'bg-rose-600 text-white shadow-xs'
+                  : 'text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400'
+              }`}
+            >
+              <span>시간 초과</span>
+            </button>
+          </div>
+
+          {/* 모두 펼치기 / 모두 접기 컨트롤 */}
+          {filteredAndSortedReports.length > 0 && (
+            <div className="flex items-center gap-1 bg-white/60 dark:bg-zinc-800/60 p-1 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80 text-xs font-bold select-none">
+              <button
+                type="button"
+                onClick={() => handleToggleAll(true)}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-xl transition-all ${
+                  allExpanded
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700/60'
+                }`}
+                title="모든 회차 상세 분석 펼치기"
+              >
+                <Icon name="chevronDown" className="w-3.5 h-3.5" />
+                <span>모두 펼치기</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleToggleAll(false)}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-xl transition-all ${
+                  noneExpanded
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700/60'
+                }`}
+                title="모든 회차 상세 분석 접기"
+              >
+                <Icon name="chevronUp" className="w-3.5 h-3.5" />
+                <span>모두 접기</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* 정렬 셀렉트 */}
-        <div className="flex items-center gap-2 text-xs">
-          <label className="text-zinc-500 dark:text-zinc-400 font-bold">정렬:</label>
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-xs"
-          >
-            <option value="latest">최신 응시순</option>
-            <option value="oldest">과거 회차순</option>
-            <option value="fastest">시간 절약순 (세이브 순)</option>
-            <option value="slowest">시간 초과순 (지연 큰 순)</option>
-          </select>
+        {/* 우측: 정렬 셀렉트 및 과목별 전체 삭제 */}
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          {/* 과목별 리포트 전체 삭제 버튼 */}
+          {filteredAndSortedReports.length > 0 && handleDeleteSubjectHistory && (
+            <button
+              type="button"
+              onClick={() => handleDeleteSubjectHistory(activeSubject)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-xl font-bold text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-900/50 active:scale-95 transition-all shadow-xs"
+              title={
+                activeSubject === 'all'
+                  ? '모든 과목의 모의고사 리포트 초기화'
+                  : `${SUBJECT_META[activeSubject]?.name || activeSubject} 영역의 모든 리포트 삭제`
+              }
+            >
+              <Icon name="trash2" className="w-3.5 h-3.5" />
+              <span>
+                {activeSubject === 'all'
+                  ? '전체 리포트 삭제'
+                  : `${SUBJECT_META[activeSubject]?.name.replace(' 영역', '') || '과목'} 리포트 전체 삭제 (${filteredAndSortedReports.length}건)`}
+              </span>
+            </button>
+          )}
+
+          {/* 정렬 셀렉트 */}
+          <div className="flex items-center gap-1.5">
+            <label className="text-zinc-500 dark:text-zinc-400 font-bold hidden sm:inline">정렬:</label>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-xs"
+            >
+              <option value="latest">최신 응시순</option>
+              <option value="oldest">과거 회차순</option>
+              <option value="fastest">시간 절약순 (세이브 순)</option>
+              <option value="slowest">시간 초과순 (지연 큰 순)</option>
+            </select>
+          </div>
         </div>
       </div>
 

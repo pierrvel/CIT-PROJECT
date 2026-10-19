@@ -99,6 +99,7 @@ export const ExamPacer = ({
   handleUpdateMemo,
   handleDeleteExamHistory,
   handleClearAllHistory,
+  handleDeleteSubjectHistory,
 
   // 성적 & 등급컷 트래커 props
   scoreHistory = [],
@@ -858,6 +859,7 @@ export const ExamPacer = ({
           setPacerSubView={setPacerSubView}
           handleUpdateMemo={handleUpdateMemo}
           handleDeleteExamHistory={handleDeleteExamHistory}
+          handleDeleteSubjectHistory={handleDeleteSubjectHistory}
         />
       )}
 
@@ -876,6 +878,7 @@ export const ExamPacer = ({
           handleUpdateMemo={handleUpdateMemo}
           handleDeleteExamHistory={handleDeleteExamHistory}
           handleClearAllHistory={handleClearAllHistory}
+          handleDeleteSubjectHistory={handleDeleteSubjectHistory}
           setPacerSubView={setPacerSubView}
         />
       )}

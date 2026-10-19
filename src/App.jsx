@@ -1086,6 +1086,26 @@ export function App() {
     }
   };
 
+  const handleDeleteSubjectHistory = useCallback((subjectKey) => {
+    if (!subjectKey || subjectKey === 'all') {
+      handleClearAllHistory();
+      return;
+    }
+    const subjectName = SUBJECT_META[subjectKey]?.name || subjectKey;
+    const targetCount = examHistory.filter(h => h.subject === subjectKey).length;
+    if (targetCount === 0) {
+      showToast(`${subjectName} 영역의 저장된 기록이 없습니다.`, 'info');
+      return;
+    }
+
+    if (window.confirm(`정말 ${subjectName} 영역의 모든 모의고사 기록(${targetCount}건)을 삭제하시겠습니까?\n\n※ 다른 과목의 기록은 삭제되지 않고 안전하게 보존됩니다.`)) {
+      const updated = examHistory.filter(h => h.subject !== subjectKey);
+      setExamHistory(updated);
+      localStorage.setItem('dc_exam_history', JSON.stringify(updated));
+      showToast(`${subjectName} 영역 리포트 ${targetCount}건이 모두 삭제되었습니다.`, 'success');
+    }
+  }, [examHistory, showToast]);
+
   // 6. 동기화 & 데이터 파이프라인
   const cleanPin = pinInput.trim().replace(/\D/g, '').slice(0, 6);
 
@@ -1519,6 +1539,7 @@ export function App() {
             handleUpdateMemo={handleUpdateMemo}
             handleDeleteExamHistory={handleDeleteExamHistory}
             handleClearAllHistory={handleClearAllHistory}
+            handleDeleteSubjectHistory={handleDeleteSubjectHistory}
             scoreHistory={scoreHistory}
             setScoreHistory={setScoreHistory}
             showToast={showToast}
