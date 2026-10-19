@@ -1,6 +1,7 @@
 import React from 'react';
 import { Globe, Calendar, Moon, Sun, Sparkles, Image, Maximize2, Minimize2, Cloud, Zap, Download } from 'lucide-react';
 import Icon from './Icon';
+import { calculateDDay } from '../../constants/ddays';
 
 const TABS = [
   { key: 'sprint', label: 'Sprint 플랜', tone: 640 },
@@ -34,8 +35,12 @@ export const Header = ({
   isFullscreen,
   toggleFullscreen,
   onOpenInstall,
-  isInstalled
+  isInstalled,
+  primaryDDay,
+  onOpenDDay
 }) => {
+  const ddayInfo = primaryDDay ? calculateDDay(primaryDDay.date) : { text: 'D-Day', days: 0, status: 'unknown' };
+
   return (
     <header className="sticky top-2 sm:top-3 z-40 w-full px-3 sm:px-6 mb-4">
       <div className="max-w-7xl mx-auto rounded-2xl sm:rounded-full px-3 sm:px-5 py-2.5 glass-card bg-white/75 dark:bg-zinc-900/75 border border-white/60 dark:border-white/10 shadow-lg shadow-black/5 dark:shadow-black/20 flex items-center justify-between gap-2 sm:gap-4 transition-all">
@@ -92,6 +97,36 @@ export const Header = ({
 
         {/* 3. 우측: 애플 컨트롤 센터 스타일 유틸리티 캡슐 */}
         <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 shrink-0">
+          {/* 대표 D-Day 배지 알약 버튼 */}
+          <button
+            type="button"
+            onClick={onOpenDDay}
+            title={
+              primaryDDay
+                ? `대표 D-Day: ${primaryDDay.title} (${ddayInfo.text}) • 클릭하여 디데이 목록 및 설정`
+                : 'D-Day 설정 • 클릭하여 새 디데이 등록'
+            }
+            className="group flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all border shadow-xs select-none bg-rose-50/80 hover:bg-rose-100/90 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-zinc-800 dark:text-zinc-200 border-rose-200/80 dark:border-rose-900/50 active:scale-95"
+          >
+            <span className="text-[12px] sm:text-[13px] leading-none group-hover:scale-110 transition-transform">
+              🎯
+            </span>
+            <span className="hidden md:inline max-w-[85px] lg:max-w-[120px] truncate font-medium text-zinc-700 dark:text-zinc-300">
+              {primaryDDay ? primaryDDay.title : 'D-Day'}
+            </span>
+            <span
+              className={`px-1.5 py-0.2 rounded-md font-mono font-black text-[10px] sm:text-[11px] tracking-tight ${
+                ddayInfo.status === 'today'
+                  ? 'bg-rose-500 text-white animate-pulse'
+                  : ddayInfo.days <= 7 && ddayInfo.days > 0
+                  ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
+                  : 'bg-rose-500/10 dark:bg-rose-400/20 text-rose-600 dark:text-rose-400'
+              }`}
+            >
+              {ddayInfo.text}
+            </span>
+          </button>
+
           {/* PWA 앱 설치 버튼 (아직 미설치된 브라우저 탭 상태일 때) */}
           {!isInstalled && (
             <button

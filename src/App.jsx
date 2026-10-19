@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { SUBJECT_META, DEFAULT_SUBJECT_PRESETS } from './constants/subjects';
 import { DEFAULT_CHEERS } from './constants/lounge';
+import { DEFAULT_DDAYS } from './constants/ddays';
 import { playChime, playSchoolBellSequence } from './utils/audio';
 import { getSyncEndpoint, getFirebaseDbUrl } from './utils/env';
 
@@ -22,6 +23,7 @@ import SavePresetModal from './components/modals/SavePresetModal';
 import ExamReportModal from './components/modals/ExamReportModal';
 import ShareCardModal from './components/share/ShareCardModal';
 import InstallModal from './components/modals/InstallModal';
+import DDayModal from './components/modals/DDayModal';
 
 export function App() {
   // 1. 네비게이션 & 환경 상태
@@ -273,6 +275,37 @@ export function App() {
   useEffect(() => {
     localStorage.setItem('dualcore_deleted_milestones', JSON.stringify(deletedMilestoneIds));
   }, [deletedMilestoneIds]);
+
+  // 4-3. 상단 헤더 D-Day 다중 관리 및 대표 디데이 설정 상태
+  const [ddaysList, setDdaysList] = useState(() => {
+    const saved = localStorage.getItem('dc_ddays_list');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return DEFAULT_DDAYS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dc_ddays_list', JSON.stringify(ddaysList));
+  }, [ddaysList]);
+
+  const [primaryDDayId, setPrimaryDDayId] = useState(() => {
+    return localStorage.getItem('dc_primary_dday_id') || 'csat_2027';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('dc_primary_dday_id', primaryDDayId);
+  }, [primaryDDayId]);
+
+  const [isDDayModalOpen, setIsDDayModalOpen] = useState(false);
+
+  const primaryDDay = useMemo(() => {
+    const found = ddaysList.find((d) => d.id === primaryDDayId);
+    return found || ddaysList[0] || null;
+  }, [ddaysList, primaryDDayId]);
 
   // 5. Exam Pacer: 순차 파이프라인 & 다중 프리셋 영구 저장 시스템
   const [selectedSubjectKey, setSelectedSubjectKey] = useState('korean');
@@ -1074,6 +1107,7 @@ export function App() {
       data: {
         goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, scoreHistory, cheerBoard,
         customMilestones, starredMilestoneIds, deletedMilestoneIds,
+        ddaysList, primaryDDayId,
         settings: { dimOpacity, blurAmount, isDarkMode }
       }
     };
@@ -1102,7 +1136,7 @@ export function App() {
       if (!isSilent) showToast('동기화 서버 연결에 실패했습니다.', 'warn');
       return false;
     }
-  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, scoreHistory, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
+  }, [clientId, goals, selectedSubjectKey, selectedPresetId, subjectPresets, examHistory, scoreHistory, cheerBoard, customMilestones, starredMilestoneIds, deletedMilestoneIds, ddaysList, primaryDDayId, dimOpacity, blurAmount, isDarkMode, getSyncUrl, soundEnabled, showToast]);
 
   const pullFromServer = useCallback(async (targetPin, isSilent = true) => {
     if (!targetPin || targetPin.length !== 6) return false;
@@ -1144,6 +1178,12 @@ export function App() {
       }
       if (cloudData.data.deletedMilestoneIds && Array.isArray(cloudData.data.deletedMilestoneIds)) {
         setDeletedMilestoneIds(cloudData.data.deletedMilestoneIds);
+      }
+      if (cloudData.data.ddaysList && Array.isArray(cloudData.data.ddaysList)) {
+        setDdaysList(cloudData.data.ddaysList);
+      }
+      if (cloudData.data.primaryDDayId) {
+        setPrimaryDDayId(cloudData.data.primaryDDayId);
       }
       if (cloudData.data.settings) {
         if (typeof cloudData.data.settings.dimOpacity === 'number') setDimOpacity(cloudData.data.settings.dimOpacity);
@@ -1332,6 +1372,8 @@ export function App() {
         toggleFullscreen={toggleFullscreen}
         onOpenInstall={() => setIsInstallModalOpen(true)}
         isInstalled={isInstalled}
+        primaryDDay={primaryDDay}
+        onOpenDDay={() => setIsDDayModalOpen(true)}
       />
 
       {/* 메인 뷰 */}
@@ -1536,6 +1578,16 @@ export function App() {
         onClose={() => setIsInstallModalOpen(false)}
         deferredPrompt={deferredPrompt}
         onInstallSuccess={() => showToast('🎉 앱 설치가 완료되었습니다!', 'success')}
+      />
+
+      <DDayModal
+        isOpen={isDDayModalOpen}
+        onClose={() => setIsDDayModalOpen(false)}
+        ddaysList={ddaysList}
+        setDdaysList={setDdaysList}
+        primaryDDayId={primaryDDayId}
+        setPrimaryDDayId={setPrimaryDDayId}
+        showToast={showToast}
       />
     </div>
   );
