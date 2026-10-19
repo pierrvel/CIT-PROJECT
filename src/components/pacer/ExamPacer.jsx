@@ -109,90 +109,92 @@ export const ExamPacer = ({
   return (
     <div className="space-y-6">
       {/* ── 1. 애플 스타일 서브 네비게이션 세그먼트 바 ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-black/5 dark:border-white/10">
-        <div className="inline-flex p-1 rounded-2xl bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/5 backdrop-blur-xl">
-          <button
-            type="button"
-            onClick={() => setPacerSubView('timer')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
-              pacerSubView === 'timer'
-                ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-white shadow-sm border border-black/[0.04] dark:border-white/10'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <Clock className="w-4 h-4" />
-            <span>실전 타임어택</span>
-          </button>
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 pb-2 border-b border-black/5 dark:border-white/10">
+        <div className="overflow-x-auto no-scrollbar max-w-full py-0.5">
+          <div className="inline-flex items-center p-1 rounded-2xl bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/5 backdrop-blur-xl min-w-max">
+            <button
+              type="button"
+              onClick={() => setPacerSubView('timer')}
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
+                pacerSubView === 'timer'
+                  ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-white shadow-sm border border-black/[0.04] dark:border-white/10'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Clock className="w-4 h-4" />
+              <span>실전 타임어택</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setPacerSubView('reports')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
-              pacerSubView === 'reports'
-                ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-sm border border-black/[0.04] dark:border-white/10'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            <span>과목별 리포트</span>
-            {examHistory.length > 0 && (
-              <span className="px-1.5 py-0.2 text-[10px] font-mono rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 font-extrabold">
-                {examHistory.length}
+            <button
+              type="button"
+              onClick={() => setPacerSubView('reports')}
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
+                pacerSubView === 'reports'
+                  ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-blue-400 shadow-sm border border-black/[0.04] dark:border-white/10'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              <span>과목별 리포트</span>
+              {examHistory.length > 0 && (
+                <span className="px-1.5 py-0.2 text-[10px] font-mono rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-400 font-extrabold">
+                  {examHistory.length}
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPacerSubView('analytics')}
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
+                pacerSubView === 'analytics'
+                  ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-black/[0.04] dark:border-white/10'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>통계 대시보드</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPacerSubView('grader')}
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
+                pacerSubView === 'grader'
+                  ? 'bg-white dark:bg-zinc-800 text-purple-600 dark:text-purple-400 shadow-sm border border-black/[0.04] dark:border-white/10'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Award className="w-4 h-4" />
+              <span>성적 & 등급컷</span>
+              {scoreHistory.length > 0 && (
+                <span className="px-1.5 py-0.2 text-[10px] font-mono rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 font-extrabold">
+                  {scoreHistory.length}
+                </span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPacerSubView('admission')}
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
+                pacerSubView === 'admission'
+                  ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-black/[0.04] dark:border-white/10'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Target className="w-4 h-4" />
+              <span>정시 대학 라인</span>
+              <span className="px-1.5 py-0.2 text-[9px] font-mono rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-extrabold">
+                NEW
               </span>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setPacerSubView('analytics')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
-              pacerSubView === 'analytics'
-                ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-black/[0.04] dark:border-white/10'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <BarChart3 className="w-4 h-4" />
-            <span>통계 대시보드</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setPacerSubView('grader')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
-              pacerSubView === 'grader'
-                ? 'bg-white dark:bg-zinc-800 text-purple-600 dark:text-purple-400 shadow-sm border border-black/[0.04] dark:border-white/10'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <Award className="w-4 h-4" />
-            <span>성적 & 등급컷</span>
-            {scoreHistory.length > 0 && (
-              <span className="px-1.5 py-0.2 text-[10px] font-mono rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 font-extrabold">
-                {scoreHistory.length}
-              </span>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setPacerSubView('admission')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 select-none ${
-              pacerSubView === 'admission'
-                ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-black/[0.04] dark:border-white/10'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <Target className="w-4 h-4" />
-            <span>정시 대학 라인</span>
-            <span className="px-1.5 py-0.2 text-[9px] font-mono rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 font-extrabold">
-              NEW
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
 
         {/* 시험 진행 중이거나 리포트가 있을 때 우측 퀵 버튼 */}
         {pacerSubView === 'timer' && examHistory.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => setIsReportModalOpen(true)}
@@ -501,10 +503,10 @@ export const ExamPacer = ({
 
               {/* ── 타이머 메인 뷰 (듀얼 / 아날로그 / 디지털) ── */}
               {timerDisplayMode === 'dual' && (
-                <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-8 my-2">
+                <div className="w-full max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-6 lg:gap-8 my-2">
                   {/* 좌측: 수능 시험장 규격 아날로그 시계 */}
-                  <div className="flex flex-col items-center justify-center p-6 bg-black/[0.02] dark:bg-white/[0.03] rounded-[28px] border border-black/5 dark:border-white/5 shadow-inner">
-                    <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-1.5">
+                  <div className="flex flex-col items-center justify-center p-4 sm:p-6 bg-black/[0.02] dark:bg-white/[0.03] rounded-[28px] border border-black/5 dark:border-white/5 shadow-inner">
+                    <div className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-1.5 text-center">
                       <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
                       <span>수능 시험장 표준 시계 ({currentSubject.startTimeStr} ~ {currentSubject.endTimeStr})</span>
                     </div>
@@ -520,11 +522,11 @@ export const ExamPacer = ({
                   </div>
 
                   {/* 우측: 애플 카운트다운 타이머 & 현재 파트 다이내믹 아일랜드 */}
-                  <div className="flex flex-col items-center justify-center p-2">
+                  <div className="flex flex-col items-center justify-center p-4 sm:p-6 bg-black/[0.02] dark:bg-white/[0.03] rounded-[28px] border border-black/5 dark:border-white/5 shadow-inner text-center">
                     <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500 font-bold mb-1">
                       전체 시험 잔여 시간
                     </div>
-                    <div className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black font-mono tracking-tighter text-zinc-900 dark:text-white digital-timer drop-shadow-sm my-1">
+                    <div className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black font-mono tracking-tighter text-zinc-900 dark:text-white digital-timer drop-shadow-sm my-1">
                       {formatTime(remainingSeconds)}
                     </div>
 

@@ -86,48 +86,50 @@ export const ScoreInputPanel = ({
         </div>
 
         {/* 탭 전환 버튼 */}
-        <div className="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800/80 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80">
-          <button
-            type="button"
-            onClick={() => setActiveInputMode('direct')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeInputMode === 'direct'
-                ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <Icon name="zap" className="w-3.5 h-3.5" />
-            <span>원점수 직접 입력</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveInputMode('wrong_picks')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeInputMode === 'wrong_picks'
-                ? 'bg-white dark:bg-zinc-900 text-rose-600 dark:text-rose-400 shadow-sm'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <Icon name="target" className="w-3.5 h-3.5" />
-            <span>틀린 번호 콕!</span>
-            {wrongQuestionNos.length > 0 && (
-              <span className="px-1.5 py-0.2 text-[10px] rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400">
-                {wrongQuestionNos.length}
-              </span>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveInputMode('omr')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeInputMode === 'omr'
-                ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            <Icon name="checkSquare" className="w-3.5 h-3.5" />
-            <span>스마트 OMR</span>
-          </button>
+        <div className="overflow-x-auto no-scrollbar max-w-full py-0.5">
+          <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-zinc-800/80 rounded-2xl border border-zinc-200/80 dark:border-zinc-700/80 min-w-max">
+            <button
+              type="button"
+              onClick={() => setActiveInputMode('direct')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                activeInputMode === 'direct'
+                  ? 'bg-white dark:bg-zinc-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Icon name="zap" className="w-3.5 h-3.5" />
+              <span>원점수 직접 입력</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveInputMode('wrong_picks')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                activeInputMode === 'wrong_picks'
+                  ? 'bg-white dark:bg-zinc-900 text-rose-600 dark:text-rose-400 shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Icon name="target" className="w-3.5 h-3.5" />
+              <span>틀린 번호 콕!</span>
+              {wrongQuestionNos.length > 0 && (
+                <span className="px-1.5 py-0.2 text-[10px] rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400">
+                  {wrongQuestionNos.length}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveInputMode('omr')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                activeInputMode === 'omr'
+                  ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Icon name="checkSquare" className="w-3.5 h-3.5" />
+              <span>스마트 OMR</span>
+            </button>
+          </div>
         </div>
       </div>
 
