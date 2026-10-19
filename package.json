@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "rollback:ui": "git checkout v1.0-pre-redesign -- src/ index.html tailwind.config.js"
   },
   "dependencies": {
     "lucide-react": "^0.475.0",

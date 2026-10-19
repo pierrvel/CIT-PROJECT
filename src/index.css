@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Pretendard Variable", "Pretendard", system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -13,6 +13,7 @@
   }
   body {
     font-family: inherit;
+    line-height: 1.6;
   }
 }
 
@@ -21,9 +22,22 @@
 ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.7); }
 
-.digital-timer { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
-.glass-card { backdrop-filter: blur(24px) saturate(190%); -webkit-backdrop-filter: blur(24px) saturate(190%); }
-.apple-card { backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%); box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2); }
+.digital-timer,
+.font-mono {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+.glass-card {
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+}
+
+.apple-card {
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
 
 /* Apple Control Center range slider */
 input[type="range"].apple-slider {
@@ -32,11 +46,11 @@ input[type="range"].apple-slider {
   background: rgba(0, 0, 0, 0.12);
   border-radius: 9999px;
   outline: none;
-  height: 8px;
-  transition: all 0.2s ease;
+  height: 6px;
+  transition: background 0.18s ease;
 }
 html.dark input[type="range"].apple-slider {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.16);
 }
 html.theme-paper input[type="range"].apple-slider {
   background: #d6e2d4;
@@ -48,19 +62,20 @@ input[type="range"].apple-slider::-webkit-slider-thumb {
   height: 18px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: transform 0.15s ease;
 }
 input[type="range"].apple-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
+  transform: scale(1.08);
 }
 
 @keyframes slideInUp { 
-  from { transform: translateY(100%); opacity: 0; } 
+  from { transform: translateY(12px); opacity: 0; } 
   to { transform: translateY(0); opacity: 1; } 
 }
-.animate-slide-up { animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-up { animation: slideInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 @keyframes pulseGlow { 
   0%, 100% { opacity: 1; transform: scale(1); } 
@@ -96,6 +111,251 @@ input[type="range"].apple-slider::-webkit-slider-thumb:hover {
 }
 .animate-flash-end { animation: edgeFlashEnd 3.2s ease-in-out forwards; }
 
+/* ==========================================================================
+   🍎 DESIGN.md — APPLE MINIMAL DESIGN SYSTEM (html.design-apple)
+   언제든 html.design-legacy로 전환 시 0.1초 만에 구형 디자인으로 즉시 롤백됩니다.
+   ========================================================================== */
+
+html.design-apple {
+  --apple-bg: #FFFFFF;
+  --apple-bg-sec: #F5F5F7;
+  --apple-surface: #FFFFFF;
+  --apple-text: #1D1D1F;
+  --apple-text-sec: #6E6E73;
+  --apple-text-ter: #86868B;
+  --apple-border: #D2D2D7;
+  --apple-divider: #E8E8ED;
+  --apple-accent: #0071E3;
+  --apple-accent-hover: #0077ED;
+  --apple-accent-subtle: #EAF3FF;
+  --apple-success: #248A3D;
+  --apple-warning: #9A6700;
+  --apple-error: #D70015;
+}
+
+html.design-apple.dark {
+  --apple-bg: #000000;
+  --apple-bg-sec: #161617;
+  --apple-surface: #1C1C1E;
+  --apple-text: #F5F5F7;
+  --apple-text-sec: #A1A1A6;
+  --apple-text-ter: #86868B;
+  --apple-border: #38383A;
+  --apple-divider: #2C2C2E;
+  --apple-accent: #2997FF;
+  --apple-accent-hover: #0077ED;
+  --apple-accent-subtle: rgba(41, 151, 255, 0.14);
+  --apple-success: #30D158;
+  --apple-warning: #FFD60A;
+  --apple-error: #FF453A;
+}
+
+/* 1. 베이스 배경 및 타이포그래피 위계 (Light & Dark) */
+html.design-apple:not(.theme-paper),
+html.design-apple:not(.theme-paper) body {
+  background-color: var(--apple-bg-sec);
+  color: var(--apple-text);
+}
+
+html.design-apple.dark:not(.theme-paper),
+html.design-apple.dark:not(.theme-paper) body {
+  background-color: #000000;
+  color: #F5F5F7;
+}
+
+/* 과도한 볼드(900)를 DESIGN.md 규격(600 Semi-Bold)으로 정제 */
+html.design-apple .font-black,
+html.design-apple .font-extrabold {
+  font-weight: 600 !important;
+  letter-spacing: -0.015em;
+}
+
+html.design-apple .digital-timer {
+  font-weight: 600 !important;
+  letter-spacing: -0.03em;
+}
+
+/* 2. 서피스, 카드, 보더 (Flat Surface & Subtle Separation) */
+html.design-apple:not(.theme-paper):not(.has-custom-bg) .glass-card {
+  background-color: #FFFFFF !important;
+  border: 1px solid #D2D2D7 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 16px !important;
+}
+
+html.design-apple.dark:not(.theme-paper):not(.has-custom-bg) .glass-card {
+  background-color: #1C1C1E !important;
+  border: 1px solid #38383A !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 16px !important;
+}
+
+/* 커스텀 배경화면 사용 시 절제된 반투명 서피스 */
+html.design-apple.has-custom-bg:not(.theme-paper) .glass-card {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid #D2D2D7 !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.design-apple.dark.has-custom-bg:not(.theme-paper) .glass-card {
+  background-color: rgba(28, 28, 30, 0.88) !important;
+  border: 1px solid #38383A !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* 과도한 라운드값(24px~32px)을 DESIGN.md 표준(12px~16px)으로 정돈 */
+html.design-apple .rounded-3xl,
+html.design-apple .rounded-\[24px\],
+html.design-apple .rounded-\[26px\],
+html.design-apple .rounded-\[28px\],
+html.design-apple .rounded-\[32px\] {
+  border-radius: 16px !important;
+}
+
+html.design-apple .rounded-2xl {
+  border-radius: 12px !important;
+}
+
+/* 3. 텍스트 컬러 토큰 매핑 (Light & Dark) */
+html.design-apple:not(.dark):not(.theme-paper) .text-zinc-900,
+html.design-apple:not(.dark):not(.theme-paper) .text-zinc-800 {
+  color: #1D1D1F !important;
+}
+
+html.design-apple:not(.dark):not(.theme-paper) .text-zinc-700,
+html.design-apple:not(.dark):not(.theme-paper) .text-zinc-600,
+html.design-apple:not(.dark):not(.theme-paper) .text-zinc-500 {
+  color: #6E6E73 !important;
+}
+
+html.design-apple:not(.dark):not(.theme-paper) .text-zinc-400 {
+  color: #86868B !important;
+}
+
+html.design-apple.dark:not(.theme-paper) .text-zinc-100,
+html.design-apple.dark:not(.theme-paper) .text-white {
+  color: #F5F5F7;
+}
+
+html.design-apple.dark:not(.theme-paper) .text-zinc-300,
+html.design-apple.dark:not(.theme-paper) .text-zinc-400,
+html.design-apple.dark:not(.theme-paper) .text-zinc-500 {
+  color: #A1A1A6 !important;
+}
+
+/* 4. 보더 & 디바이더 정밀화 */
+html.design-apple:not(.dark):not(.theme-paper) .border-zinc-200,
+html.design-apple:not(.dark):not(.theme-paper) .border-zinc-200\/80,
+html.design-apple:not(.dark):not(.theme-paper) .border-zinc-200\/60,
+html.design-apple:not(.dark):not(.theme-paper) .border-black\/5 {
+  border-color: #E8E8ED !important;
+}
+
+html.design-apple.dark:not(.theme-paper) .border-zinc-800,
+html.design-apple.dark:not(.theme-paper) .border-zinc-800\/80,
+html.design-apple.dark:not(.theme-paper) .border-zinc-700,
+html.design-apple.dark:not(.theme-paper) .border-white\/10,
+html.design-apple.dark:not(.theme-paper) .border-white\/5 {
+  border-color: #38383A !important;
+}
+
+/* 5. 단일 절제 액센트 컬러 (#0071E3 / #2997FF) — 무지개 그라디언트 배제 */
+html.design-apple:not(.theme-paper) .bg-indigo-600,
+html.design-apple:not(.theme-paper) .bg-indigo-500,
+html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-indigo-600,
+html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-emerald-600,
+html.design-apple:not(.theme-paper) .bg-gradient-to-tr.from-indigo-600 {
+  background-image: none !important;
+  background-color: #0071E3 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.design-apple:not(.theme-paper) .bg-indigo-600:hover,
+html.design-apple:not(.theme-paper) .hover\:bg-indigo-700:hover,
+html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-indigo-600:hover,
+html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-emerald-600:hover {
+  background-image: none !important;
+  background-color: #0077ED !important;
+}
+
+html.design-apple:not(.dark):not(.theme-paper) .text-indigo-600,
+html.design-apple:not(.dark):not(.theme-paper) .text-indigo-500,
+html.design-apple:not(.dark):not(.theme-paper) .text-purple-600 {
+  color: #0071E3 !important;
+}
+
+html.design-apple.dark:not(.theme-paper) .text-indigo-400,
+html.design-apple.dark:not(.theme-paper) .text-indigo-300,
+html.design-apple.dark:not(.theme-paper) .text-purple-400 {
+  color: #2997FF !important;
+}
+
+html.design-apple:not(.dark):not(.theme-paper) .bg-indigo-50,
+html.design-apple:not(.dark):not(.theme-paper) .bg-indigo-50\/90,
+html.design-apple:not(.dark):not(.theme-paper) .bg-indigo-500\/10,
+html.design-apple:not(.dark):not(.theme-paper) .bg-purple-500\/15 {
+  background-color: #EAF3FF !important;
+  border-color: rgba(0, 113, 227, 0.2) !important;
+}
+
+html.design-apple.dark:not(.theme-paper) .bg-indigo-950\/40,
+html.design-apple.dark:not(.theme-paper) .bg-indigo-950\/60,
+html.design-apple.dark:not(.theme-paper) .bg-indigo-500\/10,
+html.design-apple.dark:not(.theme-paper) .bg-indigo-400\/10 {
+  background-color: rgba(41, 151, 255, 0.14) !important;
+  border-color: rgba(41, 151, 255, 0.28) !important;
+}
+
+/* 6. 시맨틱 상태 컬러 (Success #248A3D, Warning #9A6700, Error #D70015) */
+html.design-apple:not(.dark):not(.theme-paper) .text-emerald-600,
+html.design-apple:not(.dark):not(.theme-paper) .text-emerald-500 {
+  color: #248A3D !important;
+}
+html.design-apple:not(.dark):not(.theme-paper) .text-amber-600,
+html.design-apple:not(.dark):not(.theme-paper) .text-amber-500 {
+  color: #9A6700 !important;
+}
+html.design-apple:not(.dark):not(.theme-paper) .text-rose-600,
+html.design-apple:not(.dark):not(.theme-paper) .text-rose-500 {
+  color: #D70015 !important;
+}
+
+/* 7. 입력 컨트롤 및 포커스 링 (Accessibility) */
+html.design-apple input:focus-visible,
+html.design-apple select:focus-visible,
+html.design-apple textarea:focus-visible,
+html.design-apple button:focus-visible {
+  outline: 2px solid var(--apple-accent) !important;
+  outline-offset: 2px !important;
+}
+
+/* 8. 절제된 마이크로인터랙션 (과도한 펄스/바운스 억제) */
+html.design-apple .animate-pulse-glow {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── ClassSpace 스타일 (내추럴 페이퍼 웜그린 테마) ── */
 html.theme-paper {
   --cs-bg: #f4f8f0;
@@ -126,8 +386,8 @@ html.theme-paper.has-custom-bg body {
 html.theme-paper .glass-card {
   background-color: rgba(251, 252, 248, 0.96);
   border-color: rgba(225, 233, 223, 0.95);
-  box-shadow: 0 10px 30px rgba(69, 98, 77, 0.06);
-  border-radius: 22px;
+  box-shadow: 0 4px 16px rgba(69, 98, 77, 0.05);
+  border-radius: 16px;
   color: #1f2c24;
 }
 
@@ -144,7 +404,7 @@ html.theme-paper .has-custom-bg .glass-card {
 html.theme-paper header {
   background-color: rgba(251, 252, 248, 0.95);
   border-color: #e1e9df;
-  box-shadow: 0 4px 20px rgba(69, 98, 77, 0.04);
+  box-shadow: 0 2px 12px rgba(69, 98, 77, 0.04);
 }
 
 html.theme-paper.has-custom-bg header,
@@ -337,4 +597,3 @@ html.theme-paper ::-webkit-scrollbar-thumb {
 html.theme-paper ::-webkit-scrollbar-thumb:hover {
   background: #9bb798 !important;
 }
-
