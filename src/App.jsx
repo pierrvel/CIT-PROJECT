@@ -1313,6 +1313,53 @@ export function App() {
     });
   }, []);
 
+  // 7. 모바일 화면 좌우 스와이프 제스처로 탭 전환 지원 ("옆으로 넘기는 형식")
+  const touchStartXRef = useRef(null);
+  const touchStartYRef = useRef(null);
+
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length === 1) {
+      touchStartXRef.current = e.touches[0].clientX;
+      touchStartYRef.current = e.touches[0].clientY;
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartXRef.current;
+    const deltaY = touchEndY - touchStartYRef.current;
+
+    // 모달이 열려있거나 폼 입력/슬라이더 조작 중일 때는 제스처 무시
+    const isAnyModalOpen = isBgModalOpen || isSyncModalOpen || isDDayModalOpen || newGoalModal || isTimeEditModalOpen || isSavePresetModalOpen || isReportModalOpen || shareCardConfig.isOpen || isInstallModalOpen;
+    if (
+      isAnyModalOpen ||
+      (e.target && e.target.closest('input, textarea, select, [type="range"], [data-no-swipe]'))
+    ) {
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      return;
+    }
+
+    // 가로 스와이프 거리가 65px 이상이고, 세로 스크롤보다 확연히 클 때만 탭 전환
+    if (Math.abs(deltaX) > 65 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      const tabKeys = ['sprint', 'pacer', 'lounge', 'calendar'];
+      const currentIndex = tabKeys.indexOf(activeTab);
+      if (deltaX < 0 && currentIndex < tabKeys.length - 1) {
+        // 좌측으로 스와이프 (손가락이 오른쪽->왼쪽) -> 다음 탭
+        setActiveTab(tabKeys[currentIndex + 1]);
+        if (soundEnabled) playChime(740, 'sine', 0.04);
+      } else if (deltaX > 0 && currentIndex > 0) {
+        // 우측으로 스와이프 (손가락이 왼쪽->오른쪽) -> 이전 탭
+        setActiveTab(tabKeys[currentIndex - 1]);
+        if (soundEnabled) playChime(640, 'sine', 0.04);
+      }
+    }
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+  };
+
   return (
     <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'text-[#1f2c24]' : 'text-zinc-900 dark:text-zinc-100'} ${bgImage ? 'has-custom-bg' : ''} font-sans`}>
       {/* 고정 배경 레이어 (z-0) */}
@@ -1377,7 +1424,11 @@ export function App() {
       />
 
       {/* 메인 뷰 */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <main
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8"
+      >
         {activeTab === 'sprint' && (
           <SprintTab
             goals={goals}
