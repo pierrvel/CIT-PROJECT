@@ -49,6 +49,10 @@ const iconMap = {
   checkSquare: LucideIcons.CheckSquare,
   chevronRight: LucideIcons.ChevronRight,
   chevronDown: LucideIcons.ChevronDown,
+  chevronUp: LucideIcons.ChevronUp,
+  sliders: LucideIcons.Sliders,
+  eye: LucideIcons.Eye,
+  eyeOff: LucideIcons.EyeOff,
   calculator: LucideIcons.Calculator,
   helpCircle: LucideIcons.HelpCircle,
   layers: LucideIcons.Layers

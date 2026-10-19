@@ -952,6 +952,8 @@ export const ExamPacer = ({
           showToast={showToast}
           onGoToSprint={onGoToSprint}
           onOpenShareCard={onOpenShareCard}
+          isTextMinimal={isTextMinimal}
+          toggleTextMinimal={toggleTextMinimal}
         />
       )}
     </div>
