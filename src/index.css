@@ -19,8 +19,16 @@
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.7); }
+::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.35); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.6); }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 .digital-timer,
 .font-mono {
@@ -29,28 +37,70 @@
 }
 
 .glass-card {
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
 }
 
 .apple-card {
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Apple Hardware Keycap (<kbd>) */
+.apple-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem 0.45rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #48484A;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html.dark .apple-kbd {
+  background: rgba(255, 255, 255, 0.1);
+  color: #D1D1D6;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Primary 버튼 내부의 반투명 Keycap */
+.apple-kbd-on-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Apple Control Center range slider */
 input[type="range"].apple-slider {
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(118, 118, 128, 0.18);
   border-radius: 9999px;
   outline: none;
-  height: 6px;
+  height: 5px;
   transition: background 0.18s ease;
 }
 html.dark input[type="range"].apple-slider {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
 }
 html.theme-paper input[type="range"].apple-slider {
   background: #d6e2d4;
@@ -58,21 +108,22 @@ html.theme-paper input[type="range"].apple-slider {
 input[type="range"].apple-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 input[type="range"].apple-slider::-webkit-slider-thumb:hover {
   transform: scale(1.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
 }
 
 @keyframes slideInUp { 
-  from { transform: translateY(12px); opacity: 0; } 
+  from { transform: translateY(10px); opacity: 0; } 
   to { transform: translateY(0); opacity: 1; } 
 }
 .animate-slide-up { animation: slideInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -112,59 +163,70 @@ input[type="range"].apple-slider::-webkit-slider-thumb:hover {
 .animate-flash-end { animation: edgeFlashEnd 3.2s ease-in-out forwards; }
 
 /* ==========================================================================
-   🍎 DESIGN.md — APPLE MINIMAL DESIGN SYSTEM (html.design-apple)
+   🍎 APPLE GLASSMORPHISM DESIGN SYSTEM (html.design-apple)
+   macOS Sequoia / visionOS / Linear 스타일의 멀티레이어 반투명 아크릴 글래스 & 정밀 타이포그래피
    언제든 html.design-legacy로 전환 시 0.1초 만에 구형 디자인으로 즉시 롤백됩니다.
    ========================================================================== */
 
 html.design-apple {
-  --apple-bg: #FFFFFF;
-  --apple-bg-sec: #F5F5F7;
-  --apple-surface: #FFFFFF;
+  --apple-bg: #F2F4F8;
+  --apple-bg-sec: #ECEEF3;
+  --apple-surface: rgba(255, 255, 255, 0.72);
+  --apple-surface-elevated: rgba(255, 255, 255, 0.86);
+  --apple-well: rgba(118, 118, 128, 0.07);
   --apple-text: #1D1D1F;
   --apple-text-sec: #6E6E73;
   --apple-text-ter: #86868B;
-  --apple-border: #D2D2D7;
-  --apple-divider: #E8E8ED;
+  --apple-border: rgba(0, 0, 0, 0.07);
+  --apple-border-highlight: rgba(255, 255, 255, 0.85);
+  --apple-divider: rgba(0, 0, 0, 0.06);
   --apple-accent: #0071E3;
   --apple-accent-hover: #0077ED;
-  --apple-accent-subtle: #EAF3FF;
+  --apple-accent-subtle: rgba(0, 113, 227, 0.1);
   --apple-success: #248A3D;
   --apple-warning: #9A6700;
   --apple-error: #D70015;
 }
 
 html.design-apple.dark {
-  --apple-bg: #000000;
-  --apple-bg-sec: #161617;
-  --apple-surface: #1C1C1E;
+  --apple-bg: #07080A;
+  --apple-bg-sec: #121316;
+  --apple-surface: rgba(28, 28, 32, 0.68);
+  --apple-surface-elevated: rgba(40, 40, 46, 0.78);
+  --apple-well: rgba(255, 255, 255, 0.045);
   --apple-text: #F5F5F7;
   --apple-text-sec: #A1A1A6;
-  --apple-text-ter: #86868B;
-  --apple-border: #38383A;
-  --apple-divider: #2C2C2E;
+  --apple-text-ter: #6E6E73;
+  --apple-border: rgba(255, 255, 255, 0.09);
+  --apple-border-highlight: rgba(255, 255, 255, 0.14);
+  --apple-divider: rgba(255, 255, 255, 0.07);
   --apple-accent: #2997FF;
-  --apple-accent-hover: #0077ED;
-  --apple-accent-subtle: rgba(41, 151, 255, 0.14);
+  --apple-accent-hover: #40A2FF;
+  --apple-accent-subtle: rgba(41, 151, 255, 0.15);
   --apple-success: #30D158;
   --apple-warning: #FFD60A;
   --apple-error: #FF453A;
 }
 
-/* 1. 베이스 배경 및 타이포그래피 위계 (Light & Dark) */
+/* 1. 베이스 배경 및 타이포그래피 위계 */
 html.design-apple:not(.theme-paper),
 html.design-apple:not(.theme-paper) body {
-  background-color: var(--apple-bg-sec);
+  background-color: var(--apple-bg);
   color: var(--apple-text);
 }
 
 html.design-apple.dark:not(.theme-paper),
 html.design-apple.dark:not(.theme-paper) body {
-  background-color: #000000;
+  background-color: #07080A;
   color: #F5F5F7;
 }
 
-/* 과도한 볼드(900)를 DESIGN.md 규격(600 Semi-Bold)으로 정제 */
-html.design-apple .font-black,
+/* 과도한 헤비 볼드(900)를 세련된 Apple Semi-Bold/Bold 위계로 정제 */
+html.design-apple .font-black {
+  font-weight: 650 !important;
+  letter-spacing: -0.02em;
+}
+
 html.design-apple .font-extrabold {
   font-weight: 600 !important;
   letter-spacing: -0.015em;
@@ -172,58 +234,73 @@ html.design-apple .font-extrabold {
 
 html.design-apple .digital-timer {
   font-weight: 600 !important;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 
-/* 2. 서피스, 카드, 보더 (Flat Surface & Subtle Separation) */
-html.design-apple:not(.theme-paper):not(.has-custom-bg) .glass-card {
-  background-color: #FFFFFF !important;
-  border: 1px solid #D2D2D7 !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-radius: 16px !important;
+/* 2. 진정한 Apple Glassmorphism 서피스 (.glass-card)
+   - 반투명 멀티레이어 아크릴 블러 (blur 28px + saturate 190%)
+   - 상단 1px 스페큘러 인셋 하이라이트 (빛 반사 림)
+   - 부드러운 다중 깊이 엘리베이션 섀도 */
+html.design-apple:not(.theme-paper) .glass-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.80) 0%, rgba(255, 255, 255, 0.66) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 12px 32px -8px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95) !important;
 }
 
-html.design-apple.dark:not(.theme-paper):not(.has-custom-bg) .glass-card {
-  background-color: #1C1C1E !important;
-  border: 1px solid #38383A !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-radius: 16px !important;
+html.design-apple.dark:not(.theme-paper) .glass-card {
+  background: linear-gradient(180deg, rgba(32, 33, 38, 0.74) 0%, rgba(20, 21, 25, 0.64) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow:
+    0 16px 40px -10px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12) !important;
 }
 
-/* 커스텀 배경화면 사용 시 절제된 반투명 서피스 */
+/* 커스텀 배경화면 활성화 시 더욱 깊이감 있는 아크릴 글래스 */
 html.design-apple.has-custom-bg:not(.theme-paper) .glass-card {
-  background-color: rgba(255, 255, 255, 0.88) !important;
-  border: 1px solid #D2D2D7 !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74) 0%, rgba(255, 255, 255, 0.60) 100%) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
 }
 
 html.design-apple.dark.has-custom-bg:not(.theme-paper) .glass-card {
-  background-color: rgba(28, 28, 30, 0.88) !important;
-  border: 1px solid #38383A !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+  background: linear-gradient(180deg, rgba(26, 27, 31, 0.72) 0%, rgba(16, 17, 20, 0.62) 100%) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
 }
 
-/* 과도한 라운드값(24px~32px)을 DESIGN.md 표준(12px~16px)으로 정돈 */
-html.design-apple .rounded-3xl,
-html.design-apple .rounded-\[24px\],
-html.design-apple .rounded-\[26px\],
-html.design-apple .rounded-\[28px\],
-html.design-apple .rounded-\[32px\] {
-  border-radius: 16px !important;
+/* Apple Recessed Glass Well (시계 독, 세그먼트 트랙, 내부 슬롯용) */
+.apple-glass-well {
+  background: rgba(118, 118, 128, 0.075);
+  border: 1px solid rgba(0, 0, 0, 0.045);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
-html.design-apple .rounded-2xl {
-  border-radius: 12px !important;
+html.dark .apple-glass-well {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Apple Elevated Glass Pill / Button (세그먼트 액티브 탭, 글래스 버튼용) */
+.apple-glass-pill {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+html.dark .apple-glass-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 /* 3. 텍스트 컬러 토큰 매핑 (Light & Dark) */
@@ -253,39 +330,23 @@ html.design-apple.dark:not(.theme-paper) .text-zinc-500 {
   color: #A1A1A6 !important;
 }
 
-/* 4. 보더 & 디바이더 정밀화 */
-html.design-apple:not(.dark):not(.theme-paper) .border-zinc-200,
-html.design-apple:not(.dark):not(.theme-paper) .border-zinc-200\/80,
-html.design-apple:not(.dark):not(.theme-paper) .border-zinc-200\/60,
-html.design-apple:not(.dark):not(.theme-paper) .border-black\/5 {
-  border-color: #E8E8ED !important;
-}
-
-html.design-apple.dark:not(.theme-paper) .border-zinc-800,
-html.design-apple.dark:not(.theme-paper) .border-zinc-800\/80,
-html.design-apple.dark:not(.theme-paper) .border-zinc-700,
-html.design-apple.dark:not(.theme-paper) .border-white\/10,
-html.design-apple.dark:not(.theme-paper) .border-white\/5 {
-  border-color: #38383A !important;
-}
-
-/* 5. 단일 절제 액센트 컬러 (#0071E3 / #2997FF) — 무지개 그라디언트 배제 */
+/* 4. 단일 절제 액센트 컬러 (#0071E3 / #2997FF) — AI 느낌의 무지개 그라디언트 제거 */
 html.design-apple:not(.theme-paper) .bg-indigo-600,
 html.design-apple:not(.theme-paper) .bg-indigo-500,
 html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-indigo-600,
 html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-emerald-600,
 html.design-apple:not(.theme-paper) .bg-gradient-to-tr.from-indigo-600 {
-  background-image: none !important;
+  background-image: linear-gradient(180deg, #0077ED 0%, #0068D1 100%) !important;
   background-color: #0071E3 !important;
   color: #FFFFFF !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
 }
 
 html.design-apple:not(.theme-paper) .bg-indigo-600:hover,
 html.design-apple:not(.theme-paper) .hover\:bg-indigo-700:hover,
 html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-indigo-600:hover,
 html.design-apple:not(.theme-paper) .bg-gradient-to-r.from-emerald-600:hover {
-  background-image: none !important;
+  background-image: linear-gradient(180deg, #1482F5 0%, #0071E3 100%) !important;
   background-color: #0077ED !important;
 }
 
@@ -305,8 +366,8 @@ html.design-apple:not(.dark):not(.theme-paper) .bg-indigo-50,
 html.design-apple:not(.dark):not(.theme-paper) .bg-indigo-50\/90,
 html.design-apple:not(.dark):not(.theme-paper) .bg-indigo-500\/10,
 html.design-apple:not(.dark):not(.theme-paper) .bg-purple-500\/15 {
-  background-color: #EAF3FF !important;
-  border-color: rgba(0, 113, 227, 0.2) !important;
+  background-color: rgba(0, 113, 227, 0.08) !important;
+  border-color: rgba(0, 113, 227, 0.18) !important;
 }
 
 html.design-apple.dark:not(.theme-paper) .bg-indigo-950\/40,
@@ -314,10 +375,10 @@ html.design-apple.dark:not(.theme-paper) .bg-indigo-950\/60,
 html.design-apple.dark:not(.theme-paper) .bg-indigo-500\/10,
 html.design-apple.dark:not(.theme-paper) .bg-indigo-400\/10 {
   background-color: rgba(41, 151, 255, 0.14) !important;
-  border-color: rgba(41, 151, 255, 0.28) !important;
+  border-color: rgba(41, 151, 255, 0.26) !important;
 }
 
-/* 6. 시맨틱 상태 컬러 (Success #248A3D, Warning #9A6700, Error #D70015) */
+/* 5. 시맨틱 상태 컬러 (Success #248A3D, Warning #9A6700, Error #D70015) */
 html.design-apple:not(.dark):not(.theme-paper) .text-emerald-600,
 html.design-apple:not(.dark):not(.theme-paper) .text-emerald-500 {
   color: #248A3D !important;
@@ -331,7 +392,7 @@ html.design-apple:not(.dark):not(.theme-paper) .text-rose-500 {
   color: #D70015 !important;
 }
 
-/* 7. 입력 컨트롤 및 포커스 링 (Accessibility) */
+/* 6. 입력 컨트롤 및 포커스 링 (Accessibility) */
 html.design-apple input:focus-visible,
 html.design-apple select:focus-visible,
 html.design-apple textarea:focus-visible,
@@ -340,8 +401,9 @@ html.design-apple button:focus-visible {
   outline-offset: 2px !important;
 }
 
-/* 8. 절제된 마이크로인터랙션 (과도한 펄스/바운스 억제) */
-html.design-apple .animate-pulse-glow {
+/* 7. 절제된 마이크로인터랙션 (AI 특유의 과도한 펄스/바운스 억제) */
+html.design-apple .animate-pulse-glow,
+html.design-apple .animate-bounce {
   animation: none !important;
 }
 

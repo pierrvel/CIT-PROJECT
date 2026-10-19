@@ -121,10 +121,10 @@ export function App() {
       const next = prev === 'apple' ? 'legacy' : 'apple';
       localStorage.setItem('dc_design_system', next);
       if (next === 'legacy') {
-        showToast('⏪ 이전 클래식 UI 디자인으로 즉시 롤백되었습니다.', 'info');
+        showToast('이전 클래식 UI 디자인으로 즉시 롤백되었습니다.', 'info');
       } else {
         setThemeMode((curr) => (curr === 'paper' ? 'light' : curr));
-        showToast('✨ DESIGN.md 애플 미니멀 UI 디자인이 적용되었습니다.', 'success');
+        showToast('Apple 글래스모피즘 스튜디오 UI가 적용되었습니다.', 'success');
       }
       return next;
     });
@@ -1380,18 +1380,30 @@ export function App() {
     <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'text-[#1f2c24]' : designSystem === 'apple' ? 'text-[#1D1D1F] dark:text-[#F5F5F7]' : 'text-zinc-900 dark:text-zinc-100'} ${bgImage ? 'has-custom-bg' : ''} font-sans`}>
       {/* 고정 배경 레이어 (z-0) */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-        {/* 1. 기본 베이스 톤 (페이퍼 / DESIGN.md 뉴트럴 / 구형 라이트·다크) */}
+        {/* 1. 기본 베이스 톤 (페이퍼 / Apple Studio Pearl·Obsidian / 구형 라이트·다크) */}
         <div
           className={`absolute inset-0 transition-colors duration-200 ${
             isPaperTheme
               ? 'bg-[#f4f8f0]'
               : designSystem === 'apple'
-              ? 'bg-[#F5F5F7] dark:bg-[#000000]'
+              ? 'bg-[#F2F4F8] dark:bg-[#07080A]'
               : 'bg-zinc-50 dark:bg-zinc-950'
           }`}
         />
 
-        {/* 2. 구형(Legacy) 모드 전용 앰비언트 그라디언트 (DESIGN.md 모드에서는 무지개/네온 글로우 배제) */}
+        {/* 2-A. 신형 Apple Glassmorphism 전용 은은한 스튜디오 펄/티타늄 광원 (유리 굴절 극대화) */}
+        {designSystem === 'apple' && !isPaperTheme && !bgImage && (
+          <div
+            className="absolute inset-0 transition-opacity duration-500"
+            style={{
+              backgroundImage: isDarkMode
+                ? 'radial-gradient(1000px circle at 15% 10%, rgba(41, 151, 255, 0.08), transparent 55%), radial-gradient(900px circle at 85% 20%, rgba(255, 255, 255, 0.035), transparent 50%), radial-gradient(800px circle at 50% 95%, rgba(41, 151, 255, 0.045), transparent 60%)'
+                : 'radial-gradient(1100px circle at 12% 8%, rgba(0, 113, 227, 0.055), transparent 55%), radial-gradient(900px circle at 88% 15%, rgba(255, 255, 255, 0.95), transparent 50%), radial-gradient(1000px circle at 50% 95%, rgba(142, 142, 147, 0.08), transparent 60%)'
+            }}
+          />
+        )}
+
+        {/* 2-B. 구형(Legacy) 모드 전용 앰비언트 그라디언트 */}
         {designSystem === 'legacy' && !isPaperTheme && !bgImage && (
           <div
             className="absolute inset-0 opacity-60 dark:opacity-30 transition-all duration-700"
@@ -1451,7 +1463,7 @@ export function App() {
       <main
         className={`flex-1 w-full mx-auto ${
           designSystem === 'apple'
-            ? 'max-w-[1200px] px-5 sm:px-6 lg:px-10 py-4 sm:py-6'
+            ? 'max-w-[1200px] px-4 sm:px-6 lg:px-10 py-3 sm:py-5'
             : 'max-w-7xl p-4 sm:p-6 lg:p-8'
         }`}
       >
@@ -1492,6 +1504,7 @@ export function App() {
 
         {activeTab === 'pacer' && (
           <ExamPacer
+            designSystem={designSystem}
             pacerSubView={pacerSubView}
             setPacerSubView={setPacerSubView}
             examHistory={examHistory}

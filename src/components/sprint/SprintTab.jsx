@@ -47,33 +47,33 @@ export const SprintTab = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card bg-white/70 dark:bg-zinc-900/70 p-5 rounded-2xl border border-white/60 dark:border-zinc-800 shadow-glass dark:shadow-glass-dark">
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-[20px]">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-              🏃 주간 Sprint 마일스톤
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-zinc-900 dark:text-white">
+              주간 Sprint 마일스톤
             </h2>
-            <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-              목표 {goals.length}개
+            <span className="px-2.5 py-0.5 text-xs font-mono font-semibold rounded-full apple-glass-well text-[#0071E3] dark:text-[#2997FF]">
+              {goals.length} Active
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-            지연 발생 시 3가지 적응형 재배분 전략(강제 상향 / 주말 이월 / 범위 가지치기)을 지원합니다.
+          <p className="text-xs sm:text-[13px] text-[#6E6E73] dark:text-[#A1A1A6] mt-1">
+            지연 발생 시 강제 상향 · 주말 이월 · 범위 가지치기의 3가지 적응형 재배분 전략을 지원합니다.
           </p>
         </div>
 
         <button
           type="button"
           onClick={() => setNewGoalModal(true)}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-sm shadow-md shadow-indigo-600/25 transition-all"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[12px] bg-[#0071E3] hover:bg-[#0077ED] active:scale-[0.99] text-white font-semibold text-xs sm:text-sm shadow-xs transition-all shrink-0"
         >
           <Icon name="plus" className="w-4 h-4" />
           <span>새 학습 목표 등록</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {goals.map((goal) => {
           const pacing = calculateGoalPacing(goal);
           const completedPct = Math.min(100, Math.round((goal.completedAmount / goal.totalAmount) * 100));
@@ -83,33 +83,33 @@ export const SprintTab = ({
           return (
             <div
               key={goal.id}
-              className={`glass-card rounded-2xl border p-6 shadow-glass dark:shadow-glass-dark transition-all duration-200 flex flex-col justify-between relative ${
+              className={`glass-card rounded-[20px] p-5 sm:p-6 transition-all duration-200 flex flex-col justify-between relative ${
                 pacing.requiresAttention
-                  ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-800/80 shadow-glow-amber'
-                  : 'bg-white/75 dark:bg-zinc-900/75 border-white/70 dark:border-zinc-800 hover:border-indigo-400/40'
+                  ? 'ring-1 ring-[#9A6700]/40 dark:ring-[#FFD60A]/40'
+                  : ''
               }`}
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-300/50 dark:border-zinc-700">
+                    <span className="font-mono text-[11px] font-semibold px-2 py-0.5 rounded-[6px] apple-glass-well text-[#6E6E73] dark:text-[#A1A1A6]">
                       {goal.unit}
                     </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white">
+                    <h3 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white tracking-tight">
                       {goal.title}
                     </h3>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-black px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                    <span className="font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#D70015]/10 text-[#D70015] dark:text-[#FF453A]">
                       D-{pacing.D}
                     </span>
                     <button
                       type="button"
                       onClick={() => setEditingGoal(goal)}
                       title="학습 목표 수정"
-                      className="p-1 rounded-lg text-zinc-400 hover:text-indigo-500 hover:bg-indigo-500/10 transition-colors"
+                      className="p-1.5 rounded-[8px] text-[#6E6E73] hover:text-[#1D1D1F] dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-colors"
                     >
-                      <Icon name="edit3" className="w-4 h-4" />
+                      <Icon name="edit3" className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
@@ -119,10 +119,10 @@ export const SprintTab = ({
                           showToast('목표가 삭제되었습니다.', 'info');
                         }
                       }}
-                      className="p-1 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+                      className="p-1.5 rounded-[8px] text-[#6E6E73] hover:text-[#D70015] hover:bg-[#D70015]/10 transition-colors"
                       title="학습 목표 삭제"
                     >
-                      <Icon name="trash2" className="w-4 h-4" />
+                      <Icon name="trash2" className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -132,51 +132,51 @@ export const SprintTab = ({
                     <button
                       type="button"
                       onClick={() => { setStrategyModalGoal(goal); setPruneInputVal(goal.prunedAmount || 0); }}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500 text-white text-xs font-bold shadow-md shadow-amber-500/30 hover:bg-amber-600 transition-all animate-bounce"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] bg-[#9A6700]/15 dark:bg-[#FFD60A]/15 text-[#9A6700] dark:text-[#FFD60A] border border-[#9A6700]/30 text-xs font-semibold hover:opacity-90 transition-all"
                     >
                       <Icon name="alertTriangle" className="w-3.5 h-3.5" />
-                      <span>⚠️ 계획 재조정 필요 (전략 선택)</span>
+                      <span>계획 재조정 필요 · 전략 선택</span>
                     </button>
                   ) : goal.strategyMode !== 'normal' ? (
                     <button
                       type="button"
                       onClick={() => { setStrategyModalGoal(goal); setPruneInputVal(goal.prunedAmount || 0); }}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 text-xs font-semibold hover:bg-indigo-500/20"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] bg-[#0071E3]/10 text-[#0071E3] dark:text-[#2997FF] text-xs font-semibold hover:bg-[#0071E3]/15 transition-all"
                     >
                       <Icon name="sparkles" className="w-3.5 h-3.5" />
-                      <span>{pacing.badgeText} (변경)</span>
+                      <span>{pacing.badgeText} · 변경</span>
                     </button>
                   ) : null}
                 </div>
 
                 <div className="mt-2">
                   <div className="flex items-baseline justify-between mb-1.5 font-mono">
-                    <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+                    <span className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white">
                       {goal.completedAmount}
-                      <span className="text-sm font-normal text-zinc-400 dark:text-zinc-500 ml-1">
+                      <span className="text-xs font-normal text-[#86868B] ml-1.5">
                         / {goal.totalAmount} {goal.unit}
                       </span>
                     </span>
-                    <div className="flex items-center gap-2 text-xs font-bold">
+                    <div className="flex items-center gap-2 text-xs font-semibold">
                       {goal.prunedAmount > 0 && (
-                        <span className="text-amber-600 dark:text-amber-400">
-                          제외: {goal.prunedAmount}{goal.unit} ({prunedPct}%)
+                        <span className="text-[#9A6700] dark:text-[#FFD60A]">
+                          제외 {goal.prunedAmount}{goal.unit} ({prunedPct}%)
                         </span>
                       )}
-                      <span className="text-indigo-600 dark:text-indigo-400">
-                        완료 {completedPct}%
+                      <span className="text-[#0071E3] dark:text-[#2997FF]">
+                        {completedPct}%
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-full h-3.5 bg-zinc-200/80 dark:bg-zinc-800 rounded-full overflow-hidden flex p-0.5 border border-zinc-200/60 dark:border-zinc-700/60">
+                  <div className="w-full h-2.5 apple-glass-well rounded-full overflow-hidden flex p-0.5">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-500"
+                      className="h-full rounded-full bg-[#0071E3] dark:bg-[#2997FF] transition-all duration-500"
                       style={{ width: `${completedPct}%` }}
                     />
                     {prunedPct > 0 && (
                       <div
-                        className="h-full bg-amber-400 dark:bg-amber-500 border-l border-white/40 dark:border-zinc-900/40 relative rounded-r-full"
+                        className="h-full bg-[#9A6700] dark:bg-[#FFD60A] border-l border-white/40 dark:border-zinc-900/40 relative rounded-r-full"
                         style={{ width: `${prunedPct}%` }}
                         title={`가지치기 제외: ${goal.prunedAmount}${goal.unit}`}
                       />
@@ -184,19 +184,24 @@ export const SprintTab = ({
                   </div>
                 </div>
 
-                <div className={`mt-4 p-3.5 rounded-xl border text-xs sm:text-sm ${
-                  pacing.requiresAttention
-                    ? 'bg-amber-100/70 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 font-medium'
-                    : 'bg-indigo-50/70 dark:bg-indigo-950/30 border-indigo-100 dark:border-indigo-900/40 text-indigo-900 dark:text-indigo-200'
-                }`}>
-                  <div className="flex items-start gap-2">
-                    <Icon name={pacing.requiresAttention ? 'alertTriangle' : 'sparkles'} className="w-4 h-4 mt-0.5 shrink-0 text-indigo-600 dark:text-indigo-400" />
+                <div className="mt-4 p-3.5 rounded-[14px] apple-glass-well text-xs">
+                  <div className="flex items-start gap-2.5">
+                    <Icon
+                      name={pacing.requiresAttention ? 'alertTriangle' : 'sparkles'}
+                      className={`w-4 h-4 mt-0.5 shrink-0 ${
+                        pacing.requiresAttention
+                          ? 'text-[#9A6700] dark:text-[#FFD60A]'
+                          : 'text-[#0071E3] dark:text-[#2997FF]'
+                      }`}
+                    />
                     <div className="flex-1">
-                      <p className="leading-relaxed">{pacing.guideText}</p>
-                      <div className="mt-1 flex items-center gap-3 text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">
-                        <span>마감까지 잔여: {pacing.R} {goal.unit}</span>
-                        <span>•</span>
-                        <span>하루 소화 한도: {goal.dailyCap} {goal.unit}</span>
+                      <p className="leading-relaxed text-[#1D1D1F] dark:text-[#F5F5F7] font-medium">
+                        {pacing.guideText}
+                      </p>
+                      <div className="mt-1.5 flex items-center gap-3 text-[11px] text-[#6E6E73] dark:text-[#A1A1A6] font-mono">
+                        <span>잔여 {pacing.R}{goal.unit}</span>
+                        <span>·</span>
+                        <span>일일 한도 {goal.dailyCap}{goal.unit}</span>
                       </div>
                     </div>
                   </div>
@@ -204,21 +209,21 @@ export const SprintTab = ({
               </div>
 
               {/* 당일 실적 입력 */}
-              <div className="mt-6 pt-5 border-t border-zinc-200/60 dark:border-zinc-800/80">
+              <div className="mt-5 pt-4 border-t border-black/[0.06] dark:border-white/[0.07]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">오늘 실적 입력</span>
-                  <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono">최근: {goal.lastRecordDate}</span>
+                  <span className="text-xs font-medium text-[#6E6E73] dark:text-[#A1A1A6]">오늘 실적 기록</span>
+                  <span className="text-[11px] text-[#86868B] font-mono">최근: {goal.lastRecordDate}</span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="inline-flex rounded-xl p-0.5 bg-zinc-200/70 dark:bg-zinc-800/70 border border-zinc-300/40 dark:border-zinc-700/40">
+                  <div className="inline-flex rounded-[10px] p-0.5 apple-glass-well">
                     <button
                       type="button"
                       onClick={() => {
                         if (soundEnabled) playChime(700, 'sine', 0.08);
                         setGoals(prev => prev.map(g => g.id === goal.id ? { ...g, completedAmount: Math.max(0, g.completedAmount - 1), lastRecordDate: '방금 전' } : g));
                       }}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700"
+                      className="px-2.5 py-1.5 rounded-[8px] text-xs font-mono font-semibold text-[#1D1D1F] dark:text-white hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
                     >
                       -1
                     </button>
@@ -228,7 +233,7 @@ export const SprintTab = ({
                         if (soundEnabled) playChime(700, 'sine', 0.08);
                         setGoals(prev => prev.map(g => g.id === goal.id ? { ...g, completedAmount: Math.min(g.totalAmount, g.completedAmount + 1), lastRecordDate: '방금 전' } : g));
                       }}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-white dark:hover:bg-zinc-700"
+                      className="px-2.5 py-1.5 rounded-[8px] text-xs font-mono font-semibold text-[#0071E3] dark:text-[#2997FF] hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
                     >
                       +1
                     </button>
@@ -238,7 +243,7 @@ export const SprintTab = ({
                         if (soundEnabled) playChime(700, 'sine', 0.08);
                         setGoals(prev => prev.map(g => g.id === goal.id ? { ...g, completedAmount: Math.min(g.totalAmount, g.completedAmount + 5), lastRecordDate: '방금 전' } : g));
                       }}
-                      className="px-3 py-1.5 rounded-lg text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-white dark:hover:bg-zinc-700"
+                      className="px-3 py-1.5 rounded-[8px] text-xs font-mono font-semibold text-[#0071E3] dark:text-[#2997FF] hover:bg-white/80 dark:hover:bg-white/10 transition-colors"
                     >
                       +5
                     </button>
@@ -247,7 +252,7 @@ export const SprintTab = ({
                   <div className="flex-1 flex items-center gap-1.5 min-w-[130px]">
                     <input
                       type="number"
-                      placeholder={`+수량`}
+                      placeholder="+수량"
                       value={inputVal}
                       onChange={(e) => setInputDeltas(prev => ({ ...prev, [goal.id]: e.target.value }))}
                       onKeyDown={(e) => {
@@ -259,7 +264,7 @@ export const SprintTab = ({
                           }
                         }
                       }}
-                      className="w-full px-3 py-1.5 text-xs sm:text-sm font-mono rounded-xl bg-white dark:bg-zinc-800 border border-zinc-300/70 dark:border-zinc-700 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-1.5 text-xs sm:text-sm font-mono rounded-[10px] apple-glass-well text-[#1D1D1F] dark:text-white focus:outline-none"
                     />
                     <button
                       type="button"
@@ -270,7 +275,7 @@ export const SprintTab = ({
                           setInputDeltas(prev => ({ ...prev, [goal.id]: '' }));
                         }
                       }}
-                      className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:opacity-90 active:scale-95 transition-all whitespace-nowrap"
+                      className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-[10px] bg-[#1D1D1F] dark:bg-white text-white dark:text-[#1D1D1F] hover:opacity-90 active:scale-[0.99] transition-all whitespace-nowrap"
                     >
                       기록
                     </button>
@@ -284,52 +289,52 @@ export const SprintTab = ({
 
       {/* 전략 재조정 모달 */}
       {strategyModalGoal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-lg glass-card bg-white/95 dark:bg-zinc-900/95 rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
-              <h3 className="font-bold text-lg text-zinc-900 dark:text-white">
-                💡 [{strategyModalGoal.title}] 적응형 재배분 전략
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-fadeIn">
+          <div className="w-full max-w-lg glass-card rounded-[22px] p-6 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-black/[0.06] dark:border-white/[0.08]">
+              <h3 className="font-semibold text-base sm:text-lg text-zinc-900 dark:text-white">
+                {strategyModalGoal.title} · 적응형 재배분 전략
               </h3>
               <button
                 type="button"
                 onClick={() => setStrategyModalGoal(null)}
-                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                className="p-1.5 rounded-[8px] text-[#6E6E73] hover:text-[#1D1D1F] dark:hover:text-white"
               >
-                <Icon name="x" className="w-5 h-5" />
+                <Icon name="x" className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
-              목표 완주를 위해 상황에 맞는 전략을 선택해주세요:
+            <p className="text-xs text-[#6E6E73] dark:text-[#A1A1A6]">
+              목표 완주를 위해 상황에 맞는 배분 방식을 선택하세요.
             </p>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               <button
                 type="button"
                 onClick={() => handleApplyStrategy(strategyModalGoal.id, 'forced_increase')}
-                className="w-full p-4 rounded-2xl border text-left hover:border-indigo-500 bg-zinc-50 dark:bg-zinc-800/60 transition-all space-y-1"
+                className="w-full p-4 rounded-[14px] apple-glass-well text-left hover:ring-1 hover:ring-[#0071E3] transition-all space-y-1"
               >
-                <div className="font-bold text-sm text-indigo-600 dark:text-indigo-400">전략 A: 강제 상향 (초과 허용)</div>
-                <div className="text-xs text-zinc-600 dark:text-zinc-300">
-                  하루 소화 한도를 넘어 매일 남은 분량을 균등하게 나눕니다.
+                <div className="font-semibold text-sm text-[#0071E3] dark:text-[#2997FF]">전략 A · 강제 상향 (초과 허용)</div>
+                <div className="text-xs text-[#6E6E73] dark:text-[#A1A1A6]">
+                  일일 소화 한도를 넘어 남은 분량을 마감일까지 균등하게 배분합니다.
                 </div>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleApplyStrategy(strategyModalGoal.id, 'weekend_rollover')}
-                className="w-full p-4 rounded-2xl border text-left hover:border-indigo-500 bg-zinc-50 dark:bg-zinc-800/60 transition-all space-y-1"
+                className="w-full p-4 rounded-[14px] apple-glass-well text-left hover:ring-1 hover:ring-[#248A3D] transition-all space-y-1"
               >
-                <div className="font-bold text-sm text-emerald-600 dark:text-emerald-400">전략 B: 주말 이월 (평일 한도 유지)</div>
-                <div className="text-xs text-zinc-600 dark:text-zinc-300">
-                  평일에는 하루 소화 한도만 풀고, 초과 분량은 주말에 몰아서 완주합니다.
+                <div className="font-semibold text-sm text-[#248A3D] dark:text-[#30D158]">전략 B · 주말 이월 (평일 한도 유지)</div>
+                <div className="text-xs text-[#6E6E73] dark:text-[#A1A1A6]">
+                  평일에는 일일 한도만 소화하고, 초과 분량은 주말에 집중 배분합니다.
                 </div>
               </button>
 
-              <div className="p-4 rounded-2xl border bg-zinc-50 dark:bg-zinc-800/60 space-y-2">
-                <div className="font-bold text-sm text-amber-600 dark:text-amber-400">전략 C: 범위 가지치기 (일부 제외)</div>
-                <div className="text-xs text-zinc-600 dark:text-zinc-300">
-                  우선순위가 낮은 분량을 과감하게 제외하여 현실적인 매일 목표를 맞춥니다.
+              <div className="p-4 rounded-[14px] apple-glass-well space-y-2.5">
+                <div className="font-semibold text-sm text-[#9A6700] dark:text-[#FFD60A]">전략 C · 범위 가지치기 (일부 제외)</div>
+                <div className="text-xs text-[#6E6E73] dark:text-[#A1A1A6]">
+                  우선순위가 낮은 분량을 제외하여 현실적인 일일 목표량을 맞춥니다.
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <input
@@ -338,16 +343,16 @@ export const SprintTab = ({
                     max={strategyModalGoal.totalAmount - strategyModalGoal.completedAmount}
                     value={pruneInputVal}
                     onChange={(e) => setPruneInputVal(Number(e.target.value) || 0)}
-                    placeholder="제외할 분량"
-                    className="w-28 px-3 py-1.5 text-xs font-mono rounded-xl bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700"
+                    placeholder="제외 분량"
+                    className="w-28 px-3 py-1.5 text-xs font-mono rounded-[10px] bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10"
                   />
-                  <span className="text-xs text-zinc-500">{strategyModalGoal.unit} 제외</span>
+                  <span className="text-xs text-[#6E6E73]">{strategyModalGoal.unit} 제외</span>
                   <button
                     type="button"
                     onClick={() => handleApplyStrategy(strategyModalGoal.id, 'pruning', pruneInputVal)}
-                    className="ml-auto px-4 py-1.5 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600"
+                    className="ml-auto px-3.5 py-1.5 text-xs font-semibold rounded-[10px] bg-[#0071E3] text-white hover:bg-[#0077ED]"
                   >
-                    가지치기 적용
+                    적용
                   </button>
                 </div>
               </div>
@@ -355,7 +360,7 @@ export const SprintTab = ({
               <button
                 type="button"
                 onClick={() => handleApplyStrategy(strategyModalGoal.id, 'normal')}
-                className="w-full p-2.5 rounded-xl border text-xs text-center text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+                className="w-full p-2.5 rounded-[12px] apple-glass-well text-xs font-medium text-center text-[#6E6E73] hover:text-[#1D1D1F] dark:hover:text-white"
               >
                 기본 일반 모드로 초기화
               </button>
