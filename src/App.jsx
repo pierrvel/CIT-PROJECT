@@ -26,27 +26,15 @@ import InstallModal from './components/modals/InstallModal';
 export function App() {
   // 1. 네비게이션 & 환경 상태
   const [activeTab, setActiveTab] = useState('pacer'); // 'sprint' | 'pacer'
-  // 디자인 시스템 상태: 'apple' (DESIGN.md 미니멀 시스템) | 'legacy' (이전 클래식 UI - 즉시 롤백용)
-  const [designSystem, setDesignSystem] = useState(() => {
-    return localStorage.getItem('dc_design_system') || 'apple';
-  });
-
-  // 테마 모드 상태: 'light' (DESIGN.md 기본 뉴트럴 라이트) | 'dark' (다크) | 'paper' (ClassSpace 감성 페이퍼)
+  // 테마 모드 상태: 'paper' (ClassSpace 감성 페이퍼) | 'dark' (클래식 다크) | 'light' (클래식 라이트)
   const [themeMode, setThemeMode] = useState(() => {
-    const v2Migrated = localStorage.getItem('dc_design_v2_migrated');
-    if (!v2Migrated) {
-      localStorage.setItem('dc_design_v2_migrated', 'true');
-      localStorage.setItem('dc_paper_theme', 'false');
-      localStorage.setItem('dc_theme', 'light');
-      return 'light';
-    }
     const savedPaper = localStorage.getItem('dc_paper_theme');
     if (savedPaper === 'true') return 'paper';
     if (savedPaper === 'false') {
       const savedTheme = localStorage.getItem('dc_theme');
       if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
     }
-    return 'light';
+    return 'paper'; // 기본값: ClassSpace 감성 페이퍼 모드
   });
 
   const isPaperTheme = themeMode === 'paper';
@@ -56,8 +44,8 @@ export function App() {
     setThemeMode((prev) => {
       const nextPaper = typeof val === 'function' ? val(prev === 'paper') : val;
       if (nextPaper) return 'paper';
-      const last = localStorage.getItem('dc_last_mode') || 'light';
-      return last === 'paper' ? 'light' : last;
+      const last = localStorage.getItem('dc_last_mode') || 'dark';
+      return last === 'paper' ? 'dark' : last;
     });
   };
 
@@ -71,19 +59,6 @@ export function App() {
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-
-  // 디자인 시스템 클래스 동기화 (html.design-apple / html.design-legacy)
-  useEffect(() => {
-    const root = document.documentElement;
-    if (designSystem === 'apple') {
-      root.classList.add('design-apple');
-      root.classList.remove('design-legacy');
-    } else {
-      root.classList.add('design-legacy');
-      root.classList.remove('design-apple');
-    }
-    localStorage.setItem('dc_design_system', designSystem);
-  }, [designSystem]);
 
   // 단일 통합 테마 동기화 (document.documentElement 'dark' 및 'theme-paper' 상호 배타적 관리)
   useEffect(() => {
@@ -115,20 +90,6 @@ export function App() {
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000);
   }, []);
-
-  const toggleDesignSystem = useCallback(() => {
-    setDesignSystem((prev) => {
-      const next = prev === 'apple' ? 'legacy' : 'apple';
-      localStorage.setItem('dc_design_system', next);
-      if (next === 'legacy') {
-        showToast('이전 클래식 UI 디자인으로 즉시 롤백되었습니다.', 'info');
-      } else {
-        setThemeMode((curr) => (curr === 'paper' ? 'light' : curr));
-        showToast('Apple 글래스모피즘 스튜디오 UI가 적용되었습니다.', 'success');
-      }
-      return next;
-    });
-  }, [showToast]);
 
   // PWA (Progressive Web App) 설치 상태 및 이벤트 제어
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
@@ -1377,34 +1338,14 @@ export function App() {
   }, []);
 
   return (
-    <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'text-[#1f2c24]' : designSystem === 'apple' ? 'text-[#1D1D1F] dark:text-[#F5F5F7]' : 'text-zinc-900 dark:text-zinc-100'} ${bgImage ? 'has-custom-bg' : ''} font-sans`}>
+    <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'text-[#1f2c24]' : 'text-zinc-900 dark:text-zinc-100'} ${bgImage ? 'has-custom-bg' : ''} font-sans`}>
       {/* 고정 배경 레이어 (z-0) */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-        {/* 1. 기본 베이스 톤 (페이퍼 / Apple Studio Pearl·Obsidian / 구형 라이트·다크) */}
-        <div
-          className={`absolute inset-0 transition-colors duration-200 ${
-            isPaperTheme
-              ? 'bg-[#f4f8f0]'
-              : designSystem === 'apple'
-              ? 'bg-[#F2F4F8] dark:bg-[#07080A]'
-              : 'bg-zinc-50 dark:bg-zinc-950'
-          }`}
-        />
+        {/* 1. 기본 베이스 톤 (페이퍼 / 라이트 / 다크) */}
+        <div className={`absolute inset-0 transition-colors duration-500 ${isPaperTheme ? 'bg-[#f4f8f0]' : 'bg-zinc-50 dark:bg-zinc-950'}`} />
 
-        {/* 2-A. 신형 Apple Glassmorphism 전용 은은한 스튜디오 펄/티타늄 광원 (유리 굴절 극대화) */}
-        {designSystem === 'apple' && !isPaperTheme && !bgImage && (
-          <div
-            className="absolute inset-0 transition-opacity duration-500"
-            style={{
-              backgroundImage: isDarkMode
-                ? 'radial-gradient(1000px circle at 15% 10%, rgba(41, 151, 255, 0.08), transparent 55%), radial-gradient(900px circle at 85% 20%, rgba(255, 255, 255, 0.035), transparent 50%), radial-gradient(800px circle at 50% 95%, rgba(41, 151, 255, 0.045), transparent 60%)'
-                : 'radial-gradient(1100px circle at 12% 8%, rgba(0, 113, 227, 0.055), transparent 55%), radial-gradient(900px circle at 88% 15%, rgba(255, 255, 255, 0.95), transparent 50%), radial-gradient(1000px circle at 50% 95%, rgba(142, 142, 147, 0.08), transparent 60%)'
-            }}
-          />
-        )}
-
-        {/* 2-B. 구형(Legacy) 모드 전용 앰비언트 그라디언트 */}
-        {designSystem === 'legacy' && !isPaperTheme && !bgImage && (
+        {/* 2. 비페이퍼 모드 앰비언트 그라디언트 (커스텀 배경 이미지가 없을 때만) */}
+        {!isPaperTheme && !bgImage && (
           <div
             className="absolute inset-0 opacity-60 dark:opacity-30 transition-all duration-700"
             style={{
@@ -1455,18 +1396,10 @@ export function App() {
         toggleFullscreen={toggleFullscreen}
         onOpenInstall={() => setIsInstallModalOpen(true)}
         isInstalled={isInstalled}
-        designSystem={designSystem}
-        toggleDesignSystem={toggleDesignSystem}
       />
 
-      {/* 메인 뷰 (DESIGN.md: max-width 1200px, Mobile 20px / Tablet 24px / Desktop 32-48px gutters) */}
-      <main
-        className={`flex-1 w-full mx-auto ${
-          designSystem === 'apple'
-            ? 'max-w-[1200px] px-4 sm:px-6 lg:px-10 py-3 sm:py-5'
-            : 'max-w-7xl p-4 sm:p-6 lg:p-8'
-        }`}
-      >
+      {/* 메인 뷰 */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
         {activeTab === 'sprint' && (
           <SprintTab
             goals={goals}
@@ -1504,7 +1437,6 @@ export function App() {
 
         {activeTab === 'pacer' && (
           <ExamPacer
-            designSystem={designSystem}
             pacerSubView={pacerSubView}
             setPacerSubView={setPacerSubView}
             examHistory={examHistory}
