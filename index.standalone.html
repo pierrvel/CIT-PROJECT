@@ -398,49 +398,121 @@
     // ========================================================
     // 🔔 [Web Audio API 기반 수능 표준 타종음 합성기]
     // ========================================================
-    const playChimeTone = (freq, duration, gainVal = 0.1, startTime = 0, volumeScale = 1.0) => {
-      if (volumeScale <= 0) return;
+    let sharedAudioCtx = null;
+    let activeSequenceNodes = [];
+
+    const getAudioContext = () => {
       try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioContextClass = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
+        if (!AudioContextClass) return null;
+        if (!sharedAudioCtx || sharedAudioCtx.state === 'closed') {
+          sharedAudioCtx = new AudioContextClass();
+        }
+        if (sharedAudioCtx.state === 'suspended') {
+          sharedAudioCtx.resume().catch(() => {});
+        }
+        return sharedAudioCtx;
+      } catch (err) {
+        console.warn('AudioContext init failed', err);
+        return null;
+      }
+    };
+
+    const stopActiveChimes = () => {
+      if (!sharedAudioCtx || activeSequenceNodes.length === 0) return;
+      try {
+        const now = sharedAudioCtx.currentTime;
+        activeSequenceNodes.forEach(({ osc, gain }) => {
+          try {
+            gain.gain.cancelScheduledValues(now);
+            gain.gain.setTargetAtTime(0, now, 0.015);
+            osc.stop(now + 0.05);
+          } catch (err) {
+            try { osc.stop(); } catch (e2) {}
+          }
+        });
+        activeSequenceNodes = [];
+      } catch (e) {
+        console.warn('Failed to stop active chimes', e);
+      }
+    };
+
+    const playChimeTone = (freq, duration, gainVal = 0.1, startTime = 0, volumeScale = 1.0, type = 'sine') => {
+      if (volumeScale <= 0) return null;
+      const audioCtx = getAudioContext();
+      if (!audioCtx) return null;
+
+      try {
+        const now = audioCtx.currentTime;
+        const startAt = Math.max(now + 0.005, now + Math.max(0, startTime));
+        const stopAt = startAt + Math.max(0.02, duration);
+        const attackTime = Math.min(0.02, Math.max(0.004, duration * 0.15));
+
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+        osc.type = type || 'sine';
+        osc.frequency.setValueAtTime(freq, startAt);
 
-        const actualGain = Math.max(0.0001, gainVal * volumeScale);
-        gain.gain.setValueAtTime(actualGain, audioCtx.currentTime + startTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + startTime + duration);
+        const actualGain = Math.max(0.0001, Math.min(1.0, gainVal * volumeScale));
+
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.exponentialRampToValueAtTime(actualGain, startAt + attackTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, stopAt);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
-        osc.start(audioCtx.currentTime + startTime);
-        osc.stop(audioCtx.currentTime + startTime + duration);
+        osc.start(startAt);
+        osc.stop(stopAt + 0.02);
+
+        const nodeRef = { osc, gain, stopAt };
+
+        osc.onended = () => {
+          try {
+            osc.disconnect();
+            gain.disconnect();
+          } catch (e) {}
+          const idx = activeSequenceNodes.indexOf(nodeRef);
+          if (idx !== -1) activeSequenceNodes.splice(idx, 1);
+        };
+
+        return nodeRef;
       } catch (e) {
         console.warn('Audio tone failed', e);
+        return null;
       }
     };
 
     // 정통 수능 실로폰/차임벨 타종 시퀀스
     const playSchoolBellSequence = (pattern = 'start', volumeScale = 0.8) => {
       if (volumeScale <= 0) return;
+
+      stopActiveChimes();
+
+      const audioCtx = getAudioContext();
+      if (!audioCtx) return;
+
       if (pattern === 'start') {
         // 본령 (시험 시작): 정통 4음계 맑은 실로폰 차임벨 (F5 -> A5 -> C6 -> F6)
         const notes = [698.46, 880.00, 1046.50, 1396.91];
         notes.forEach((freq, idx) => {
-          playChimeTone(freq, 0.9, 0.12, idx * 0.32, volumeScale);
+          const node = playChimeTone(freq, 0.9, 0.12, idx * 0.32, volumeScale, 'sine');
+          if (node) activeSequenceNodes.push(node);
         });
       } else if (pattern === 'warning10m') {
         // 종료 10분 전 안내: 2음계 차임벨 (A5 -> F5)
-        playChimeTone(880.00, 0.8, 0.12, 0, volumeScale);
-        playChimeTone(698.46, 1.2, 0.12, 0.38, volumeScale);
+        const n1 = playChimeTone(880.00, 0.8, 0.12, 0, volumeScale, 'sine');
+        const n2 = playChimeTone(698.46, 1.2, 0.12, 0.38, volumeScale, 'sine');
+        if (n1) activeSequenceNodes.push(n1);
+        if (n2) activeSequenceNodes.push(n2);
       } else if (pattern === 'end') {
         // 종료령 (0초 도달): 3회 연속 롱 차임벨 (F5 -> D5 -> Bb4)
         const notes = [698.46, 587.33, 466.16];
         [0, 1.4].forEach((roundOffset) => {
           notes.forEach((freq, idx) => {
-            playChimeTone(freq, 1.5, 0.14, roundOffset + idx * 0.38, volumeScale);
+            const node = playChimeTone(freq, 1.5, 0.14, roundOffset + idx * 0.38, volumeScale, 'sine');
+            if (node) activeSequenceNodes.push(node);
           });
         });
       }
@@ -448,7 +520,7 @@
 
     const playChime = (freq = 880, type = 'sine', duration = 0.15, volumeScale = 1.0) => {
       if (volumeScale <= 0) return;
-      playChimeTone(freq, duration, 0.08, 0, volumeScale);
+      playChimeTone(freq, duration, 0.08, 0, volumeScale, type);
     };
 
     // 시간 포맷팅 헬퍼
