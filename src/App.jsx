@@ -20,6 +20,7 @@ import GoalModal from './components/modals/GoalModal';
 import PartEditModal from './components/modals/PartEditModal';
 import SavePresetModal from './components/modals/SavePresetModal';
 import ExamReportModal from './components/modals/ExamReportModal';
+import ShareCardModal from './components/share/ShareCardModal';
 
 export function App() {
   // 1. 네비게이션 & 환경 상태
@@ -1289,6 +1290,23 @@ export function App() {
     if (soundEnabled) playChime(640, 'sine', 0.05);
   };
 
+  // 4-3. 공스타 감성 성적표 카드 모달 상태
+  const [shareCardConfig, setShareCardConfig] = useState({
+    isOpen: false,
+    mode: 'single', // 'single' | 'overall'
+    singleData: null,
+    overallData: null
+  });
+
+  const handleOpenShareCard = useCallback(({ mode = 'single', singleData = null, overallData = null }) => {
+    setShareCardConfig({
+      isOpen: true,
+      mode,
+      singleData,
+      overallData
+    });
+  }, []);
+
   return (
     <div className={`relative min-h-screen flex flex-col overflow-x-hidden ${isPaperTheme ? 'text-[#1f2c24]' : 'text-zinc-900 dark:text-zinc-100'} ${bgImage ? 'has-custom-bg' : ''} font-sans`}>
       {/* 고정 배경 레이어 (z-0) */}
@@ -1445,6 +1463,7 @@ export function App() {
             setScoreHistory={setScoreHistory}
             showToast={showToast}
             onGoToSprint={handleGoToSprintWithGoal}
+            onOpenShareCard={handleOpenShareCard}
           />
         )}
       </main>
@@ -1534,6 +1553,15 @@ export function App() {
         onGoToGrader={() => {
           setPacerSubView('grader');
         }}
+      />
+
+      <ShareCardModal
+        isOpen={shareCardConfig.isOpen}
+        onClose={() => setShareCardConfig((prev) => ({ ...prev, isOpen: false }))}
+        initialMode={shareCardConfig.mode}
+        singleData={shareCardConfig.singleData}
+        overallData={shareCardConfig.overallData}
+        showToast={showToast}
       />
     </div>
   );

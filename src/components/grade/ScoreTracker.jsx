@@ -19,7 +19,8 @@ export const ScoreTracker = ({
   setScoreHistory,
   initialSubjectKey = 'korean',
   showToast,
-  onGoToAdmission
+  onGoToAdmission,
+  onOpenShareCard
 }) => {
   // 1. 선택 상태 (연도 -> 6/9/수능 2단계 탭 구조)
   const [selectedYear, setSelectedYear] = useState('2025');
@@ -797,7 +798,7 @@ export const ScoreTracker = ({
               </div>
             </div>
 
-            {/* 복기 한 줄 메모 입력 & 영구 저장 버튼 */}
+            {/* 복기 한 줄 메모 입력 & 영구 저장 & 성적 카드 버튼 */}
             <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
               <input
                 type="text"
@@ -806,14 +807,47 @@ export const ScoreTracker = ({
                 onChange={(e) => setExamMemo(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
-              <button
-                type="button"
-                onClick={handleSaveScoreRecord}
-                className="w-full py-2.5 rounded-xl text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 flex items-center justify-center gap-1.5 transition-all"
-              >
-                <Icon name="save" className="w-4 h-4" />
-                <span>이 성적 영구 기록하기</span>
-              </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={handleSaveScoreRecord}
+                  className="py-2.5 rounded-xl text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 flex items-center justify-center gap-1.5 transition-all active:scale-95"
+                >
+                  <Icon name="save" className="w-4 h-4" />
+                  <span>이 성적 영구 기록</span>
+                </button>
+                {onOpenShareCard && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const subjectNames = {
+                        korean: '국어 영역',
+                        math: '수학 영역',
+                        english: '영어 영역',
+                        history: '한국사 영역',
+                        inquiry: '탐구 영역'
+                      };
+                      onOpenShareCard({
+                        mode: 'single',
+                        singleData: {
+                          subjectName: subjectNames[selectedSubjectKey] || '과목',
+                          optionName: evaluation.optionName || '',
+                          score,
+                          grade: evaluation.grade,
+                          percentile: evaluation.percentile,
+                          standardScore: Math.round(evaluation.cut1 + (score - evaluation.cut1) * 1.1),
+                          deltaFromCut1: evaluation.deltaFromCut1,
+                          elapsedTimeStr: ''
+                        }
+                      });
+                    }}
+                    className="py-2.5 rounded-xl text-xs font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-md shadow-purple-600/20 flex items-center justify-center gap-1.5 transition-all active:scale-95"
+                  >
+                    <Icon name="camera" className="w-4 h-4" />
+                    <span>📸 감성 카드 만들기</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -924,6 +958,31 @@ export const ScoreTracker = ({
                       1컷({rec.cut1}점) {rec.score >= rec.cut1 ? `+${rec.score - rec.cut1}점` : `${rec.score - rec.cut1}점`}
                     </div>
                   </div>
+
+                  {onOpenShareCard && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onOpenShareCard({
+                          mode: 'single',
+                          singleData: {
+                            subjectName: rec.subjectName,
+                            optionName: rec.optionName || '',
+                            score: rec.score,
+                            grade: rec.grade,
+                            percentile: rec.percentile,
+                            standardScore: Math.round(rec.cut1 + (rec.score - rec.cut1) * 1.1),
+                            deltaFromCut1: rec.deltaFromCut1 || (rec.score - rec.cut1),
+                            elapsedTimeStr: ''
+                          }
+                        });
+                      }}
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition-colors"
+                      title="성적 카드 생성"
+                    >
+                      <Icon name="camera" className="w-4 h-4" />
+                    </button>
+                  )}
 
                   <button
                     type="button"

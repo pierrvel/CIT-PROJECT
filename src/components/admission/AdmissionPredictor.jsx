@@ -15,7 +15,8 @@ import { HISTORICAL_EXAMS } from '../../constants/cutoffs';
 export const AdmissionPredictor = ({
   scoreHistory = [],
   showToast,
-  onGoToSprint
+  onGoToSprint,
+  onOpenShareCard
 }) => {
   // 1. 선택 상태
   const [selectedExamId, setSelectedExamId] = useState('2025_csat');
@@ -201,6 +202,38 @@ export const AdmissionPredictor = ({
               <Icon name="zap" className="w-4 h-4 text-amber-500" />
               <span>1컷 기준 채우기</span>
             </button>
+            {onOpenShareCard && (
+              <button
+                type="button"
+                onClick={() => {
+                  const currentExam = HISTORICAL_EXAMS.find((e) => e.id === selectedExamId);
+                  onOpenShareCard({
+                    mode: 'overall',
+                    overallData: {
+                      examName: currentExam ? currentExam.name : '2025학년도 대학수학능력시험 종합 성적표',
+                      avgPercentile: overallStats.avgPercentile,
+                      totalStdScore: overallStats.totalStdScore,
+                      cumulativePercent: overallStats.cumulativePercent,
+                      estimatedRank: overallStats.estimatedRank,
+                      tierName: overallStats.matchedTier.name.split(' ')[0] || 'DIAMOND',
+                      tierRange: overallStats.matchedTier.range,
+                      subjects: [
+                        { name: '국어', score: overallStats.korData.rawScore, grade: overallStats.korData.grade, option: overallStats.korData.optName || '화작', percentile: overallStats.korData.percentile },
+                        { name: '수학', score: overallStats.mathData.rawScore, grade: overallStats.mathData.grade, option: overallStats.mathData.optName || '미적', percentile: overallStats.mathData.percentile },
+                        { name: '영어', score: overallStats.engData.rawScore, grade: overallStats.engData.grade, option: '절대', percentile: overallStats.engData.percentile },
+                        { name: '한국사', score: overallStats.histData.rawScore, grade: overallStats.histData.grade, option: '절대', percentile: overallStats.histData.percentile },
+                        { name: '탐구1', score: overallStats.inq1Data.rawScore, grade: overallStats.inq1Data.grade, option: inquiry1.name || '탐구1', percentile: overallStats.inq1Data.percentile },
+                        { name: '탐구2', score: overallStats.inq2Data.rawScore, grade: overallStats.inq2Data.grade, option: inquiry2.name || '탐구2', percentile: overallStats.inq2Data.percentile }
+                      ]
+                    }
+                  });
+                }}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-md shadow-purple-600/25 transition-all active:scale-95"
+              >
+                <Icon name="camera" className="w-4 h-4" />
+                <span>📸 성적표 카드 저장</span>
+              </button>
+            )}
           </div>
         </div>
 

@@ -36,6 +36,7 @@ export const ExamPacer = ({
   setPacerSubView,
   examHistory,
   onGoToSprint,
+  onOpenShareCard,
 
   // 과목 및 프리셋
   selectedSubjectKey,
@@ -900,6 +901,7 @@ export const ExamPacer = ({
           initialSubjectKey={selectedSubjectKey}
           showToast={showToast}
           onGoToAdmission={() => setPacerSubView('admission')}
+          onOpenShareCard={onOpenShareCard}
         />
       )}
 
@@ -909,6 +911,7 @@ export const ExamPacer = ({
           scoreHistory={scoreHistory}
           showToast={showToast}
           onGoToSprint={onGoToSprint}
+          onOpenShareCard={onOpenShareCard}
         />
       )}
     </div>
