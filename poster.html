@@ -108,12 +108,12 @@
   </div>
 
   <!-- A2 규격 전시 포스터 시트 (840px × 1188px 고정 비율) -->
-  <div class="a2-sheet p-8 shadow-2xl relative flex flex-col justify-between">
+  <div class="a2-sheet p-7 sm:p-8 shadow-2xl relative flex flex-col justify-between">
 
     <!-- 상단 그룹 -->
     <div>
       <!-- 0. 최상단 메타 바 -->
-      <div class="flex items-center justify-between pb-2.5 hairline-b text-[11px] font-semibold text-zinc-500">
+      <div class="flex items-center justify-between pb-2 hairline-b text-[11px] font-semibold text-zinc-500">
         <div class="flex items-center gap-2.5">
           <span class="font-bold text-black text-xs">CIT 2026 연간 프로젝트 결과물 발표회</span>
           <span>·</span>
@@ -126,17 +126,17 @@
       </div>
 
       <!-- 1. 메인 헤더 -->
-      <header class="pt-4 pb-4 hairline-b">
+      <header class="pt-3.5 pb-3.5 hairline-b">
         <div class="flex items-end justify-between gap-4">
           <div>
-            <div class="inline-block px-2 py-0.5 bg-black text-white text-[10px] font-bold rounded mb-1.5">
+            <div class="inline-block px-2 py-0.5 bg-black text-white text-[10px] font-bold rounded mb-1">
               수험생 전용 올인원 학습 운영체제
             </div>
             <h1 class="text-4xl font-black tracking-tight text-black leading-none">
               듀얼코어 콕핏
               <span class="text-2xl font-bold font-inter text-zinc-400 ml-2 tracking-normal">DualCore Cockpit</span>
             </h1>
-            <p class="mt-2 text-xs sm:text-sm font-medium text-zinc-700 leading-snug">
+            <p class="mt-1.5 text-xs sm:text-sm font-medium text-zinc-700 leading-snug">
               공부할 때 필요한 모든 도구를 하나의 화면에 쏙! <br/>
               <strong>수능 실전 모의고사 타이머, 적응형 주간 플래너, 스마트 채점 통합 플랫폼</strong>
             </p>
@@ -155,14 +155,14 @@
       </header>
 
       <!-- 2. 기획 의도: 왜 만들었는가? -->
-      <section class="py-3.5 hairline-b grid grid-cols-12 gap-4 items-center">
+      <section class="py-3 hairline-b grid grid-cols-12 gap-4 items-center">
         <div class="col-span-3">
           <div class="text-[10px] font-bold text-zinc-400 uppercase">01. 기획 배경</div>
           <h2 class="text-base font-bold text-black tracking-tight">
             왜 만들었는가?
           </h2>
         </div>
-        <div class="col-span-9 space-y-1.5 text-xs text-zinc-700 leading-relaxed">
+        <div class="col-span-9 space-y-1 text-xs text-zinc-700 leading-relaxed">
           <p>
             스톱워치 따로, 플래너 따로, 채점기 따로... 
             <strong>앱을 여러 개 번갈아 켜며 공부하는 게 너무 비효율적이고 집중도 흐트러졌습니다.</strong>
@@ -175,15 +175,15 @@
       </section>
 
       <!-- 3. 핵심 기능 4가지 (2x2 그리드) -->
-      <section class="py-3.5 hairline-b">
-        <div class="flex items-center justify-between mb-2.5">
+      <section class="py-3 hairline-b">
+        <div class="flex items-center justify-between mb-2">
           <div>
             <div class="text-[10px] font-bold text-zinc-400 uppercase">02. 핵심 기능</div>
             <h2 class="text-base font-bold text-black tracking-tight">
               수험생에게 꼭 필요한 4가지 핵심 도구
             </h2>
           </div>
-          <div class="text-[10px] font-semibold text-zinc-500">실제 개발된 앱 화면 탑재</div>
+          <div class="text-[10px] font-semibold text-zinc-500">실제 개발된 앱 화면 (핵심 영역 고화질)</div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -197,12 +197,13 @@
               </div>
               <h3 class="text-xs font-bold text-black mb-1">실전 모의고사 타이머</h3>
               <p class="text-[11px] text-zinc-600 leading-snug mb-2">
-                수능 시험장 실제 아날로그 시계판 동기화. 
+                수능 규격 아날로그 시계판과 디지털 타이머 실시간 동기화. 
                 독서실용 <strong>무음 시각 알림</strong>과 실수 방지 3초 되돌리기 탑재.
               </p>
             </div>
-            <div class="rounded-lg overflow-hidden hairline-all bg-zinc-50">
-              <img src="poster_assets/pacer_preview.png" alt="타이머 화면" class="w-full h-20 object-cover object-top" />
+            <!-- 잘림 없이 핵심 시계와 타이머가 온전히 다 보이는 컨테이너 -->
+            <div class="rounded-lg overflow-hidden hairline-all bg-white p-1 flex items-center justify-center">
+              <img src="poster_assets/pacer_card_cropped.png" alt="실전 모의고사 타이머 핵심 화면" class="w-full h-24 object-contain" />
             </div>
           </div>
 
@@ -216,11 +217,12 @@
               <h3 class="text-xs font-bold text-black mb-1">적응형 주간 플래너</h3>
               <p class="text-[11px] text-zinc-600 leading-snug mb-2">
                 계획 지연 시 3-Way 최적 대안 재배분. 
-                목표 잔여량 기반 <strong>"매일 N강씩 수강 시 완주 예정일"</strong>을 실시간 뱃지 산출.
+                목표 잔여량 기반 <strong>"매일 N강 소화 시 완주 예정일"</strong>을 실시간 뱃지로 산출.
               </p>
             </div>
-            <div class="rounded-lg overflow-hidden hairline-all bg-zinc-50">
-              <img src="poster_assets/sprint_preview.png" alt="플래너 화면" class="w-full h-20 object-cover object-top" />
+            <!-- 잘림 없이 목표 카드, 완주 예상일 뱃지, 진도율이 온전히 다 보이는 컨테이너 -->
+            <div class="rounded-lg overflow-hidden hairline-all bg-white p-1 flex items-center justify-center">
+              <img src="poster_assets/sprint_card_cropped.png" alt="적응형 주간 플래너 핵심 화면" class="w-full h-24 object-contain" />
             </div>
           </div>
 
@@ -266,7 +268,7 @@
       </section>
 
       <!-- 4. 개발 중 겪은 문제와 극복 -->
-      <section class="py-3.5 hairline-b grid grid-cols-12 gap-4 items-start">
+      <section class="py-3 hairline-b grid grid-cols-12 gap-4 items-start">
         <div class="col-span-3">
           <div class="text-[10px] font-bold text-zinc-400 uppercase">03. 고민과 해결</div>
           <h2 class="text-base font-bold text-black tracking-tight leading-tight">
@@ -274,7 +276,7 @@
           </h2>
         </div>
 
-        <div class="col-span-9 space-y-2">
+        <div class="col-span-9 space-y-1.5">
           <div class="p-2.5 bg-white rounded-lg hairline-all">
             <div class="text-[11px] font-bold text-black mb-0.5 flex items-center gap-1.5">
               <span>⚠️</span> <strong>문제: 만들고 싶은 게 너무 많아져 정체성이 흔들림</strong>
@@ -296,9 +298,9 @@
       </section>
 
       <!-- 5. 제작 과정 / 배운 점 / 최종 소감 (3분할 카드) -->
-      <section class="pt-3.5 grid grid-cols-3 gap-3">
+      <section class="pt-3 grid grid-cols-3 gap-3">
         
-        <div class="p-3 rounded-xl hairline-all bg-white">
+        <div class="p-2.5 rounded-xl hairline-all bg-white">
           <div class="text-[9px] font-bold text-zinc-400 mb-0.5">제작 개발 방식</div>
           <h4 class="text-xs font-bold text-black mb-0.5">AI와 페어 프로그래밍</h4>
           <p class="text-[10px] text-zinc-600 leading-snug">
@@ -306,7 +308,7 @@
           </p>
         </div>
 
-        <div class="p-3 rounded-xl hairline-all bg-white">
+        <div class="p-2.5 rounded-xl hairline-all bg-white">
           <div class="text-[9px] font-bold text-zinc-400 mb-0.5">새롭게 배운 기술</div>
           <h4 class="text-xs font-bold text-black mb-0.5">실전 풀스택 개발 경험</h4>
           <p class="text-[10px] text-zinc-600 leading-snug">
@@ -314,7 +316,7 @@
           </p>
         </div>
 
-        <div class="p-3 rounded-xl hairline-all bg-zinc-900 text-white">
+        <div class="p-2.5 rounded-xl hairline-all bg-zinc-900 text-white">
           <div class="text-[9px] font-bold text-zinc-400 mb-0.5">최종 소감 & 앞으로</div>
           <h4 class="text-xs font-bold text-white mb-0.5">결과 매우 만족 & 다음 도전</h4>
           <p class="text-[10px] text-zinc-300 leading-snug">
@@ -326,7 +328,7 @@
     </div>
 
     <!-- 하단 푸터 -->
-    <footer class="mt-4 pt-2.5 hairline-t flex items-center justify-between text-[11px] text-zinc-500">
+    <footer class="mt-3 pt-2 hairline-t flex items-center justify-between text-[11px] text-zinc-500">
       <div>
         <strong class="text-black">듀얼코어 콕핏 (DualCore Cockpit)</strong>
         <span> · 1년 CIT 프로젝트 최종 완성작</span>
