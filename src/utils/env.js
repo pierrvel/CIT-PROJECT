@@ -58,6 +58,35 @@ export const getFirebaseApiKey = () => {
 };
 
 /**
+ * Firebase Project ID 반환
+ */
+export const getFirebaseProjectId = () => {
+  return getEnvVar('VITE_FIREBASE_PROJECT_ID', '');
+};
+
+/**
+ * Firebase 통합 Web Config 객체 반환
+ */
+export const getFirebaseConfig = () => {
+  const apiKey = getEnvVar('VITE_FIREBASE_API_KEY', '');
+  const projectId = getEnvVar('VITE_FIREBASE_PROJECT_ID', '');
+  const authDomain = getEnvVar('VITE_FIREBASE_AUTH_DOMAIN', projectId ? `${projectId}.firebaseapp.com` : '');
+  const storageBucket = getEnvVar('VITE_FIREBASE_STORAGE_BUCKET', projectId ? `${projectId}.firebasestorage.app` : '');
+  const messagingSenderId = getEnvVar('VITE_FIREBASE_MESSAGING_SENDER_ID', '');
+  const appId = getEnvVar('VITE_FIREBASE_APP_ID', '');
+
+  return {
+    apiKey,
+    authDomain,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
+    isConfigured: Boolean(apiKey && projectId)
+  };
+};
+
+/**
  * 프로덕션 배포 환경 여부
  */
 export const isProduction = () => {

@@ -1,0 +1,163 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // This security rules file assumes the following data structures:
+    //
+    // Collection: cheer_board
+    // Document ID: custom or auto-generated ID (e.g., cheer_1740000000000)
+    // Fields:
+    //   - nickname: string (required, 1 to 12 chars) - Display name of student
+    //   - message: string (required, 1 to 60 chars) - D-Day resolution & encouragement
+    //   - cheers: int / number (required, starts at 0, strictly incremented by +1) - Cheer/like counter
+    //   - createdAt: int / number / timestamp (required, immutable) - Creation time in epoch ms or Firestore timestamp
+    //   - expiresAt: int / number / timestamp (required, immutable) - Expiration time in epoch ms or Firestore timestamp (createdAt + 24h)
+    //   - clientTimestamp: int / number / timestamp (optional, immutable) - Client device local timestamp
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user owns the resource (for user-owned documents by path)
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Check if user is owner based on document's uid field
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    // Verify UID hasn't been tampered with on create
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == request.auth.uid;
+    }
+
+    // Ensure uid field is not modified on update
+    function uidNotModified() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == resource.data.uid;
+    }
+
+    // Validate that required fields exist in request.resource.data
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // Validate that request.resource.data contains only allowed fields
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // Validate that specified fields have not been modified on update
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // Validate string length within bounds [minLen, maxLen]
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    // Validate timestamp or positive epoch millisecond number
+    function isValidTimestampOrEpoch(val) {
+      return (val is timestamp) || ((val is int || val is number) && val > 0);
+    }
+
+    // Validate optional clientTimestamp field
+    function isValidClientTimestamp(data) {
+      return !('clientTimestamp' in data) || isValidTimestampOrEpoch(data.clientTimestamp);
+    }
+
+    // Validate createdAt and expiresAt relationship
+    function isValidExpiration(data) {
+      return isValidTimestampOrEpoch(data.createdAt) &&
+             isValidTimestampOrEpoch(data.expiresAt) &&
+             (
+               (data.createdAt is timestamp && data.expiresAt is timestamp && data.expiresAt >= data.createdAt) ||
+               ((data.createdAt is int || data.createdAt is number) && (data.expiresAt is int || data.expiresAt is number) && data.expiresAt >= data.createdAt) ||
+               (data.createdAt is timestamp && (data.expiresAt is int || data.expiresAt is number)) ||
+               ((data.createdAt is int || data.createdAt is number) && data.expiresAt is timestamp)
+             );
+    }
+
+    // Determine if cheer document is expired and eligible for deletion (past expiresAt or >24h old)
+    function isCheerExpired() {
+      return (
+        // expiresAt is a timestamp that has passed
+        ('expiresAt' in resource.data && resource.data.expiresAt is timestamp && resource.data.expiresAt <= request.time) ||
+        // expiresAt is epoch ms that has passed
+        ('expiresAt' in resource.data && (resource.data.expiresAt is int || resource.data.expiresAt is number) && resource.data.expiresAt <= request.time.toMillis()) ||
+        // createdAt is a timestamp older than 24 hours
+        ('createdAt' in resource.data && resource.data.createdAt is timestamp && resource.data.createdAt <= request.time - duration.value(24, 'h')) ||
+        // createdAt is epoch ms older than 24 hours (86,400,000 ms)
+        ('createdAt' in resource.data && (resource.data.createdAt is int || resource.data.createdAt is number) && resource.data.createdAt + 86400000 <= request.time.toMillis())
+      );
+    }
+
+    // Validate atomic increment (+1) on cheers with strict lockdown of all other fields
+    function isValidCheerIncrement() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cheers']) &&
+             request.resource.data.cheers == resource.data.cheers + 1 &&
+             areImmutableFieldsUnchanged(['nickname', 'message', 'createdAt', 'expiresAt']);
+    }
+
+    // ===============================================================
+    // Domain Validators (Validator Function Pattern)
+    // ===============================================================
+
+    // Full schema and constraint validator for cheer_board documents
+    // Called on BOTH create and update to prevent Update Bypass
+    function isValidCheerDoc(data) {
+      return hasOnlyAllowedFields(['nickname', 'message', 'cheers', 'createdAt', 'expiresAt', 'clientTimestamp']) &&
+             hasRequiredFields(['nickname', 'message', 'cheers', 'createdAt', 'expiresAt']) &&
+             validStringLength('nickname', 1, 12) &&
+             validStringLength('message', 1, 60) &&
+             (data.cheers is int || data.cheers is number) &&
+             data.cheers >= 0 &&
+             isValidExpiration(data) &&
+             isValidClientTimestamp(data);
+    }
+
+    // ---------------------------------------------------------------
+    // cheer_board Collection Rules
+    // ---------------------------------------------------------------
+    match /cheer_board/{cheerId} {
+      // 1. Read: Publicly readable for all students
+      allow read: if true;
+
+      // 2. Create: Anyone can create a card conforming to schema (initial cheers must be 0)
+      allow create: if isValidCheerDoc(request.resource.data) &&
+                       request.resource.data.cheers == 0;
+
+      // 3. Update: Only cheering/clapping allowed (+1 atomic increment, other fields immutable)
+      allow update: if isValidCheerDoc(request.resource.data) &&
+                       isValidCheerIncrement();
+
+      // 4. Delete: Anyone can purge expired cards (past expiresAt or >24h old)
+      allow delete: if isCheerExpired();
+    }
+
+    // ---------------------------------------------------------------
+    // Default Deny Rule (Fallback for all other collections and paths)
+    // ---------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

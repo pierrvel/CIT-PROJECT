@@ -4,6 +4,7 @@ import { DEFAULT_CHEERS } from './constants/lounge';
 import { DEFAULT_DDAYS } from './constants/ddays';
 import { playChime, playSchoolBellSequence } from './utils/audio';
 import { getSyncEndpoint, getFirebaseDbUrl } from './utils/env';
+import { subscribeToCheers } from './services/cheerService';
 
 import Header from './components/common/Header';
 import Toast from './components/common/Toast';
@@ -221,19 +222,32 @@ export function App() {
     localStorage.setItem('dc_goals_v2', JSON.stringify(goals));
   }, [goals]);
 
-  // 4-1. 라이브 라운지 D-Day 응원 전광판 상태 (이전 예시 데이터 자동 필터링)
+  // 4-1. 라이브 라운지 D-Day 응원 전광판 상태 (Firebase 실시간 연동 및 24시간 TTL 자동 만료)
   const [cheerBoard, setCheerBoard] = useState(() => {
     const saved = localStorage.getItem('dualcore_cheer_board');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed.filter((c) => c && !String(c.id).startsWith('cheer_default_'));
+          const now = Date.now();
+          return parsed.filter((c) => c && (now - (Number(c.createdAt) || 0)) < 24 * 60 * 60 * 1000);
         }
       } catch (e) {}
     }
     return DEFAULT_CHEERS;
   });
+  const [isRealtimeCheer, setIsRealtimeCheer] = useState(false);
+
+  // Firebase Firestore 실시간 구독 (연동 시 전 세계 사용자 간 실시간 공유)
+  useEffect(() => {
+    const unsubscribe = subscribeToCheers(({ cheers, isRealtime }) => {
+      setCheerBoard(cheers);
+      setIsRealtimeCheer(isRealtime);
+    });
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('dualcore_cheer_board', JSON.stringify(cheerBoard));
@@ -1469,6 +1483,7 @@ export function App() {
             cheerBoard={cheerBoard}
             setCheerBoard={setCheerBoard}
             showToast={showToast}
+            isRealtimeCheer={isRealtimeCheer}
           />
         )}
 

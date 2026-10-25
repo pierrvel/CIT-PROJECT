@@ -10,6 +10,7 @@
     "rollback:ui": "git checkout v1.0-pre-redesign -- src/ index.html tailwind.config.js"
   },
   "dependencies": {
+    "firebase": "^13.1.0",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

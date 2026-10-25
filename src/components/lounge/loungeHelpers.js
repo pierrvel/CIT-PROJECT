@@ -15,16 +15,42 @@ export const formatSignedDelta = (seconds) => {
   return `${value < 0 ? '-' : '+'}${formatMMSS(value)}`;
 };
 
-// "YYYY-MM-DD HH:MM" → "방금 전" / "n분 전" / "n시간 전" / "n일 전"
-export const formatRelativeTime = (dateStr) => {
-  if (!dateStr) return '최근';
-  const parsed = new Date(String(dateStr).replace(' ', 'T'));
-  if (Number.isNaN(parsed.getTime())) return String(dateStr);
-  const diffMin = Math.floor((Date.now() - parsed.getTime()) / 60000);
+// "YYYY-MM-DD HH:MM" 또는 epoch ms → "방금 전" / "n분 전" / "n시간 전" / "n일 전"
+export const formatRelativeTime = (dateInput) => {
+  if (!dateInput) return '최근';
+  let timestamp = null;
+  if (typeof dateInput === 'number') {
+    timestamp = dateInput;
+  } else {
+    const parsed = new Date(String(dateInput).replace(' ', 'T'));
+    if (!Number.isNaN(parsed.getTime())) {
+      timestamp = parsed.getTime();
+    }
+  }
+  if (!timestamp) return String(dateInput);
+
+  const diffMin = Math.floor((Date.now() - timestamp) / 60000);
   if (diffMin < 1) return '방금 전';
   if (diffMin < 60) return `${diffMin}분 전`;
   if (diffMin < 1440) return `${Math.floor(diffMin / 60)}시간 전`;
   return `${Math.floor(diffMin / 1440)}일 전`;
+};
+
+// 24시간 TTL 남은 시간 포맷팅 ("23시간 남음", "45분 남음")
+export const formatRemainingTtl = (createdAt) => {
+  if (!createdAt) return '24시간';
+  const ageMs = Date.now() - Number(createdAt);
+  const remainingMs = Math.max(0, (24 * 60 * 60 * 1000) - ageMs);
+  const hours = Math.floor(remainingMs / (60 * 60 * 1000));
+  const mins = Math.floor((remainingMs % (60 * 60 * 1000)) / (60 * 1000));
+
+  if (hours > 0) {
+    return `${hours}시간 ${mins}분 후 자동 삭제`;
+  }
+  if (mins > 0) {
+    return `${mins}분 후 자동 삭제`;
+  }
+  return '곧 자동 삭제';
 };
 
 // 수능까지 남은 일수 (오늘 자정 기준)
@@ -82,7 +108,7 @@ export const buildUserActivityLogs = (examHistory, goals) => {
 
 // examHistory prop이 없을 때 localStorage에서 직접 로드
 export const loadExamHistoryFallback = () => {
-  const keys = ['dc_exam_history', 'dualcore_exam_history'];
+  const keys = ['dc_exam_history_v2', 'dc_exam_history', 'dualcore_exam_history'];
   for (const key of keys) {
     try {
       const raw = localStorage.getItem(key);
@@ -96,6 +122,8 @@ export const loadExamHistoryFallback = () => {
   }
   return [];
 };
+
+export const readExamHistoryFromStorage = loadExamHistoryFallback;
 
 // 시험 파트 1개 → 벤치마크 구간 매칭 (id 우선, 이름 키워드 차선)
 const findSegmentForPart = (subjectCfg, part) => {
