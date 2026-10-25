@@ -9,11 +9,17 @@ export const LiveLounge = ({
   cheerBoard,
   setCheerBoard,
   showToast,
-  isRealtimeCheer = false
+  isRealtimeCheer = false,
+  onlineCount = 1
 }) => {
   return (
     <div className="space-y-6">
-      <LivePulseBanner examHistory={examHistory} goals={goals} />
+      <LivePulseBanner
+        examHistory={examHistory}
+        goals={goals}
+        cheers={cheerBoard}
+        onlineCount={onlineCount}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-7">

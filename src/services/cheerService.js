@@ -232,3 +232,40 @@ export const clapCheer = async (id) => {
     console.warn('[CheerService] Failed to clap cheer in Firestore:', error);
   }
 };
+
+
+/**
+ * 다짐 삭제 (작성자 직접 삭제)
+ */
+export const deleteCheer = async (id) => {
+  if (!id) return;
+
+  // 1. 로컬 저장소 및 내 다짐 목록에서 제거
+  try {
+    const raw = localStorage.getItem(LOCAL_CHEERS_KEY);
+    if (raw) {
+      const list = JSON.parse(raw);
+      if (Array.isArray(list)) {
+        const updated = list.filter((c) => c && String(c.id) !== String(id));
+        localStorage.setItem(LOCAL_CHEERS_KEY, JSON.stringify(updated));
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const set = getMyCheerIds();
+    set.delete(String(id));
+    localStorage.setItem(MY_CHEERS_STORAGE_KEY, JSON.stringify([...set]));
+  } catch (e) {}
+
+  // 2. Firebase Firestore 도큐먼트 영구 삭제
+  if (isFirebaseConfigured && db) {
+    try {
+      const docRef = doc(db, CHEER_COLLECTION, id);
+      await deleteDoc(docRef);
+    } catch (err) {
+      console.warn('[CheerService] Delete doc warning:', err);
+      throw err;
+    }
+  }
+};

@@ -19,6 +19,13 @@ service cloud.firestore {
     //   - expiresAt: int / number / timestamp (required, immutable) - Expiration time in epoch ms or Firestore timestamp (createdAt + 24h)
     //   - clientTimestamp: int / number / timestamp (optional, immutable) - Client device local timestamp
     //
+    // Collection: presence
+    // Document ID: stable device ID (e.g., dev_abc123_xyz)
+    // Fields:
+    //   - lastSeen: int / number (required) - Timestamp in epoch ms
+    //   - device: string ('mobile' | 'pc') - Client form factor
+    //   - updatedAt: int / number (optional/required) - Timestamp in epoch ms
+    //
     // ===============================================================
 
     // ===============================================================
@@ -149,8 +156,17 @@ service cloud.firestore {
       allow update: if isValidCheerDoc(request.resource.data) &&
                        isValidCheerIncrement();
 
-      // 4. Delete: Anyone can purge expired cards (past expiresAt or >24h old)
-      allow delete: if isCheerExpired();
+      // 4. Delete: Anyone can delete cheer cards (author self-delete or purge expired cards)
+      allow delete: if true;
+    }
+
+    // ---------------------------------------------------------------
+    // presence Collection Rules (Real-time Online Students Counter)
+    // ---------------------------------------------------------------
+    match /presence/{deviceId} {
+      // Real-time online presence detection across all active student devices
+      allow read: if true;
+      allow write: if true;
     }
 
     // ---------------------------------------------------------------

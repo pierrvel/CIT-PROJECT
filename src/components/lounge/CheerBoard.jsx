@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Flame, Pencil, Clock, Radio } from 'lucide-react';
+import { Flame, Pencil, Clock, Radio, Trash2 } from 'lucide-react';
 import CheerWriteModal from './CheerWriteModal';
 import { formatDDayLabel, getCsatDDay, formatRelativeTime, formatRemainingTtl } from './loungeHelpers';
-import { clapCheer, postCheer } from '../../services/cheerService';
+import { clapCheer, postCheer, deleteCheer } from '../../services/cheerService';
 import { isFirebaseConfigured } from '../../utils/firebase';
 
 export const CheerBoard = ({ cheers = [], setCheers, showToast, isRealtime = false }) => {
@@ -32,6 +32,18 @@ export const CheerBoard = ({ cheers = [], setCheers, showToast, isRealtime = fal
       await clapCheer(id);
     } catch (err) {
       console.warn('Cheer clap error', err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('이 다짐을 전광판에서 완전히 삭제하시겠습니까?')) return;
+    try {
+      setCheers((prev) => prev.filter((c) => c.id !== id));
+      await deleteCheer(id);
+      if (showToast) showToast('다짐이 전광판에서 삭제되었습니다.', 'info');
+    } catch (err) {
+      console.error('Delete cheer error:', err);
+      if (showToast) showToast('삭제에 실패했습니다. 다시 시도해주세요.', 'error');
     }
   };
 
@@ -149,9 +161,21 @@ export const CheerBoard = ({ cheers = [], setCheers, showToast, isRealtime = fal
                   <span className="font-mono">{Number(c.cheers) || 0}</span>
                 </button>
 
-                <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">
-                  {formatRelativeTime(c.createdAt)}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">
+                    {formatRelativeTime(c.createdAt)}
+                  </span>
+                  {c.isMine && (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(c.id)}
+                      className="p-1 rounded-md text-zinc-400 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 transition-colors"
+                      title="내 다짐 삭제"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
             </article>
           ))}

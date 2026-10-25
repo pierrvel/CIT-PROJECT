@@ -5,6 +5,7 @@ import { DEFAULT_DDAYS } from './constants/ddays';
 import { playChime, playSchoolBellSequence } from './utils/audio';
 import { getSyncEndpoint, getFirebaseDbUrl } from './utils/env';
 import { subscribeToCheers } from './services/cheerService';
+import { initPresence } from './services/presenceService';
 
 import Header from './components/common/Header';
 import Toast from './components/common/Toast';
@@ -237,6 +238,17 @@ export function App() {
     return DEFAULT_CHEERS;
   });
   const [isRealtimeCheer, setIsRealtimeCheer] = useState(false);
+  const [onlineCount, setOnlineCount] = useState(1);
+
+  // 수험생 실시간 접속자 수 감지 (Presence)
+  useEffect(() => {
+    const cleanup = initPresence((count) => {
+      setOnlineCount(count);
+    });
+    return () => {
+      if (typeof cleanup === 'function') cleanup();
+    };
+  }, []);
 
   // Firebase Firestore 실시간 구독 (연동 시 전 세계 사용자 간 실시간 공유)
   useEffect(() => {
@@ -1484,6 +1496,7 @@ export function App() {
             setCheerBoard={setCheerBoard}
             showToast={showToast}
             isRealtimeCheer={isRealtimeCheer}
+            onlineCount={onlineCount}
           />
         )}
 
