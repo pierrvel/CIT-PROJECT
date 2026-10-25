@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DualCore Cockpit - CIT 프로젝트 발표 포스터</title>
+  <title>DUALCORE COCKPIT - CIT Project Exhibition Poster</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Pretendard & Outfit -->
+  <!-- Google Fonts: Pretendard, Inter, JetBrains Mono -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -18,18 +18,13 @@
         extend: {
           fontFamily: {
             sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-            outfit: ['Outfit', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              200: '#c7d2fe',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-              900: '#312e81',
-            }
+            carbon: '#09090b',
+            pure: '#ffffff',
+            slateLine: '#e4e4e7',
           }
         }
       }
@@ -37,327 +32,315 @@
   </script>
 
   <style>
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Pretendard', sans-serif;
-      background-color: #0f172a;
-      color: #1e293b;
+      background-color: #121214;
+      color: #09090b;
     }
+
+    /* 아크릴 인쇄 및 고해상도 전시용 규격 */
+    .acrylic-poster {
+      width: 100%;
+      max-width: 960px;
+      min-height: 1350px;
+      background-color: #ffffff;
+      color: #09090b;
+    }
+
+    /* 테크니컬 헤어라인 그리드 */
+    .hairline-b { border-bottom: 1px solid #e4e4e7; }
+    .hairline-r { border-right: 1px solid #e4e4e7; }
+    .hairline-t { border-top: 1px solid #e4e4e7; }
+    .hairline-l { border-left: 1px solid #e4e4e7; }
+    .hairline-all { border: 1px solid #e4e4e7; }
+
     @media print {
       body {
-        background-color: white !important;
+        background-color: #ffffff !important;
         padding: 0 !important;
+        margin: 0 !important;
       }
       .no-print {
         display: none !important;
       }
-      .poster-sheet {
-        box-shadow: none !important;
-        margin: 0 !important;
-        border: none !important;
+      .acrylic-poster {
         max-width: 100% !important;
         width: 100% !important;
+        min-height: 100vh !important;
+        box-shadow: none !important;
+        border: none !important;
         border-radius: 0 !important;
+        padding: 12mm 15mm !important;
       }
       @page {
-        size: A3 portrait;
-        margin: 8mm;
+        size: A1 portrait;
+        margin: 0;
       }
     }
   </style>
 </head>
 <body class="py-10 px-4 flex flex-col items-center justify-center min-h-screen">
 
-  <!-- 인쇄 / 다운로드 플로팅 액션 바 -->
-  <div class="no-print fixed top-5 z-50 flex items-center gap-3 bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-full border border-slate-700 shadow-2xl text-white text-sm">
-    <span class="font-bold flex items-center gap-2">
-      <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      DualCore Cockpit 발표 포스터
-    </span>
-    <span class="text-slate-500">|</span>
-    <button onclick="window.print()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold rounded-full transition-all flex items-center gap-1.5 shadow-md shadow-indigo-600/30">
-      <span>🖨️ PDF 저장 / 인쇄하기</span>
+  <!-- 인쇄 / 다운로드 제어 바 -->
+  <div class="no-print fixed top-6 z-50 flex items-center gap-4 bg-zinc-900/95 backdrop-blur-md px-6 py-3 rounded-full border border-zinc-700 shadow-2xl text-white text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+      <span class="font-mono font-bold tracking-wider uppercase text-zinc-300">EXHIBITION READY / ACRYLIC SPECS</span>
+    </div>
+    <span class="text-zinc-600">|</span>
+    <button onclick="window.print()" class="px-4 py-1.5 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 transition-all font-mono">
+      PRINT TO PDF (A1/A2/A3)
     </button>
-    <a href="https://www.canva.com/d/8x_AKMf-atB5QEB" target="_blank" rel="noopener noreferrer" class="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-full transition-all flex items-center gap-1.5">
-      <span>🎨 Canva에서 편집하기</span>
-    </a>
   </div>
 
-  <!-- 포스터 시트 (A3 비율 최적화 Bento Grid) -->
-  <div class="poster-sheet w-full max-w-[900px] bg-gradient-to-br from-slate-50 via-indigo-50/40 to-sky-50 rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] relative overflow-hidden">
-    
-    <!-- 배경 장식 글로우 -->
-    <div class="absolute -top-24 -right-24 w-80 h-80 bg-indigo-300/30 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-sky-300/30 rounded-full blur-3xl pointer-events-none"></div>
+  <!-- 아크릴 전시 포스터 본체 (모던 스위스 미니멀리즘 / 블랙앤화이트) -->
+  <div class="acrylic-poster p-10 sm:p-14 shadow-[0_30px_90px_rgba(0,0,0,0.6)] relative overflow-hidden flex flex-col justify-between">
 
-    <!-- 1. 헤더 (Title & Meta) -->
-    <header class="relative z-10 border-b border-indigo-100/80 pb-6 mb-7">
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="px-3 py-1 bg-indigo-600 text-white font-bold text-xs rounded-full shadow-sm tracking-wide">
-            🤖 AI X React 프로젝트
-          </span>
-          <span class="px-3 py-1 bg-sky-100 text-sky-800 font-bold text-xs rounded-full border border-sky-200">
-            1년 장기 CIT 활동 최종 결과물
-          </span>
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-xs rounded-full border border-emerald-200 flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Vercel 상용 배포 완료
-          </span>
+    <!-- 0. 최상단 테크니컬 메타 바 -->
+    <div>
+      <div class="flex items-center justify-between pb-4 hairline-b text-[11px] font-mono tracking-widest text-zinc-500 uppercase">
+        <div class="flex items-center gap-3">
+          <span class="font-bold text-black">CIT 2026 ANNUAL INNOVATION EXHIBITION</span>
+          <span>/</span>
+          <span>TRACK: AI X REACT</span>
         </div>
-        <div class="text-right">
-          <span class="text-xs font-semibold text-slate-500 tracking-tight">수험생 전용 올인원 지능형 생산성 OS</span>
+        <div class="flex items-center gap-3">
+          <span>SYS.VER: 1.0.0-PROD</span>
+          <span>/</span>
+          <span class="text-black font-bold">ONLINE STATUS: 100% DEPLOYED</span>
         </div>
       </div>
 
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 font-outfit flex items-center gap-3">
-            <span>DualCore Cockpit</span>
-            <span class="text-2xl sm:text-3xl font-bold font-sans text-indigo-600">듀얼코어 콕핏</span>
-          </h1>
-          <p class="mt-2 text-base sm:text-lg font-semibold text-slate-700">
-            "공부할 때 필요한 모든 도구를 하나의 앱에 쏙! 수험생 맞춤 실전 학습 플랫폼"
-          </p>
-        </div>
-        <div class="flex items-center gap-3 shrink-0 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="text-right">
-            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Live Web</p>
-            <p class="text-xs font-bold text-indigo-600 font-mono">citproject.vercel.app</p>
-          </div>
-          <!-- QR 코드 -->
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&data=https://citproject.vercel.app" alt="QR" class="w-12 h-12 rounded-lg border border-slate-200" />
-        </div>
-      </div>
-    </header>
-
-    <!-- 2. 본문 벤토 그리드 -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 relative z-10">
-
-      <!-- 카드 A: 기획 배경 (Why?) -->
-      <div class="md:col-span-5 bg-white/90 backdrop-blur-sm rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-2.5">
-            <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">💡</span>
-            <h2 class="text-base font-bold text-slate-900">왜 만들었을까? (기획 배경)</h2>
-          </div>
-          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-            스톱워치 따로, 플래너 따로, 오답노트 따로... <br/>
-            공부할 때 여러 앱을 번갈아 켜는 게 너무 비효율적이었습니다.
-          </p>
-          <div class="mt-3 p-3 bg-amber-50/80 rounded-xl border border-amber-200/60">
-            <p class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-              <span>🎯</span> 나의 개발 목표:
-            </p>
-            <p class="text-xs text-amber-800 mt-1 leading-snug font-medium">
-              <strong>"내가 공부할 때 진짜 필요한 기능들을 하나의 앱에서 완벽하게 돌리자!"</strong>
+      <!-- 1. 메인 헤더: 타이포그래피 중심의 압도적인 블랙 & 화이트 구성 -->
+      <header class="pt-8 pb-10 hairline-b">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2 py-0.5 bg-black text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                FLAGSHIP OS
+              </span>
+              <span class="text-xs font-mono text-zinc-500 tracking-tight">
+                STUDENT-CENTRIC PRODUCTIVITY OPERATING SYSTEM
+              </span>
+            </div>
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black font-inter tracking-tighter text-black uppercase leading-none">
+              DUALCORE COCKPIT
+            </h1>
+            <p class="mt-4 text-base sm:text-lg font-medium text-zinc-600 max-w-2xl leading-relaxed">
+              공부할 때 필요한 모든 도구를 하나의 인터페이스로 재정의하다. <br class="hidden sm:inline"/>
+              <strong>수험생 실전 모의고사 타이머, 적응형 플래너, 클라우드 동기화 올인원 OS</strong>
             </p>
           </div>
-        </div>
-        <div class="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2 text-[11px] text-slate-500">
-          <span class="font-bold text-indigo-600">#실전중심</span>
-          <span class="font-bold text-indigo-600">#수험생니즈100%</span>
-          <span class="font-bold text-indigo-600">#올인원생산성</span>
-        </div>
-      </div>
 
-      <!-- 카드 B: 제작 및 개발 과정 (How?) -->
-      <div class="md:col-span-7 bg-white/90 backdrop-blur-sm rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-2.5">
-            <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">🤖</span>
-            <h2 class="text-base font-bold text-slate-900">제작 & 개발 파이프라인 (AI 페어 프로그래밍)</h2>
+          <!-- 라이브 웹 & QR 블록 -->
+          <div class="flex items-center gap-4 bg-zinc-50 p-3.5 rounded-xl hairline-all shrink-0">
+            <div class="text-right">
+              <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">LIVE ACCESS</div>
+              <div class="text-xs font-mono font-bold text-black mt-0.5">citproject.vercel.app</div>
+              <div class="text-[10px] text-zinc-500 mt-1">스마트폰 카메라로 실시간 구동</div>
+            </div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=72x72&data=https://citproject.vercel.app" alt="QR" class="w-14 h-14 rounded-lg border border-zinc-200" />
           </div>
-          <div class="grid grid-cols-3 gap-2.5 my-2">
-            <div class="bg-indigo-50/70 p-2.5 rounded-xl border border-indigo-100 text-center">
-              <span class="text-lg">💭</span>
-              <p class="text-xs font-bold text-slate-800 mt-1">1. 아이디어 기획</p>
-              <p class="text-[10px] text-slate-500 mt-0.5">실제 수험 루틴 분석</p>
-            </div>
-            <div class="bg-indigo-50/70 p-2.5 rounded-xl border border-indigo-100 text-center">
-              <span class="text-lg">⚡</span>
-              <p class="text-xs font-bold text-slate-800 mt-1">2. AI 페어 코딩</p>
-              <p class="text-[10px] text-indigo-600 font-semibold mt-0.5">Gemini 3.8 Flash High</p>
-            </div>
-            <div class="bg-indigo-50/70 p-2.5 rounded-xl border border-indigo-100 text-center">
-              <span class="text-lg">🚀</span>
-              <p class="text-xs font-bold text-slate-800 mt-1">3. 실전 배포</p>
-              <p class="text-[10px] text-slate-500 mt-0.5">Vercel 무중단 배포</p>
+        </div>
+      </header>
+
+      <!-- 2. 기획 배경 & 핵심 철학 (2-칼럼 구조) -->
+      <section class="py-8 hairline-b grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div class="md:col-span-4">
+          <div class="font-mono text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2">01 // MOTIVATION</div>
+          <h2 class="text-xl sm:text-2xl font-bold font-inter tracking-tight text-black">
+            왜 만들었는가: <br/>분절된 수험 루틴의 통합
+          </h2>
+        </div>
+        <div class="md:col-span-8 space-y-3 text-sm text-zinc-700 leading-relaxed">
+          <p>
+            수험생들은 공부할 때 스톱워치, 플래너 앱, 오답노트, 인강 타이머를 각각 따로 실행합니다. 
+            앱을 전환할 때마다 <strong>집중의 흐름이 끊기고, 기록의 파편화가 발생</strong>했습니다.
+          </p>
+          <div class="p-4 bg-zinc-50 rounded-lg hairline-all text-black font-medium flex items-start gap-3">
+            <span class="font-mono font-bold text-base text-zinc-400 mt-0.5">↳</span>
+            <div>
+              <strong class="text-black">CORE PHILOSOPHY:</strong> "남들이 만든 여러 앱에 수험생이 맞추는 것이 아니라, 
+              <strong>수험생이 오직 자습과 실전 감각에만 몰입할 수 있도록 필요한 모든 기능을 단 하나의 앱에서 완벽하게 구동하자.</strong>"
             </div>
           </div>
-          <p class="text-xs text-slate-600 leading-relaxed font-medium mt-1">
-            혼자서 막히는 기술 장벽은 <strong>최신 AI 모델(Antigravity 3.8 Flash High)</strong>과 적극적으로 페어 프로그래밍하며, 구조적인 React 컴포넌트 단위로 빠르게 구현했습니다.
+        </div>
+      </section>
+
+      <!-- 3. 핵심 시스템 아키텍처 (4대 모듈 상세) -->
+      <section class="py-8 hairline-b">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <div class="font-mono text-xs font-bold tracking-widest text-zinc-400 uppercase mb-1">02 // CORE MODULES</div>
+            <h2 class="text-xl sm:text-2xl font-bold font-inter tracking-tight text-black">
+              듀얼코어를 완성하는 4대 지능형 서브시스템
+            </h2>
+          </div>
+          <div class="hidden sm:block text-right font-mono text-[11px] text-zinc-400">
+            ENGINEERING & INTERFACE SPECIFICATIONS
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- 모듈 1: Exam Pacer -->
+          <div class="p-5 bg-white rounded-xl hairline-all flex flex-col justify-between hover:border-black transition-colors">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5 rounded">SYS.01</span>
+                <span class="text-[11px] font-mono text-zinc-500 uppercase">REAL EXAM PIPELINE</span>
+              </div>
+              <h3 class="text-lg font-bold font-inter text-black mb-2">실전 모의고사 타이머 (Exam Pacer)</h3>
+              <p class="text-xs text-zinc-600 leading-relaxed mb-4">
+                평가원 수능 시험장 규격 <strong>수침형 아날로그 시계판 동기화</strong>와 디지털 타이머의 듀얼 인터페이스. 
+                독서실 환경을 위한 <strong>무음 시각 플래시(Visual Pulse)</strong>와 Web Audio API 기반 오실레이터 순수 타종음을 내장했습니다.
+              </p>
+            </div>
+            <div class="rounded-lg overflow-hidden hairline-all bg-zinc-50">
+              <img src="poster_assets/pacer_preview.png" alt="Exam Pacer" class="w-full h-36 object-cover object-top" />
+            </div>
+          </div>
+
+          <!-- 모듈 2: Adaptive Sprint -->
+          <div class="p-5 bg-white rounded-xl hairline-all flex flex-col justify-between hover:border-black transition-colors">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5 rounded">SYS.02</span>
+                <span class="text-[11px] font-mono text-zinc-500 uppercase">ADAPTIVE PACING ENGINE</span>
+              </div>
+              <h3 class="text-lg font-bold font-inter text-black mb-2">적응형 주간 Sprint 플래너</h3>
+              <p class="text-xs text-zinc-600 leading-relaxed mb-4">
+                계획이 밀렸을 때 자책감 대신 <strong>수학적 최적 대안(강제상향/주말이월/가지치기)</strong>을 3-Way로 재제시합니다. 
+                목표 잔여량과 일일 소화 한도를 역산하여 <strong>"매일 N강 소화 시 완주 예정일"</strong>을 실시간 뱃지로 산출합니다.
+              </p>
+            </div>
+            <div class="rounded-lg overflow-hidden hairline-all bg-zinc-50">
+              <img src="poster_assets/sprint_preview.png" alt="Adaptive Sprint" class="w-full h-36 object-cover object-top" />
+            </div>
+          </div>
+
+          <!-- 모듈 3: Smart OMR -->
+          <div class="p-5 bg-zinc-50 rounded-xl hairline-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold bg-zinc-200 text-black px-2 py-0.5 rounded">SYS.03</span>
+                <span class="text-[11px] font-mono text-zinc-500 uppercase">GRADE & CUTOFF TRACKER</span>
+              </div>
+              <h3 class="text-lg font-bold font-inter text-black mb-2">스마트 OMR & 기출 확정 등급컷</h3>
+              <p class="text-xs text-zinc-600 leading-relaxed">
+                역대 수능·모평 확정 등급컷 DB를 내장하여 원점수 직접 입력, 틀린 번호만 콕 찍기, 스마트 OMR의 3-Way 초간편 채점을 지원합니다. 
+                채점 즉시 1등급 컷 기준 갭과 전국 백분위 궤적을 SVG 차트로 분석합니다.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 hairline-t font-mono text-[11px] text-zinc-500 flex justify-between">
+              <span>DATA: 2024~2025 CSAT CUTOFFS</span>
+              <span class="font-bold text-black">AUTO EVALUATION</span>
+            </div>
+          </div>
+
+          <!-- 모듈 4: Cloud Sync & Presence -->
+          <div class="p-5 bg-zinc-50 rounded-xl hairline-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-xs font-bold bg-zinc-200 text-black px-2 py-0.5 rounded">SYS.04</span>
+                <span class="text-[11px] font-mono text-zinc-500 uppercase">REALTIME PRESENCE NODE</span>
+              </div>
+              <h3 class="text-lg font-bold font-inter text-black mb-2">6자리 PIN 동기화 & 실시간 라운지</h3>
+              <p class="text-xs text-zinc-600 leading-relaxed">
+                복잡한 로그인 없이 6자리 PIN으로 PC ↔ 태블릿 ↔ 스마트폰 간 데이터를 즉시 동기화합니다. 
+                Firebase Cloud Firestore 하트비트를 통해 <strong>"현재 전국에서 함께 자습 중인 수험생 수"</strong>를 실시간 집계하고 24시간 응원 전광판을 운영합니다.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 hairline-t font-mono text-[11px] text-zinc-500 flex justify-between">
+              <span>SYNC: 6-DIGIT PIN ENCRYPTION</span>
+              <span class="font-bold text-black">FIREBASE FIRESTORE</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. 엔지니어링 여정과 시행착오 (시행착오 & 해결책) -->
+      <section class="py-8 hairline-b grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div class="md:col-span-5">
+          <div class="font-mono text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2">03 // ENGINEERING DECISION</div>
+          <h2 class="text-xl font-bold font-inter tracking-tight text-black">
+            개발 중 최대 위기와 <br/>아키텍처 피벗(Pivot)
+          </h2>
+          <p class="text-xs text-zinc-500 mt-2 font-mono">
+            FEATURE CREEP RESOLUTION & IDENTITY RE-ALIGNMENT
           </p>
         </div>
-        <div class="mt-2.5 flex items-center gap-2 text-[11px] text-slate-400 font-mono">
-          <span>Stack: React 18 · Vite · Tailwind · Firebase</span>
-        </div>
-      </div>
 
-      <!-- 카드 C: 핵심 기능 4가지 (Key Features with Real Screenshots) -->
-      <div class="md:col-span-12 bg-white/95 backdrop-blur-sm rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">✨</span>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900">핵심 기능 4대장 : 수험생에게 꼭 필요한 무기</h2>
-          </div>
-          <span class="text-xs font-semibold px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-full">실제 구동 화면</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-          <!-- 1) 모의고사 실전 타이머 -->
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/70 flex flex-col justify-between hover:border-indigo-300 transition-colors">
-            <div>
-              <div class="flex items-center gap-1.5 mb-1.5">
-                <span class="text-base">⏱️</span>
-                <h3 class="text-xs font-bold text-slate-900">실전 모의고사 Pacer</h3>
-              </div>
-              <ul class="text-[11px] text-slate-600 space-y-1 font-medium mb-3">
-                <li>• 수능 규격 아날로그 시계판 동기화</li>
-                <li>• 독서실용 <strong>무음 시각 플래시</strong> 테두리</li>
-                <li>• Web Audio 내장 타종 & 3초 되돌리기</li>
-              </ul>
+        <div class="md:col-span-7 space-y-4">
+          <div class="p-4 bg-white rounded-lg hairline-all">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-2 h-2 rounded-full bg-black"></span>
+              <span class="font-mono text-xs font-bold text-black uppercase">THE OBSTACLE: 기능 과잉으로 인한 정체성 혼란</span>
             </div>
-            <div class="rounded-lg overflow-hidden border border-slate-200 shadow-sm">
-              <img src="poster_assets/pacer_preview.png" alt="Pacer Screen" class="w-full h-24 object-cover object-top hover:scale-105 transition-transform" />
-            </div>
+            <p class="text-xs text-zinc-600 leading-relaxed">
+              초기 개발 중 구현하고 싶은 기능이 계속 늘어나면서 플래너, 타이머, 캘린더가 뒤섞여 
+              <strong>"이 앱이 도대체 무엇을 위한 것인가?"</strong>라는 정체성 상실의 위기를 맞닥뜨렸습니다.
+            </p>
           </div>
 
-          <!-- 2) 적응형 주간 Sprint -->
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/70 flex flex-col justify-between hover:border-indigo-300 transition-colors">
-            <div>
-              <div class="flex items-center gap-1.5 mb-1.5">
-                <span class="text-base">🏃</span>
-                <h3 class="text-xs font-bold text-slate-900">적응형 주간 Sprint</h3>
-              </div>
-              <ul class="text-[11px] text-slate-600 space-y-1 font-medium mb-3">
-                <li>• 목표 밀림 방지 <strong>3-Way 적응형 재배분</strong></li>
-                <li>• 마감일 기준 <strong>완주 예상일 실시간 예측</strong></li>
-                <li>• 일일 소화량 즉시 누적 & 직관적 게이지</li>
-              </ul>
+          <div class="p-4 bg-zinc-50 rounded-lg hairline-all">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="w-2 h-2 rounded-full bg-zinc-400"></span>
+              <span class="font-mono text-xs font-bold text-black uppercase">THE SOLUTION: 본질에 집중한 가지치기 및 통합</span>
             </div>
-            <div class="rounded-lg overflow-hidden border border-slate-200 shadow-sm">
-              <img src="poster_assets/sprint_preview.png" alt="Sprint Screen" class="w-full h-24 object-cover object-top hover:scale-105 transition-transform" />
-            </div>
-          </div>
-
-          <!-- 3) 스마트 OMR 채점 -->
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/70 flex flex-col justify-between hover:border-indigo-300 transition-colors">
-            <div>
-              <div class="flex items-center gap-1.5 mb-1.5">
-                <span class="text-base">📊</span>
-                <h3 class="text-xs font-bold text-slate-900">기출컷 & 스마트 OMR</h3>
-              </div>
-              <ul class="text-[11px] text-slate-600 space-y-1 font-medium mb-3">
-                <li>• 역대 평가원/수능 확정 등급컷 DB 탑재</li>
-                <li>• 3-Way 초간편 채점 (원점수/틀린번호/OMR)</li>
-                <li>• 회차별 성적 궤적 그래프 & 백분위 피드백</li>
-              </ul>
-            </div>
-            <div class="h-24 bg-gradient-to-br from-indigo-900/10 to-indigo-600/20 rounded-lg border border-indigo-200 flex flex-col items-center justify-center text-center p-2">
-              <span class="text-2xl">📈</span>
-              <span class="text-[10px] font-bold text-indigo-900 mt-1">확정 등급컷 자동 대조</span>
-              <span class="text-[9px] text-indigo-700">원점수 컷 & 백분위 추정</span>
-            </div>
-          </div>
-
-          <!-- 4) 기기간 동기화 & 라운지 -->
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/70 flex flex-col justify-between hover:border-indigo-300 transition-colors">
-            <div>
-              <div class="flex items-center gap-1.5 mb-1.5">
-                <span class="text-base">☁️</span>
-                <h3 class="text-xs font-bold text-slate-900">PIN 동기화 & 라이브 라운지</h3>
-              </div>
-              <ul class="text-[11px] text-slate-600 space-y-1 font-medium mb-3">
-                <li>• 6자리 PIN으로 PC ↔ 태블릿 ↔ 폰 백업</li>
-                <li>• 실시간 전국 동시 자습 수험생 카운팅</li>
-                <li>• 24시간 실시간 응원 전광판 & 비속어 차단</li>
-              </ul>
-            </div>
-            <div class="h-24 bg-gradient-to-br from-emerald-900/10 to-teal-600/20 rounded-lg border border-emerald-200 flex flex-col items-center justify-center text-center p-2">
-              <span class="text-2xl">🔥</span>
-              <span class="text-[10px] font-bold text-emerald-900 mt-1">현재 함께 자습 중인 수험생</span>
-              <span class="text-[9px] text-emerald-700">Firebase 실시간 Presence 연동</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- 카드 D: 겪었던 문제 & 해결 과정 (The Real Struggle) -->
-      <div class="md:col-span-7 bg-white/90 backdrop-blur-sm rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-7 h-7 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm">🧗</span>
-            <h2 class="text-base font-bold text-slate-900">개발 중 겪은 문제와 극복 과정</h2>
-          </div>
-          
-          <div class="space-y-2.5 mt-3">
-            <div class="p-3 bg-rose-50/70 rounded-xl border border-rose-100">
-              <p class="text-xs font-bold text-rose-900 flex items-center gap-1">
-                <span>⚠️</span> 문제: 만들고 싶은 게 너무 많아져 정체성이 흔들림!
-              </p>
-              <p class="text-[11px] text-rose-800 mt-0.5 leading-relaxed font-medium">
-                초기 기획과 달리 욕심이 생겨 타이머에 이것저것 기능을 덧붙이다 보니, 앱의 핵심 목적이 무엇인지 모호해지는 위기를 겪었습니다.
-              </p>
-            </div>
-
-            <div class="p-3 bg-emerald-50/70 rounded-xl border border-emerald-100">
-              <p class="text-xs font-bold text-emerald-900 flex items-center gap-1">
-                <span>💡</span> 해결: '수험생의 실전 자습' 본질로 기능 정돈!
-              </p>
-              <p class="text-[11px] text-emerald-800 mt-0.5 leading-relaxed font-medium">
-                "진짜 수험생에게 필요한 것은 무엇인가?"를 치열하게 고민하여, <strong>실전 모의고사 Pacer</strong>와 <strong>주간 Sprint 플래너</strong>를 두 축으로 삼아 모든 기능을 유기적으로 통합했습니다.
-              </p>
-            </div>
+            <p class="text-xs text-zinc-600 leading-relaxed">
+              초심으로 돌아가 <strong>'수험생의 실전 자습'</strong>에 꼭 필요한 본질적인 요소만을 남겼습니다. 
+              잡다한 UI를 덜어내고, <strong>'실전 모의고사 Pacer'</strong>와 <strong>'주간 Sprint'</strong>를 두 개의 핵심 코어(Dual-Core)로 정의하여 일관된 제품 정체성을 확립했습니다.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- 카드 E: 배운 점 & 최종 소감 (Learnings & Future) -->
-      <div class="md:col-span-5 bg-white/90 backdrop-blur-sm rounded-2xl p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-sm">🌟</span>
-            <h2 class="text-base font-bold text-slate-900">배운 점 & 최종 소감</h2>
-          </div>
-
-          <div class="mt-2.5 space-y-2">
-            <div>
-              <p class="text-xs font-bold text-slate-800 flex items-center gap-1">
-                <span>📚</span> 새롭게 배운 기술들:
-              </p>
-              <p class="text-[11px] text-slate-600 font-medium mt-0.5">
-                Firebase Firestore 실시간 데이터베이스, GitHub 브랜치 관리, Vercel 클라우드 자동 배포 파이프라인.
-              </p>
-            </div>
-
-            <div class="pt-2 border-t border-slate-100">
-              <p class="text-xs font-bold text-indigo-700 flex items-center gap-1">
-                <span>🎉</span> 1년을 마치며:
-              </p>
-              <p class="text-[11px] text-slate-700 font-semibold leading-relaxed mt-0.5">
-                "머릿속으로만 상상하던 앱을 실제로 완성해 <strong>200% 대만족</strong>합니다! 다음에는 더 실용적이고 대형인 프로덕트에 도전하고 싶습니다."
-              </p>
-            </div>
-          </div>
-        </div>
+      <!-- 5. 기술 스택 & 개발 환경 & 미래 전망 -->
+      <section class="pt-8 grid grid-cols-1 md:grid-cols-12 gap-6">
         
-        <div class="mt-3 p-2 bg-slate-100/80 rounded-xl text-center">
-          <span class="text-[11px] font-bold text-slate-600">DualCore Cockpit · 2026 CIT Project Final</span>
+        <div class="md:col-span-4 p-4 rounded-xl hairline-all bg-white">
+          <div class="font-mono text-[11px] font-bold text-zinc-400 uppercase mb-2">AI CO-ENGINEERING</div>
+          <h4 class="text-sm font-bold text-black font-inter mb-1">Google Antigravity</h4>
+          <p class="text-xs text-zinc-600 leading-relaxed">
+            Gemini 3.8 Flash High 모델과의 1:1 페어 프로그래밍을 통해 프론트엔드 모듈 분리, Web Audio 신디사이저 합성, 복잡한 주간 페이싱 수학 모델을 신속하게 설계 및 검증했습니다.
+          </p>
         </div>
-      </div>
 
+        <div class="md:col-span-4 p-4 rounded-xl hairline-all bg-white">
+          <div class="font-mono text-[11px] font-bold text-zinc-400 uppercase mb-2">ACQUIRED COMPETENCIES</div>
+          <h4 class="text-sm font-bold text-black font-inter mb-1">실전 풀스택 엔지니어링</h4>
+          <p class="text-xs text-zinc-600 leading-relaxed">
+            React 18 모듈 아키텍처, Tailwind CSS 디자인 시스템, Firebase Firestore 실시간 백엔드, Git & GitHub 형상 관리, Vercel 클라우드 무중단 CI/CD 배포를 실전 습득했습니다.
+          </p>
+        </div>
+
+        <div class="md:col-span-4 p-4 rounded-xl hairline-all bg-zinc-900 text-white">
+          <div class="font-mono text-[11px] font-bold text-zinc-400 uppercase mb-2">RETROSPECTIVE & NEXT</div>
+          <h4 class="text-sm font-bold text-white font-inter mb-1">대만족 & 차세대 확장</h4>
+          <p class="text-xs text-zinc-300 leading-relaxed">
+            단순 아이디어를 상용 수준의 실전 플랫폼으로 완성해 <strong>200% 만족</strong>합니다. 향후 수험생 커뮤니티 데이터 분석과 오답 맞춤형 추천이 결합된 대형 프로젝트로 고도화할 계획입니다.
+          </p>
+        </div>
+
+      </section>
     </div>
 
-    <!-- 3. 푸터 -->
-    <footer class="mt-7 pt-4 border-t border-slate-200/70 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 font-medium">
-      <div class="flex items-center gap-2">
-        <span>© 2026 DualCore Cockpit</span>
+    <!-- 6. 포스터 푸터: 엔지니어링 서명 -->
+    <footer class="mt-12 pt-5 hairline-t flex flex-wrap items-center justify-between text-xs font-mono text-zinc-500 gap-4">
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-black">DUALCORE COCKPIT</span>
         <span>•</span>
-        <span>개발: 수험생 1인 개발 (with Google Antigravity)</span>
+        <span>STUDENT SOLO DEVELOPER (WITH GOOGLE ANTIGRAVITY)</span>
       </div>
       <div>
-        <span>Vercel 배포 URL: <strong class="text-indigo-600 font-mono">https://citproject.vercel.app</strong></span>
+        <span>HOSTED AT VERCEL PRODUCTION ENVIRONMENT</span>
       </div>
     </footer>
 
