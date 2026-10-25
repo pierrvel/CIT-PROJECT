@@ -35,8 +35,10 @@ export const CheerBoard = ({ cheers = [], setCheers, showToast, isRealtime = fal
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('이 다짐을 전광판에서 완전히 삭제하시겠습니까?')) return;
+  const handleDelete = async (id, nickname = '') => {
+    const targetLabel = nickname ? `'${nickname}'님의 다짐` : '이 다짐';
+    if (!window.confirm(`${targetLabel}을 전광판에서 완전히 삭제하시겠습니까?`)) return;
+
     try {
       setCheers((prev) => prev.filter((c) => c.id !== id));
       await deleteCheer(id);
@@ -127,7 +129,7 @@ export const CheerBoard = ({ cheers = [], setCheers, showToast, isRealtime = fal
                   <div className="flex items-center gap-1.5 min-w-0">
                     <span className="text-xs font-bold text-zinc-800 dark:text-zinc-100 truncate">{c.nickname}</span>
                     {c.isMine && (
-                      <span className="shrink-0 text-[9px] font-black px-1 py-0.5 rounded bg-indigo-600 text-white">MY</span>
+                      <span className="shrink-0 text-[9px] font-black px-1.5 py-0.5 rounded bg-indigo-600 text-white">MY</span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
@@ -165,16 +167,16 @@ export const CheerBoard = ({ cheers = [], setCheers, showToast, isRealtime = fal
                   <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">
                     {formatRelativeTime(c.createdAt)}
                   </span>
-                  {c.isMine && (
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(c.id)}
-                      className="p-1 rounded-md text-zinc-400 hover:text-rose-600 hover:bg-rose-500/10 dark:hover:text-rose-400 transition-colors"
-                      title="내 다짐 삭제"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+                  {/* 빨간색 [ 🗑️ 삭제 ] 버튼: 직관적으로 바로 클릭 가능 */}
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(c.id, c.nickname)}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-500 dark:hover:text-white border border-rose-500/25 transition-all active:scale-95"
+                    title="전광판에서 이 다짐 삭제"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>삭제</span>
+                  </button>
                 </div>
               </div>
             </article>
