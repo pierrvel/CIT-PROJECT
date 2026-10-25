@@ -45,7 +45,7 @@
       color: #09090b;
       margin: 0 auto;
       box-sizing: border-box;
-      padding: 38px 48px;
+      padding: 40px 48px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -121,8 +121,8 @@
         <span class="text-zinc-300">|</span>
         <span class="text-zinc-700 font-medium">AI X React 연구팀</span>
       </div>
-      <!-- 사용자 요청: 20412 윤영찬 명시 -->
-      <div class="flex items-center gap-2 bg-black text-white px-4 py-1 rounded-full font-bold text-sm tracking-wide shadow-sm">
+      <!-- 20412 윤영찬 배지 -->
+      <div class="flex items-center gap-2 bg-black text-white px-4 py-1.5 rounded-full font-bold text-sm tracking-wide shadow-sm">
         <span>20412 윤영찬</span>
       </div>
     </div>
@@ -138,7 +138,7 @@
             듀얼코어 콕핏
             <span class="text-3xl font-bold font-inter text-zinc-400 ml-3 tracking-normal">DualCore Cockpit</span>
           </h1>
-          <p class="mt-2 text-lg font-medium text-zinc-700 leading-relaxed">
+          <p class="mt-2 text-base sm:text-lg font-medium text-zinc-700 leading-relaxed">
             공부할 때 필요한 모든 도구를 하나의 화면에 쏙! <br/>
             <strong>수능 실전 모의고사 타이머, 적응형 주간 플래너, 스마트 채점 통합 플랫폼</strong>
           </p>
@@ -151,7 +151,7 @@
             <div class="text-sm font-bold text-black font-mono mt-0.5">citproject.vercel.app</div>
             <div class="text-[10px] text-zinc-400 mt-0.5">카메라로 비추면 바로 실행</div>
           </div>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=72x72&data=https://citproject.vercel.app" alt="QR" class="w-14 h-14 rounded-xl border border-zinc-200" />
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=76x76&data=https://citproject.vercel.app" alt="QR" class="w-14 h-14 rounded-xl border border-zinc-200" />
         </div>
       </div>
     </header>
@@ -176,7 +176,7 @@
       </div>
     </section>
 
-    <!-- 3. 핵심 기능 4가지 (HERO SECTION: 4개 모두 16:10 동일 비율 실제 캡처 탑재) -->
+    <!-- 3. 핵심 기능 4가지 (4대 모듈: 네모 박스 안에 비율 완벽 매칭 탑재) -->
     <section class="py-3.5 hairline-b flex-1 flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2.5">
         <div>
@@ -201,12 +201,12 @@
             </div>
             <h3 class="text-base font-bold text-black mb-0.5">실전 모의고사 타이머 (Exam Pacer)</h3>
             <p class="text-xs text-zinc-600 leading-snug">
-              수능 규격 아날로그 시계판과 디지털 타이머 동기화. 독서실용 <strong>무음 시각 알림</strong>과 3초 되돌리기 탑재.
+              수능 시험장 실제 아날로그 시계판과 디지털 타이머 실시간 동기화. 독서실용 <strong>무음 시각 알림</strong>과 실수 방지 3초 되돌리기 탑재.
             </p>
           </div>
-          <!-- 16:10 비율 캡처 -->
-          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm">
-            <img src="poster_assets/feat1_pacer.png" alt="실전 모의고사 타이머" class="w-full h-44 object-cover object-top" />
+          <!-- 네모 박스 안에 쏙 들어가는 이미지 컨테이너 -->
+          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm h-[200px] w-full flex items-center justify-center p-1">
+            <img src="poster_assets/feat1_pacer.png" alt="실전 모의고사 타이머" class="w-full h-full object-contain" />
           </div>
         </div>
 
@@ -219,12 +219,12 @@
             </div>
             <h3 class="text-base font-bold text-black mb-0.5">적응형 주간 플래너 (Adaptive Sprint)</h3>
             <p class="text-xs text-zinc-600 leading-snug">
-              계획 지연 시 3-Way 최적 대안 재배분. <strong>"매일 N강 소화 시 완주 예정일"</strong>을 실시간 뱃지로 산출.
+              계획 지연 시 3-Way 최적 대안 재배분. 목표 잔여량 기반 <strong>"매일 N강 소화 시 완주 예정일"</strong>을 실시간 뱃지로 산출.
             </p>
           </div>
-          <!-- 16:10 비율 캡처 -->
-          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm">
-            <img src="poster_assets/feat2_sprint.png" alt="적응형 주간 플래너" class="w-full h-44 object-cover object-top" />
+          <!-- 네모 박스 안에 쏙 들어가는 이미지 컨테이너 -->
+          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm h-[200px] w-full flex items-center justify-center p-1">
+            <img src="poster_assets/feat2_sprint.png" alt="적응형 주간 플래너" class="w-full h-full object-contain" />
           </div>
         </div>
 
@@ -237,12 +237,12 @@
             </div>
             <h3 class="text-base font-bold text-black mb-0.5">기출 등급컷 & 스마트 OMR 채점</h3>
             <p class="text-xs text-zinc-600 leading-snug">
-              역대 수능·모평 확정 등급컷 내장. 원점수·틀린번호·OMR 방식으로 빠르게 채점하고 전국 백분위 분석.
+              역대 수능·모의평가 확정 등급컷 데이터 내장. 원점수·틀린번호·OMR 방식으로 빠르게 채점하고 내 전국 백분위 추이를 그래프로 분석.
             </p>
           </div>
-          <!-- 16:10 비율 캡처 -->
-          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm">
-            <img src="poster_assets/feat3_score.png" alt="스마트 OMR 채점" class="w-full h-44 object-cover object-top" />
+          <!-- 네모 박스 안에 쏙 들어가는 이미지 컨테이너 -->
+          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm h-[200px] w-full flex items-center justify-center p-1">
+            <img src="poster_assets/feat3_score.png" alt="스마트 OMR 채점" class="w-full h-full object-contain" />
           </div>
         </div>
 
@@ -255,12 +255,12 @@
             </div>
             <h3 class="text-base font-bold text-black mb-0.5">6자리 PIN 동기화 & 실시간 라운지</h3>
             <p class="text-xs text-zinc-600 leading-snug">
-              로그인 없이 6자리 PIN으로 기기간 즉시 동기화. <strong>"현재 함께 자습 중인 수험생 수"</strong> 집계 및 24시간 전광판.
+              로그인 없이 6자리 PIN으로 PC·태블릿·폰 즉시 동기화. <strong>"현재 함께 자습 중인 수험생 수"</strong> 실시간 집계 및 24시간 응원 전광판.
             </p>
           </div>
-          <!-- 16:10 비율 캡처 -->
-          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm">
-            <img src="poster_assets/feat4_lounge.png" alt="실시간 자습 라운지" class="w-full h-44 object-cover object-top" />
+          <!-- 네모 박스 안에 쏙 들어가는 이미지 컨테이너 -->
+          <div class="rounded-xl overflow-hidden hairline-all bg-zinc-50 mt-2 shadow-sm h-[200px] w-full flex items-center justify-center p-1">
+            <img src="poster_assets/feat4_lounge.png" alt="실시간 자습 라운지" class="w-full h-full object-contain" />
           </div>
         </div>
 
@@ -333,7 +333,7 @@
     </section>
 
     <!-- 하단 푸터 -->
-    <footer class="pt-3 hairline-t flex items-center justify-between text-xs text-zinc-500 font-medium">
+    <footer class="pt-2.5 hairline-t flex items-center justify-between text-xs text-zinc-500 font-medium">
       <div>
         <strong class="text-black text-sm">듀얼코어 콕핏 (DualCore Cockpit)</strong>
         <span> · 제작: <strong class="text-black">20412 윤영찬</strong></span>
