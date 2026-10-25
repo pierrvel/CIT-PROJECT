@@ -54,6 +54,7 @@ const iconMap = {
   eye: LucideIcons.Eye,
   eyeOff: LucideIcons.EyeOff,
   calculator: LucideIcons.Calculator,
+  calendar: LucideIcons.Calendar,
   helpCircle: LucideIcons.HelpCircle,
   layers: LucideIcons.Layers
 };

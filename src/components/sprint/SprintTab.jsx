@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '../common/Icon';
 import GoalEditModal from '../modals/GoalEditModal';
-import { calculateGoalPacing } from '../../utils/pacing';
+import { calculateGoalPacing, getCompletionForecast } from '../../utils/pacing';
 
 export const SprintTab = ({
   goals,
@@ -73,6 +73,7 @@ export const SprintTab = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {goals.map((goal) => {
           const pacing = calculateGoalPacing(goal);
+          const forecast = getCompletionForecast(goal);
           const completedPct = Math.min(100, Math.round((goal.completedAmount / goal.totalAmount) * 100));
           const prunedPct = Math.min(100 - completedPct, Math.round(((goal.prunedAmount || 0) / goal.totalAmount) * 100));
           const inputVal = inputDeltas[goal.id] || '';
@@ -88,15 +89,33 @@ export const SprintTab = ({
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-300/50 dark:border-zinc-700">
-                      {goal.unit}
-                    </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white">
-                      {goal.title}
-                    </h3>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-300/50 dark:border-zinc-700">
+                        {goal.unit}
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white truncate">
+                        {goal.title}
+                      </h3>
+                    </div>
+                    {/* 🎯 목표 완주 예상일 계산 문구 */}
+                    <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold border ${
+                          forecast.isCompleted
+                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25'
+                            : forecast.isAhead
+                            ? 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-500/20'
+                            : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25'
+                        }`}
+                        title={forecast.text}
+                      >
+                        <Icon name={forecast.isCompleted ? 'checkCircle' : 'calendar'} className="w-3 h-3 shrink-0" />
+                        <span>{forecast.text}</span>
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <span className="font-mono text-xs font-black px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                       D-{pacing.D}
                     </span>

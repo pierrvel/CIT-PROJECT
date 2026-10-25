@@ -80,3 +80,48 @@ export const calculateGoalPacing = (goal) => {
   }
   return result;
 };
+
+// 🎯 목표 완주 예상일 계산 (매일 N단위 시 YYYY년 MM월 DD일 완주 예정)
+export const getCompletionForecast = (goal) => {
+  const pruned = Number(goal.prunedAmount) || 0;
+  const total = Number(goal.totalAmount) || 0;
+  const completed = Number(goal.completedAmount) || 0;
+  const remaining = Math.max(0, total - completed - pruned);
+  const unit = goal.unit || '개';
+
+  if (remaining <= 0) {
+    return {
+      isCompleted: true,
+      text: '🎉 목표 분량 100% 완주 완료!',
+      dailyPace: 0,
+      daysNeeded: 0,
+      isAhead: true
+    };
+  }
+
+  const pacing = calculateGoalPacing(goal);
+  const dailyPace = Math.max(1, pacing.dailyTarget || Number(goal.dailyCap) || 1);
+  const daysNeeded = Math.ceil(remaining / dailyPace);
+
+  const targetDate = new Date();
+  targetDate.setHours(0, 0, 0, 0);
+  targetDate.setDate(targetDate.getDate() + daysNeeded);
+
+  const y = targetDate.getFullYear();
+  const m = targetDate.getMonth() + 1;
+  const d = targetDate.getDate();
+  const isAhead = pacing.D ? daysNeeded <= pacing.D : true;
+
+  return {
+    isCompleted: false,
+    remaining,
+    dailyPace,
+    daysNeeded,
+    year: y,
+    month: m,
+    day: d,
+    isAhead,
+    text: `매일 ${dailyPace}${unit} 시 ${y}년 ${m}월 ${d}일 완료 예정 (${daysNeeded}일 소요)`,
+    shortText: `매일 ${dailyPace}${unit} 시 ${y}.${m}.${d} 완료`
+  };
+};

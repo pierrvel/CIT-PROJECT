@@ -139,7 +139,8 @@
         lightbulb: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>,
         volume2: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>,
         volumeX: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>,
-        undo: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
+        undo: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>,
+        calendar: <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
       };
       return icons[name] || null;
     };
@@ -604,6 +605,51 @@
         }
       }
       return result;
+    };
+
+    // 🎯 목표 완주 예상일 계산 (매일 N단위 시 YYYY년 MM월 DD일 완주 예정)
+    const getCompletionForecast = (goal) => {
+      const pruned = Number(goal.prunedAmount) || 0;
+      const total = Number(goal.totalAmount) || 0;
+      const completed = Number(goal.completedAmount) || 0;
+      const remaining = Math.max(0, total - completed - pruned);
+      const unit = goal.unit || '개';
+
+      if (remaining <= 0) {
+        return {
+          isCompleted: true,
+          text: '🎉 목표 분량 100% 완주 완료!',
+          dailyPace: 0,
+          daysNeeded: 0,
+          isAhead: true
+        };
+      }
+
+      const pacing = calculateGoalPacing(goal);
+      const dailyPace = Math.max(1, pacing.dailyTarget || Number(goal.dailyCap) || 1);
+      const daysNeeded = Math.ceil(remaining / dailyPace);
+
+      const targetDate = new Date();
+      targetDate.setHours(0, 0, 0, 0);
+      targetDate.setDate(targetDate.getDate() + daysNeeded);
+
+      const y = targetDate.getFullYear();
+      const m = targetDate.getMonth() + 1;
+      const d = targetDate.getDate();
+      const isAhead = pacing.D ? daysNeeded <= pacing.D : true;
+
+      return {
+        isCompleted: false,
+        remaining,
+        dailyPace,
+        daysNeeded,
+        year: y,
+        month: m,
+        day: d,
+        isAhead,
+        text: `매일 ${dailyPace}${unit} 시 ${y}년 ${m}월 ${d}일 완료 예정 (${daysNeeded}일 소요)`,
+        shortText: `매일 ${dailyPace}${unit} 시 ${y}.${m}.${d} 완료`
+      };
     };
 
     // ========================================================
@@ -2228,6 +2274,7 @@
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {goals.map((goal) => {
                     const pacing = calculateGoalPacing(goal);
+                    const forecast = getCompletionForecast(goal);
                     const completedPct = Math.min(100, Math.round((goal.completedAmount / goal.totalAmount) * 100));
                     const prunedPct = Math.min(100 - completedPct, Math.round(((goal.prunedAmount || 0) / goal.totalAmount) * 100));
                     const inputVal = inputDeltas[goal.id] || '';
@@ -2243,15 +2290,33 @@
                       >
                         <div>
                           <div className="flex items-start justify-between gap-3 mb-3">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-300/50 dark:border-zinc-700">
-                                {goal.unit}
-                              </span>
-                              <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white">
-                                {goal.title}
-                              </h3>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-zinc-200/80 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-300/50 dark:border-zinc-700">
+                                  {goal.unit}
+                                </span>
+                                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white truncate">
+                                  {goal.title}
+                                </h3>
+                              </div>
+                              {/* 🎯 목표 완주 예상일 계산 문구 */}
+                              <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                                <span
+                                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold border ${
+                                    forecast.isCompleted
+                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25'
+                                      : forecast.isAhead
+                                      ? 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-500/20'
+                                      : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25'
+                                  }`}
+                                  title={forecast.text}
+                                >
+                                  <Icon name={forecast.isCompleted ? 'checkCircle' : 'calendar'} className="w-3 h-3 shrink-0" />
+                                  <span>{forecast.text}</span>
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5 shrink-0">
                               <span className="font-mono text-xs font-black px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                                 D-{pacing.D}
                               </span>
